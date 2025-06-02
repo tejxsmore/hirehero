@@ -1,0 +1,31 @@
+@import 'tailwindcss';
+@import 'uploadthing/tw/v4';
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	min-height: 100%;
+	color: #181c14;
+	background-color: #fff;
+	box-sizing: border-box;
+	scrollbar-width: none; /* Firefox */
+	-ms-overflow-style: none; /* IE 10+ */
+}
+
+::-webkit-scrollbar {
+	width: 0px;
+	height: 0px;
+}
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-thumb,
+::-webkit-scrollbar-thumb:hover {
+	background: transparent;
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: inherit;
+}
