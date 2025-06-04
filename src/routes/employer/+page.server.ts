@@ -22,7 +22,7 @@ export const load: PageServerLoad = async ({ request }) => {
 		.where(eq(employer.userId, session?.user.id));
 
 	return {
-		employerProfile,
+		employerProfile: employerProfile[0] || null,
 		hasEmployerProfile: employerProfile.length
 	};
 };
@@ -43,6 +43,7 @@ export const actions = {
 			const companyDescription = formData.get('description') as string;
 			const companyWebsite = formData.get('website') as string;
 			const contactEmail = formData.get('email') as string;
+			const companyLocation = formData.get('location') as string;
 
 			// Optional: email format validation
 			const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -58,6 +59,7 @@ export const actions = {
 				companyName,
 				companyDescription,
 				companyWebsite,
+				companyLocation,
 				contactEmail,
 				isVerified: true,
 				createdAt: new Date(),

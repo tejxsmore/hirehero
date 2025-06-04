@@ -27,7 +27,7 @@ export const actions = {
 			switch (response.status) {
 				case 422:
 					return fail(422, {
-						errorMessage: 'User already exists. Sign in using crednetials or use Google sign in'
+						errorMessage: 'User already exists. Signin using credentials or use Google signin'
 					});
 				case 400:
 					return fail(400, { errorMessage: 'Invalid email format or request.' });

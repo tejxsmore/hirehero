@@ -86,6 +86,7 @@ export const employer = pgTable('employer', {
 	companyName: text('company_name').notNull(),
 	companyDescription: text('company_description'),
 	companyWebsite: text('company_website'),
+	companyLocation: text('company_location').notNull(),
 	contactEmail: text('contact_email').notNull(),
 	isVerified: boolean('is_verified')
 		.$defaultFn(() => true)

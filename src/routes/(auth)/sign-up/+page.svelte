@@ -9,21 +9,21 @@
 </script>
 
 <div class="flex min-h-screen">
-	<div class="hidden bg-black md:block md:w-1/2"></div>
+	<div class="hidden bg-gradient-to-br from-[#A04747] to-[#FF4C29] md:block md:w-1/2"></div>
 
 	<div class="flex w-full justify-center p-8 md:w-1/2">
 		<div class="w-full max-w-md space-y-8">
-			<div class="py-8 text-center text-gray-800">
-				<a href="/" class="text-4xl font-bold">Hirehero</a>
-				<p class="pt-4 text-lg text-gray-600">Welcome! Sign up to continue</p>
+			<div class="py-8 text-center">
+				<a href="/" class="text-4xl font-black">HIREHERO</a>
+				<p class="pt-4 text-lg">Welcome! Sign up to continue</p>
 			</div>
 
 			<SocialAuthButton provider="google">Google</SocialAuthButton>
 
 			<div class="relative">
-				<hr class="border-gray-300" />
+				<hr class="border-[#6c6849]" />
 				<span
-					class="absolute top-[-12px] left-1/2 -translate-x-1/2 bg-white px-2 text-sm text-[#DDDDDD]"
+					class="absolute top-[-12px] left-1/2 -translate-x-1/2 bg-[#343131] px-2 text-sm text-[#6c6849]"
 				>
 					or
 				</span>
@@ -32,9 +32,10 @@
 			<form method="POST" class="space-y-4">
 				<div class="flex gap-4">
 					<div
-						class="flex flex-1 items-center rounded-[8px] border border-[#DDDDDD] bg-[#EEEEEE] px-4 py-2"
+						class="flex flex-1 items-center rounded-[8px] border border-[#D0DDD0] bg-[#F5F5F5] px-4 py-2 text-[#343131] focus-within:ring-2
+					focus-within:ring-[#D0DDD0]"
 					>
-						<User class="mr-4 h-4 w-4 text-gray-400" />
+						<User class="mr-4 h-4 w-4" />
 						<input
 							type="text"
 							name="firstname"
@@ -45,9 +46,10 @@
 						/>
 					</div>
 					<div
-						class="flex flex-1 items-center rounded-[8px] border border-[#DDDDDD] bg-[#EEEEEE] px-4 py-2"
+						class="flex flex-1 items-center rounded-[8px] border border-[#D0DDD0] bg-[#F5F5F5] px-4 py-2 text-[#343131] focus-within:ring-2
+					focus-within:ring-[#D0DDD0]"
 					>
-						<User class="mr-4 h-4 w-4 text-gray-400" />
+						<User class="mr-4 h-4 w-4" />
 						<input
 							type="text"
 							name="lastname"
@@ -59,8 +61,11 @@
 					</div>
 				</div>
 
-				<div class="flex items-center rounded-[8px] border border-[#DDDDDD] bg-[#EEEEEE] px-4 py-2">
-					<Mail class="mr-4 h-4 w-4 text-gray-400" />
+				<div
+					class="flex items-center rounded-[8px] border border-[#D0DDD0] bg-[#F5F5F5] px-4 py-2 text-[#343131] focus-within:ring-2
+					focus-within:ring-[#D0DDD0]"
+				>
+					<Mail class="mr-4 h-4 w-4" />
 					<input
 						type="email"
 						name="email"
@@ -71,8 +76,11 @@
 					/>
 				</div>
 
-				<div class="flex items-center rounded-[8px] border border-[#DDDDDD] bg-[#EEEEEE] px-4 py-2">
-					<Lock class="mr-4 h-4 w-4 text-gray-400" />
+				<div
+					class="flex items-center rounded-[8px] border border-[#D0DDD0] bg-[#F5F5F5] px-4 py-2 text-[#343131] focus-within:ring-2
+					focus-within:ring-[#D0DDD0]"
+				>
+					<Lock class="mr-4 h-4 w-4" />
 					<input
 						type={showPassword ? 'text' : 'password'}
 						name="password"
@@ -83,7 +91,7 @@
 					/>
 					<button
 						type="button"
-						class="ml-2 text-gray-400 hover:text-gray-600"
+						class="ml-2"
 						onclick={() => (showPassword = !showPassword)}
 						tabindex="-1"
 					>
@@ -97,23 +105,27 @@
 
 				<button
 					type="submit"
-					class="w-full cursor-pointer rounded-full border border-[#604CC3] bg-[#6256CA] p-2 text-white transition-colors duration-200 hover:bg-[#5C2FC2]"
+					class="w-full cursor-pointer rounded-full border border-[#E6521F]
+						bg-[#FF4C29] px-5 py-2 text-white transition-colors duration-200 hover:bg-[#EA2F14]"
 				>
 					Sign Up
 				</button>
 			</form>
 
-			<div class="text-center text-sm text-gray-600">
+			<div class="text-center text-gray-400">
 				<p>
 					Already have an account?
-					<a href="/sign-in" class="font-medium text-black hover:text-[#6256CA] hover:underline">
+					<a href="/sign-in" class="pl-2 font-medium hover:text-[#FF4C29] hover:underline">
 						Sign In
 					</a>
 				</p>
 			</div>
 
 			{#if form?.errorMessage}
-				<div class="rounded-[8px] border border-[#B82132] bg-[#D84040]/50 px-4 py-2">
+				<div
+					class="rounded-[8px] border border-red-400 bg-red-400/40
+				px-4 py-2"
+				>
 					<p class="flex gap-4">
 						<span><AlertCircle class="mt-1 h-4 w-4" /></span>
 						{form.errorMessage}
