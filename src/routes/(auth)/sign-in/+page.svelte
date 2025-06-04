@@ -11,11 +11,11 @@
 <div class="flex min-h-screen">
 	<div class="hidden bg-gradient-to-br from-[#A04747] to-[#FF4C29] md:block md:w-1/2"></div>
 
-	<div class="flex w-full justify-center p-8 md:w-1/2">
-		<div class="w-full max-w-md space-y-8">
-			<div class="py-8 text-center">
+	<div class="flex w-full justify-center p-5 md:w-1/2">
+		<div class="w-full max-w-md space-y-10">
+			<div class="py-5 text-center">
 				<a href="/" class="text-4xl font-black">HIREHERO</a>
-				<p class="pt-4 text-lg">Welcome! Sign in to continue</p>
+				<p class="pt-2.5 text-lg">Welcome! Sign in to continue</p>
 			</div>
 
 			<SocialAuthButton provider="google">Google</SocialAuthButton>
@@ -29,12 +29,12 @@
 				</span>
 			</div>
 
-			<form method="POST" class="space-y-4">
+			<form method="POST" class="space-y-5">
 				<div
-					class="flex items-center rounded-[8px] border border-[#D0DDD0] bg-[#F5F5F5] px-4 py-2 text-[#343131] focus-within:ring-2
+					class="flex items-center rounded-[10px] border border-[#D0DDD0] bg-[#F5F5F5] px-5 py-2 text-[#343131] focus-within:ring-2
 					focus-within:ring-[#D0DDD0]"
 				>
-					<Mail class="mr-4 h-4 w-4" />
+					<Mail class="mr-5 h-4 w-4" />
 					<input
 						type="email"
 						name="email"
@@ -46,10 +46,10 @@
 				</div>
 
 				<div
-					class="flex items-center rounded-[8px] border border-[#D0DDD0] bg-[#F5F5F5] px-4 py-2 text-[#343131] focus-within:ring-2
+					class="flex items-center rounded-[10px] border border-[#D0DDD0] bg-[#F5F5F5] px-5 py-2 text-[#343131] focus-within:ring-2
 					focus-within:ring-[#D0DDD0]"
 				>
-					<Lock class="mr-4 h-4 w-4 " />
+					<Lock class="mr-5 h-4 w-4" />
 					<input
 						type={showPassword ? 'text' : 'password'}
 						name="password"
@@ -60,7 +60,7 @@
 					/>
 					<button
 						type="button"
-						class="ml-2"
+						class="ml-5"
 						onclick={() => (showPassword = !showPassword)}
 						tabindex="-1"
 					>
@@ -81,26 +81,28 @@
 				</button>
 			</form>
 
-			<div class="text-center text-gray-400">
-				<p>
-					Don't have an account?
-					<a href="/sign-up" class="pl-2 font-medium hover:text-[#FF4C29] hover:underline">
-						Sign Up
-					</a>
-				</p>
-			</div>
-
-			{#if form?.errorMessage}
-				<div
-					class="rounded-[8px] border border-red-400 bg-red-400/40
-				px-4 py-2"
-				>
-					<p class="flex gap-4">
-						<span><AlertCircle class="mt-1 h-4 w-4" /></span>
-						{form.errorMessage}
+			<div class="space-y-2.5">
+				<div class="text-center text-gray-400">
+					<p>
+						Don't have an account?
+						<a href="/sign-up" class="pl-2 font-medium hover:text-[#FF4C29] hover:underline">
+							Sign Up
+						</a>
 					</p>
 				</div>
-			{/if}
+
+				{#if form?.errorMessage}
+					<div
+						class="rounded-[10px] border border-red-400 bg-red-400/40
+				px-4 py-2"
+					>
+						<p class="flex gap-4">
+							<span><AlertCircle class="mt-1 h-4 w-4" /></span>
+							{form.errorMessage}
+						</p>
+					</div>
+				{/if}
+			</div>
 		</div>
 	</div>
 </div>

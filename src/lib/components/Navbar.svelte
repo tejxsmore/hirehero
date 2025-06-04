@@ -42,13 +42,13 @@
 </script>
 
 <nav class="relative">
-	<div class="flex items-center justify-between p-4">
+	<div class="flex items-center justify-between p-5">
 		<div class="flex">
-			<a href="/" class="text-4xl font-black">HIREHERO</a>
+			<a href="/" class="mb-1 text-4xl font-black">HIREHERO</a>
 		</div>
 
 		<!-- Desktop Navigation -->
-		<div class="hidden gap-8 md:flex">
+		<div class="hidden gap-10 md:flex">
 			<a href="/jobs" class="transition-colors hover:text-[#FF4C29]">Jobs</a>
 			<a href="/jobs/companies" class="transition-colors hover:text-[#FF4C29]">Companies</a>
 			<a href="/jobs/salary" class="transition-colors hover:text-[#FF4C29]">Salary</a>
@@ -56,12 +56,12 @@
 		</div>
 
 		<!-- Desktop User Actions -->
-		<div class="hidden items-center gap-4 md:flex">
+		<div class="hidden items-center md:flex">
 			{#if $userStore}
 				<a
 					href="/employer"
 					class="cursor-pointer rounded-full border border-[#E6521F]
-					bg-[#FF4C29] px-5 py-2 text-white transition-colors duration-200 hover:bg-[#EA2F14]"
+					bg-[#FF4C29] px-5 py-2 text-white transition-colors duration-100 hover:bg-[#EA2F14]"
 				>
 					Employer
 				</a>
@@ -69,7 +69,7 @@
 				<a
 					href="/sign-in"
 					class="cursor-pointer rounded-full border border-[#E6521F]
-					bg-[#FF4C29] px-5 py-2 text-white transition-colors duration-200 hover:bg-[#EA2F14]"
+					bg-[#FF4C29] px-5 py-2 text-white transition-colors duration-100 hover:bg-[#EA2F14]"
 				>
 					Sign In
 				</a>
@@ -79,12 +79,12 @@
 		<!-- Mobile Menu Button -->
 		<button
 			onclick={() => (mobileMenu = !mobileMenu)}
-			class="cursor-pointer rounded-[8px] p-2 transition-colors focus:ring-2 focus:ring-[#FF4C29] focus:outline-none md:hidden"
+			class="cursor-pointer rounded-[10px] transition-colors focus:outline-none md:hidden"
 			aria-label="Toggle mobile menu"
 			aria-expanded={mobileMenu}
 		>
 			<svg
-				class="h-6 w-6"
+				class="h-8 w-8"
 				fill="none"
 				stroke="currentColor"
 				viewBox="0 0 24 24"
@@ -133,7 +133,7 @@
 			role="menu"
 			aria-orientation="vertical"
 		>
-			<div class="flex flex-col space-y-4 p-4">
+			<div class="flex flex-col space-y-5 p-5">
 				<!-- Mobile Navigation Links -->
 				<a
 					href="/jobs"

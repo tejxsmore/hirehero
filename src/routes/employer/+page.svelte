@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { Mail, Globe, Building2, Users, MapPin, AlertCircle } from '@lucide/svelte';
 	import { goto } from '$app/navigation';
-	import SignOutButton from '$lib/components/auth/SignOutButton.svelte';
 
 	const { data } = $props();
 	const { employerProfile, hasEmployerProfile } = data;
@@ -18,8 +17,8 @@
 		<Dashboard employer={employerProfile} />
 	{:else}
 		<div class="flex w-full justify-center">
-			<div class="w-full max-w-lg space-y-8 p-8">
-				<div class="space-y-2 py-4 text-center">
+			<div class="w-full max-w-lg space-y-10 p-5">
+				<div class="space-y-2.5 py-5 text-center">
 					<p class="text-xl font-semibold">Join as an Employer</p>
 					<p class="text-gray-400">Connect with top talent and grow your team</p>
 				</div>
@@ -30,9 +29,9 @@
 					<div class="space-y-1">
 						<label for="name" class="block text-sm"> Company Name * </label>
 						<div
-							class="flex items-center rounded-[8px] border border-[#D0DDD0] bg-[#F5F5F5] px-4 py-2 text-[#343131] focus-within:ring-2 focus-within:ring-[#D0DDD0]"
+							class="flex items-center rounded-[10px] border border-[#D0DDD0] bg-[#F5F5F5] px-5 py-2 text-[#343131] focus-within:ring-2 focus-within:ring-[#D0DDD0]"
 						>
-							<Building2 class="mr-4 h-4 w-4 " />
+							<Building2 class="mr-5 h-4 w-4 " />
 							<input
 								type="text"
 								name="name"
@@ -48,7 +47,7 @@
 					<div class="space-y-1">
 						<label for="description" class="block text-sm"> Company Description * </label>
 						<div
-							class="flex resize-none items-center rounded-[8px] border border-[#D0DDD0] bg-[#F5F5F5] px-4 py-2 text-[#343131] focus-within:ring-2 focus-within:ring-[#D0DDD0]"
+							class="flex resize-none items-center rounded-[10px] border border-[#D0DDD0] bg-[#F5F5F5] px-5 py-2 text-[#343131] focus-within:ring-2 focus-within:ring-[#D0DDD0]"
 						>
 							<textarea
 								name="description"
@@ -66,9 +65,9 @@
 					<div class="space-y-1">
 						<label for="website" class="block text-sm"> Company Website </label>
 						<div
-							class="flex items-center rounded-[8px] border border-[#D0DDD0] bg-[#F5F5F5] px-4 py-2 text-[#343131] focus-within:ring-2 focus-within:ring-[#D0DDD0]"
+							class="flex items-center rounded-[10px] border border-[#D0DDD0] bg-[#F5F5F5] px-5 py-2 text-[#343131] focus-within:ring-2 focus-within:ring-[#D0DDD0]"
 						>
-							<Globe class="mr-4 h-4 w-4" />
+							<Globe class="mr-5 h-4 w-4" />
 							<input
 								type="url"
 								name="website"
@@ -83,9 +82,9 @@
 					<div class="space-y-1">
 						<label for="email" class="block text-sm"> Contact Email * </label>
 						<div
-							class="flex items-center rounded-[8px] border border-[#D0DDD0] bg-[#F5F5F5] px-4 py-2 text-[#343131] focus-within:ring-2 focus-within:ring-[#D0DDD0]"
+							class="flex items-center rounded-[10px] border border-[#D0DDD0] bg-[#F5F5F5] px-5 py-2 text-[#343131] focus-within:ring-2 focus-within:ring-[#D0DDD0]"
 						>
-							<Mail class="mr-4 h-4 w-4" />
+							<Mail class="mr-5 h-4 w-4" />
 							<input
 								type="email"
 								name="email"
@@ -102,9 +101,9 @@
 					<div class="space-y-1">
 						<label for="location" class="block text-sm"> Location </label>
 						<div
-							class="flex items-center rounded-[8px] border border-[#D0DDD0] bg-[#F5F5F5] px-4 py-2 text-[#343131] focus-within:ring-2 focus-within:ring-[#D0DDD0]"
+							class="flex items-center rounded-[10px] border border-[#D0DDD0] bg-[#F5F5F5] px-5 py-2 text-[#343131] focus-within:ring-2 focus-within:ring-[#D0DDD0]"
 						>
-							<MapPin class="mr-4 h-4 w-4 " />
+							<MapPin class="mr-5 h-4 w-4 " />
 							<input
 								type="text"
 								name="location"
@@ -117,7 +116,7 @@
 					</div>
 
 					<!-- Terms and Conditions -->
-					<div class="flex items-start space-x-3">
+					<div class="flex items-start space-x-2.5">
 						<input
 							type="checkbox"
 							name="terms"
@@ -137,15 +136,15 @@
 					<!-- Submit Button -->
 					<button
 						type="submit"
-						class="w-full cursor-pointer rounded-full border border-[#E6521F] bg-[#FF4C29] px-4 py-2 font-medium text-white transition-all duration-200 hover:bg-[#EA2F14] hover:shadow-lg focus:ring-2 focus:ring-[#FF4C29]/50 focus:outline-none"
+						class="w-full cursor-pointer rounded-full border border-[#E6521F] bg-[#FF4C29] px-5 py-2 font-medium text-white transition-all duration-100 hover:bg-[#EA2F14] focus:outline-none"
 					>
 						Create Employer Profile
 					</button>
 				</form>
 
 				<!-- Help Text -->
-				<div class="mt-6 rounded-lg bg-gray-50">
-					<h3 class="mb-2 text-sm font-medium text-gray-700">Need Help?</h3>
+				<div class="mt-5">
+					<h3 class="mb-2.5 text-sm font-medium text-gray-700">Need Help?</h3>
 					<p class="text-xs text-gray-600">
 						Contact our support team at <a
 							href="mailto:support@hirehero.com"
