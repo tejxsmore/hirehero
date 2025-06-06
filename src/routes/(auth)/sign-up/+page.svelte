@@ -21,9 +21,10 @@
 			<SocialAuthButton provider="google">Google</SocialAuthButton>
 
 			<div class="relative">
-				<hr class="border-[#6c6849]" />
+				<hr class="border-[#DDDDDD]" />
 				<span
-					class="absolute top-[-12px] left-1/2 -translate-x-1/2 bg-[#343131] px-2 text-sm text-[#6c6849]"
+					class="absolute top-[-12px] left-1/2 -translate-x-1/2 bg-white
+					px-2.5 text-sm text-[#DDDDDD]"
 				>
 					or
 				</span>
@@ -32,10 +33,10 @@
 			<form method="POST" class="space-y-5">
 				<div class="flex gap-5">
 					<div
-						class="flex flex-1 items-center rounded-[10px] border border-[#D0DDD0] bg-[#F5F5F5] px-4 py-2 text-[#343131] focus-within:ring-2
-					focus-within:ring-[#D0DDD0]"
+						class="flex flex-1 items-center rounded-[10px] border border-[#DDDDDD] bg-[#EEEEEE] px-5 py-2.5 focus-within:ring-2
+					   focus-within:ring-[#DDDDDD]"
 					>
-						<User class="mr-4 h-4 w-4" />
+						<User class="mr-5 h-4 w-4" />
 						<input
 							type="text"
 							name="firstname"
@@ -46,10 +47,10 @@
 						/>
 					</div>
 					<div
-						class="flex flex-1 items-center rounded-[10px] border border-[#D0DDD0] bg-[#F5F5F5] px-4 py-2 text-[#343131] focus-within:ring-2
-					focus-within:ring-[#D0DDD0]"
+						class="flex flex-1 items-center rounded-[10px] border border-[#DDDDDD] bg-[#EEEEEE] px-5 py-2.5 focus-within:ring-2
+					  focus-within:ring-[#DDDDDD]"
 					>
-						<User class="mr-4 h-4 w-4" />
+						<User class="mr-5 h-4 w-4" />
 						<input
 							type="text"
 							name="lastname"
@@ -62,10 +63,10 @@
 				</div>
 
 				<div
-					class="flex items-center rounded-[10px] border border-[#D0DDD0] bg-[#F5F5F5] px-4 py-2 text-[#343131] focus-within:ring-2
-					focus-within:ring-[#D0DDD0]"
+					class="flex items-center rounded-[10px] border border-[#DDDDDD] bg-[#EEEEEE] px-5 py-2.5 focus-within:ring-2
+					focus-within:ring-[#DDDDDD]"
 				>
-					<Mail class="mr-4 h-4 w-4" />
+					<Mail class="mr-5 h-4 w-4 text-gray-400" />
 					<input
 						type="email"
 						name="email"
@@ -77,10 +78,10 @@
 				</div>
 
 				<div
-					class="flex items-center rounded-[10px] border border-[#D0DDD0] bg-[#F5F5F5] px-4 py-2 text-[#343131] focus-within:ring-2
-					focus-within:ring-[#D0DDD0]"
+					class="flex items-center rounded-[10px] border border-[#DDDDDD] bg-[#EEEEEE] px-5 py-2.5 focus-within:ring-2
+					focus-within:ring-[#DDDDDD]"
 				>
-					<Lock class="mr-4 h-4 w-4" />
+					<Lock class="mr-5 h-4 w-4 text-gray-400" />
 					<input
 						type={showPassword ? 'text' : 'password'}
 						name="password"
@@ -91,14 +92,14 @@
 					/>
 					<button
 						type="button"
-						class="ml-2"
+						class="ml-5 cursor-pointer text-gray-400"
 						onclick={() => (showPassword = !showPassword)}
 						tabindex="-1"
 					>
 						{#if showPassword}
-							<EyeOff class="h-4 w-4 cursor-pointer" />
+							<EyeOff class="h-4 w-4 " />
 						{:else}
-							<Eye class="h-4 w-4 cursor-pointer" />
+							<Eye class="h-4 w-4 " />
 						{/if}
 					</button>
 				</div>
@@ -106,17 +107,17 @@
 				<button
 					type="submit"
 					class="w-full cursor-pointer rounded-full border border-[#E6521F]
-						bg-[#FF4C29] px-5 py-2 text-white transition-colors duration-200 hover:bg-[#EA2F14]"
+						bg-[#FF4C29] px-5 py-2.5 text-white transition-colors duration-200 hover:bg-[#EA2F14]"
 				>
 					Sign Up
 				</button>
 			</form>
 
 			<div class="space-y-2.5">
-				<div class="text-center text-gray-400">
+				<div class="text-center text-gray-700">
 					<p>
 						Already have an account?
-						<a href="/sign-in" class="pl-2 font-medium hover:text-[#FF4C29] hover:underline">
+						<a href="/sign-in" class="pl-2.5 font-medium hover:text-[#FF4C29] hover:underline">
 							Sign In
 						</a>
 					</p>
@@ -124,11 +125,11 @@
 
 				{#if form?.errorMessage}
 					<div
-						class="rounded-[10px] border border-red-400 bg-red-400/40
-				px-4 py-2"
+						class="rounded-[10px] border border-red-700 bg-red-400/60
+						px-5 py-2.5 text-red-700"
 					>
-						<p class="flex gap-4">
-							<span><AlertCircle class="mt-1 h-4 w-4" /></span>
+						<p class="flex items-center">
+							<span><AlertCircle class="mr-5 h-4 w-4" /></span>
 							{form.errorMessage}
 						</p>
 					</div>

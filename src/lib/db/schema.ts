@@ -1,13 +1,6 @@
 import { pgTable, text, timestamp, boolean, numeric, json } from 'drizzle-orm/pg-core';
 
 //
-// Optional enums for safety and consistency
-//
-export const jobTypeEnum = ['Full-time', 'Part-time', 'Contract', 'Internship'] as const;
-export const locationTypeEnum = ['Remote', 'Onsite', 'Hybrid'] as const;
-export const salaryTypeEnum = ['Annual', 'Monthly', 'Hourly'] as const;
-
-//
 // User Table
 //
 export const user = pgTable('user', {
@@ -84,7 +77,7 @@ export const employer = pgTable('employer', {
 		.notNull()
 		.references(() => user.id, { onDelete: 'cascade' }),
 	companyName: text('company_name').notNull(),
-	companyDescription: text('company_description'),
+	companyDescription: text('company_description').notNull(),
 	companyWebsite: text('company_website'),
 	companyLocation: text('company_location').notNull(),
 	contactEmail: text('contact_email').notNull(),
@@ -111,25 +104,24 @@ export const job = pgTable('job', {
 		.references(() => employer.id, { onDelete: 'cascade' }),
 
 	// Job metadata
-	slug: text('slug').notNull().unique(), // SEO-friendly unique identifier
 	title: text('title').notNull(),
 	description: text('description').notNull(),
-	type: text('type').$type<(typeof jobTypeEnum)[number]>().notNull(), // enum: job type
+	type: text('type').notNull(),
 	category: text('category'),
 
 	// Compensation
-	salaryMin: numeric('salary_min'),
-	salaryMax: numeric('salary_max'),
+	salaryMin: numeric('salary_min').notNull(),
+	salaryMax: numeric('salary_max').notNull(),
 	salaryCurrency: text('salary_currency').default('INR'),
-	salaryType: text('salary_type').$type<(typeof salaryTypeEnum)[number]>(),
+	salaryType: text('salary_type').notNull(),
 
 	// Requirements
-	experienceLevel: text('experience_level'), // 'Entry', 'Mid', 'Senior'
+	experienceLevel: text('experience_level'),
 	educationLevel: text('education_level'),
-	skills: json('skills').$type<string[]>(), // JSON array of skill names
+	skills: json('skills').$type<string[]>(),
 
 	// Location info
-	locationType: text('location_type').$type<(typeof locationTypeEnum)[number]>().notNull(),
+	locationType: text('location_type').notNull(),
 	country: text('country'),
 	city: text('city'),
 	address: text('address'),
@@ -145,7 +137,7 @@ export const job = pgTable('job', {
 	isArchived: boolean('is_archived')
 		.$defaultFn(() => false)
 		.notNull(),
-	jobStatus: text('job_status').default('draft').notNull(), // e.g., draft, published, archived
+	jobStatus: text('job_status').default('draft').notNull(),
 	postedAt: timestamp('posted_at').$defaultFn(() => new Date()),
 	expiresAt: timestamp('expires_at'),
 

@@ -42,7 +42,7 @@
 </script>
 
 <nav class="relative">
-	<div class="flex items-center justify-between p-5">
+	<div class="flex items-center justify-between border-b border-[#DDDDDD] p-5">
 		<div class="flex">
 			<a href="/" class="mb-1 text-4xl font-black">HIREHERO</a>
 		</div>
@@ -61,7 +61,7 @@
 				<a
 					href="/employer"
 					class="cursor-pointer rounded-full border border-[#E6521F]
-					bg-[#FF4C29] px-5 py-2 text-white transition-colors duration-100 hover:bg-[#EA2F14]"
+					bg-[#FF4C29] px-5 py-2.5 text-white transition-colors duration-100 hover:bg-[#EA2F14]"
 				>
 					Employer
 				</a>
@@ -69,7 +69,7 @@
 				<a
 					href="/sign-in"
 					class="cursor-pointer rounded-full border border-[#E6521F]
-					bg-[#FF4C29] px-5 py-2 text-white transition-colors duration-100 hover:bg-[#EA2F14]"
+					bg-[#FF4C29] px-5 py-2.5 text-white transition-colors duration-100 hover:bg-[#EA2F14]"
 				>
 					Sign In
 				</a>
@@ -129,7 +129,7 @@
 	<!-- Mobile Menu Overlay -->
 	{#if mobileMenu}
 		<div
-			class="absolute top-full right-0 left-0 z-50 bg-[#343131] shadow-lg transition-all duration-300 ease-out md:hidden"
+			class="absolute top-full right-0 left-0 z-50 border-b border-[#DDDDDD] bg-white shadow-sm transition-all duration-300 ease-out md:hidden"
 			role="menu"
 			aria-orientation="vertical"
 		>
@@ -138,7 +138,7 @@
 				<a
 					href="/jobs"
 					onclick={closeMobileMenu}
-					class="block py-2 transition-colors hover:text-[#FF4C29]"
+					class="block py-2.5 transition-colors hover:text-[#FF4C29]"
 					role="menuitem"
 				>
 					Jobs
@@ -146,7 +146,7 @@
 				<a
 					href="/jobs/companies"
 					onclick={closeMobileMenu}
-					class="block py-2 transition-colors hover:text-[#FF4C29]"
+					class="block py-2.5 transition-colors hover:text-[#FF4C29]"
 					role="menuitem"
 				>
 					Companies
@@ -154,7 +154,7 @@
 				<a
 					href="/jobs/salary"
 					onclick={closeMobileMenu}
-					class="block py-2 transition-colors hover:text-[#FF4C29]"
+					class="block py-2.5 transition-colors hover:text-[#FF4C29]"
 					role="menuitem"
 				>
 					Salary
@@ -162,7 +162,7 @@
 				<a
 					href="/jobs/resources"
 					onclick={closeMobileMenu}
-					class="block py-2 transition-colors hover:text-[#FF4C29]"
+					class="block py-2.5 transition-colors hover:text-[#FF4C29]"
 					role="menuitem"
 				>
 					Resources
@@ -174,7 +174,7 @@
 						<a
 							onclick={closeMobileMenu}
 							href="/employer"
-							class="block w-full cursor-pointer rounded-full border border-[#E6521F] bg-[#FF4C29] px-5 py-2 text-center text-white transition-colors duration-200
+							class="block w-full cursor-pointer rounded-full border border-[#E6521F] bg-[#FF4C29] px-5 py-2.5 text-center text-white transition-colors duration-200
 							hover:bg-[#EA2F14]"
 							role="menuitem"
 						>
@@ -184,7 +184,7 @@
 						<a
 							onclick={closeMobileMenu}
 							href="/sign-in"
-							class="block w-full cursor-pointer rounded-full border border-[#E6521F] bg-[#FF4C29] px-5 py-2 text-center text-white transition-colors duration-200
+							class="block w-full cursor-pointer rounded-full border border-[#E6521F] bg-[#FF4C29] px-5 py-2.5 text-center text-white transition-colors duration-200
 							hover:bg-[#EA2F14]"
 							role="menuitem"
 						>

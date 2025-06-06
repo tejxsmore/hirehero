@@ -14,7 +14,7 @@
 </script>
 
 <button
-	class="flex w-full cursor-pointer items-center justify-center gap-4 rounded-[10px] border border-[#6c6849] bg-[#706D54] p-2 delay-100 hover:bg-[#6c6849]"
+	class="flex w-full cursor-pointer items-center justify-center gap-5 rounded-[10px] border border-[#DDDDDD] bg-[#EEEEEE] p-2.5 delay-100 hover:bg-[#DDDDDD]"
 	onclick={async () => {
 		await signIn.social({
 			provider,

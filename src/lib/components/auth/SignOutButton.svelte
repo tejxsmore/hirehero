@@ -15,4 +15,4 @@
 	}
 </script>
 
-<button onclick={handleSignOut} class=""> Sign Out </button>
+<button onclick={handleSignOut} class="rounded-[10px] border px-5 py-2.5"> Sign Out </button>
