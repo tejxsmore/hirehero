@@ -149,3 +149,59 @@ export const job = pgTable('job', {
 		.$defaultFn(() => new Date())
 		.notNull()
 });
+
+//
+// Application Table
+//
+export const application = pgTable('application', {
+	id: text('id').primaryKey(),
+
+	// Foreign keys
+	userId: text('user_id')
+		.notNull()
+		.references(() => user.id, { onDelete: 'cascade' }),
+	jobId: text('job_id')
+		.notNull()
+		.references(() => job.id, { onDelete: 'cascade' }),
+
+	// Application details
+	status: text('status').default('pending').notNull(), // pending, accepted, rejected, withdrawn
+	resumeUrl: text('resume_url'),
+	coverLetter: text('cover_letter'),
+	additionalInfo: json('additional_info').$type<Record<string, any>>(),
+
+	// Tracking
+	isWithdrawn: boolean('is_withdrawn')
+		.$defaultFn(() => false)
+		.notNull(),
+	appliedAt: timestamp('applied_at')
+		.$defaultFn(() => new Date())
+		.notNull(),
+
+	// Timestamps
+	createdAt: timestamp('created_at')
+		.$defaultFn(() => new Date())
+		.notNull(),
+	updatedAt: timestamp('updated_at')
+		.$defaultFn(() => new Date())
+		.notNull()
+});
+
+//
+// Message Table
+//
+export const message = pgTable('message', {
+	id: text('id').primaryKey(),
+
+	fromUserId: text('from_user_id')
+		.notNull()
+		.references(() => user.id, { onDelete: 'cascade' }),
+	toUserId: text('to_user_id')
+		.notNull()
+		.references(() => user.id, { onDelete: 'cascade' }),
+
+	text: text('text').notNull(),
+	isRead: boolean('is_read').default(false).notNull(),
+
+	createdAt: timestamp('created_at').defaultNow().notNull()
+});

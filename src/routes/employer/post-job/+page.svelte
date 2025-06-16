@@ -668,7 +668,7 @@
 				<div class="flex gap-5">
 					<button
 						type="button"
-						class="cursor-pointer rounded-full border border-[#272829] bg-[#0f0f0f] px-5 py-2.5 font-medium text-[#6c757d] transition-all duration-100 hover:bg-gray-50 focus:outline-none"
+						class="cursor-pointer rounded-full border border-[#272829] bg-[#0f0f0f] px-5 py-2.5 text-[#6c757d] transition-all duration-100 hover:bg-gray-50 focus:outline-none"
 					>
 						Cancel
 					</button>

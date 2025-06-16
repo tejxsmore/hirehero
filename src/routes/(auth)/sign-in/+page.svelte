@@ -80,9 +80,7 @@
 				<div class="text-center text-[#6c757d]">
 					<p>
 						Don't have an account?
-						<a href="/sign-up" class="pl-2.5 font-medium hover:text-[#00FFAB] hover:underline">
-							Sign Up
-						</a>
+						<a href="/sign-up" class="pl-2.5 hover:text-[#00FFAB] hover:underline"> Sign Up </a>
 					</p>
 				</div>
 

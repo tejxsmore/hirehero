@@ -15,4 +15,9 @@
 	}
 </script>
 
-<button onclick={handleSignOut} class="rounded-[10px] border px-5 py-2.5"> Sign Out </button>
+<button
+	onclick={handleSignOut}
+	class="cursor-pointer rounded-[10px] border border-red-400 bg-red-400/40 px-5 py-2.5"
+>
+	Sign Out
+</button>

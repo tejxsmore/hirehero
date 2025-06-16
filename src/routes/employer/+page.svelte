@@ -3,7 +3,7 @@
 	import { goto } from '$app/navigation';
 
 	const { data } = $props();
-	const { employerProfile, hasEmployerProfile, jobsPosted } = data;
+	const { employerProfile, hasEmployerProfile, jobsPosted, applications } = data;
 
 	import { userStore } from '$lib/stores/user.js';
 	import Dashboard from './Dashboard.svelte';
@@ -15,7 +15,7 @@
 
 <div class="flex min-h-screen bg-black">
 	{#if hasEmployerProfile}
-		<Dashboard employer={employerProfile} jobs={jobsPosted} />
+		<Dashboard employer={employerProfile} jobs={jobsPosted} {applications} />
 	{:else}
 		<div class="flex w-full justify-center p-5">
 			<div

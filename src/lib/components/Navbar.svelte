@@ -60,14 +60,14 @@
 			{#if $userStore}
 				<a
 					href="/employer"
-					class="cursor-pointer rounded-full border border-[#14C38E] bg-[#00FFAB] px-7.5 py-2.5 font-medium text-[#0f0f0f] transition-colors duration-200 hover:bg-[#15F5BA]"
+					class="cursor-pointer rounded-full border border-[#14C38E] bg-[#00FFAB] px-7.5 py-2.5 text-[#0f0f0f] transition-colors duration-200 hover:bg-[#15F5BA]"
 				>
 					Employer
 				</a>
 			{:else}
 				<a
 					href="/sign-in"
-					class="cursor-pointer rounded-full border border-[#14C38E] bg-[#00FFAB] px-7.5 py-2.5 font-medium text-[#0f0f0f] transition-colors duration-200 hover:bg-[#15F5BA]"
+					class="cursor-pointer rounded-full border border-[#14C38E] bg-[#00FFAB] px-7.5 py-2.5 text-[#0f0f0f] transition-colors duration-200 hover:bg-[#15F5BA]"
 				>
 					Sign In
 				</a>
@@ -172,7 +172,7 @@
 						<a
 							onclick={closeMobileMenu}
 							href="/employer"
-							class="block w-full cursor-pointer rounded-full border border-[#14C38E] bg-[#00FFAB] px-7.5 py-2.5 text-center font-medium text-[#0f0f0f] transition-colors duration-200 hover:bg-[#15F5BA]"
+							class="block w-full cursor-pointer rounded-full border border-[#14C38E] bg-[#00FFAB] px-7.5 py-2.5 text-center text-[#0f0f0f] transition-colors duration-200 hover:bg-[#15F5BA]"
 							role="menuitem"
 						>
 							Employer
@@ -181,7 +181,7 @@
 						<a
 							onclick={closeMobileMenu}
 							href="/sign-in"
-							class="block w-full cursor-pointer rounded-full border border-[#14C38E] bg-[#00FFAB] px-7.5 py-2.5 text-center font-medium text-[#0f0f0f] transition-colors duration-200 hover:bg-[#15F5BA]"
+							class="block w-full cursor-pointer rounded-full border border-[#14C38E] bg-[#00FFAB] px-7.5 py-2.5 text-center text-[#0f0f0f] transition-colors duration-200 hover:bg-[#15F5BA]"
 							role="menuitem"
 						>
 							Sign In

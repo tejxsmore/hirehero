@@ -109,9 +109,7 @@
 				<div class="text-center text-[#6c757d]">
 					<p>
 						Already have an account?
-						<a href="/sign-in" class="pl-2.5 font-medium hover:text-[#00FFAB] hover:underline">
-							Sign In
-						</a>
+						<a href="/sign-in" class="pl-2.5 hover:text-[#00FFAB] hover:underline"> Sign In </a>
 					</p>
 				</div>
 

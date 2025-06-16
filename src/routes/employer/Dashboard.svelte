@@ -12,13 +12,13 @@
 		MessageCircle,
 		ChevronDown,
 		Check,
-		MapPin,
-		Clock,
 		Eye
 	} from '@lucide/svelte';
 	import SignOutButton from '$lib/components/auth/SignOutButton.svelte';
+	import Jobs from './Jobs.svelte';
+	import { application } from '$lib/db/schema';
 
-	const { employer, jobs } = $props();
+	const { employer, jobs, applications } = $props();
 
 	type ViewKey =
 		| 'dashboard'
@@ -69,7 +69,7 @@
 
 <svelte:window on:click={handleClickOutside} on:keydown={handleKeydown} />
 
-<div class="flex min-h-screen w-full bg-gray-50">
+<div class="flex min-h-screen w-full overflow-y-auto bg-gray-50">
 	<!-- Desktop Sidebar -->
 	<aside
 		class="hidden w-72 flex-col space-y-5 border-r border-[#272829]
@@ -146,37 +146,37 @@
 
 		<!-- View-specific content -->
 		{#if activeView === 'dashboard'}
-			<div class="flex flex-col gap-5 md:justify-between lg:flex-row">
+			<div class="flex justify-between gap-5">
 				<h2 class="text-3xl font-bold">Dashboard</h2>
-				<div class="flex flex-col gap-5 sm:flex-row">
+				<div class="flex gap-5">
 					<a
 						href={`/employer/post-job`}
-						class="flex w-full items-center gap-5 rounded-[10px] border border-[#272829] bg-[#0f0f0f] px-5 py-2.5 text-white hover:text-[#00FFAB]"
+						class="flex w-full items-center gap-5 rounded-[10px] border border-[#272829] bg-[#0f0f0f] p-2.5 hover:text-[#00FFAB] sm:px-5"
 					>
-						<Plus size="16" />
-						Post Job
+						<Plus size="16" class="flex-shrink-0" />
+						<span class="hidden lg:inline">Post Job</span>
 					</a>
 					<div
-						class="flex w-full items-center gap-5 rounded-[10px] border border-[#272829] bg-[#191919] px-5 py-2"
+						class="flex w-full items-center gap-5 rounded-[10px] border border-[#272829] bg-[#0f0f0f] p-2.5 sm:px-5"
 					>
-						<Search size="16" class="text-[#454545]" />
+						<Search size="16" class="" />
 						<input
 							type="text"
 							name="search"
 							placeholder="Search candidates"
-							class=" placeholder:text-[#454545] focus:outline-none"
+							class=" hidden placeholder:text-[#454545] focus:outline-none sm:inline"
 						/>
 					</div>
 				</div>
 			</div>
-			<div class="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-4">
+			<div class="grid grid-cols-2 gap-5 lg:grid-cols-4">
 				<div
 					class="rounded-[15px] border
 				border-[#272829] bg-[#0f0f0f] p-5"
 				>
-					<p class="flex items-center justify-between">
+					<p class="flex justify-between gap-5">
 						Active Jobs
-						<span><Briefcase size="16" /></span>
+						<span><Briefcase size="16" class="mt-1" /></span>
 					</p>
 					<h2 class="pt-5 text-3xl font-bold">
 						{jobs.length}
@@ -187,9 +187,9 @@
 					class="rounded-[15px] border
 				border-[#272829] bg-[#0f0f0f] p-5"
 				>
-					<p class="flex items-center justify-between">
+					<p class="flex justify-between gap-5">
 						Total Applications
-						<span><Users size="16" /></span>
+						<span><Users size="16" class="mt-1" /></span>
 					</p>
 					<h2 class="pt-5 text-3xl font-bold">
 						{jobs.length}
@@ -200,9 +200,9 @@
 					class="rounded-[15px] border
 				border-[#272829] bg-[#0f0f0f] p-5"
 				>
-					<p class="flex items-center justify-between">
+					<p class="flex justify-between gap-5">
 						Profile Views
-						<span><Eye size="16" /></span>
+						<span><Eye size="16" class="mt-1" /></span>
 					</p>
 					<h2 class="pt-5 text-3xl font-bold">
 						{jobs.length}
@@ -213,9 +213,9 @@
 					class="rounded-[15px] border
 				border-[#272829] bg-[#0f0f0f] p-5"
 				>
-					<p class="flex items-center justify-between">
+					<p class="flex justify-between gap-5">
 						Interviews Scheduled
-						<span><Calendar size="16" /></span>
+						<span><Calendar size="16" class="mt-1" /></span>
 					</p>
 					<h2 class="pt-5 text-3xl font-bold">
 						{jobs.length}
@@ -223,36 +223,38 @@
 					<p class="text-sm text-[#454545]">+2 from last month</p>
 				</div>
 			</div>
-		{:else if activeView === 'jobs'}
-			<div class="space-y-5">
-				<h2 class="text-3xl font-bold">Jobs</h2>
-				<div class="space-y-5">
+			<div class="grid gap-5 md:grid-cols-2">
+				<div class="space-y-5 rounded-[15px] border border-[#272829] bg-[#0f0f0f] p-5">
+					<div class="flex items-center justify-between">
+						<h2 class="text-xl font-semibold">Applications</h2>
+						<button
+							class="cursor-pointer rounded-[10px] border border-[#272829] bg-[#191919] px-3 py-1.5 hover:bg-[#0f0f0f]"
+							>View</button
+						>
+					</div>
+					{#if application}{/if}
+				</div>
+				<div class="space-y-5 rounded-[15px] border border-[#272829] bg-[#0f0f0f] p-5">
+					<div class="flex items-center justify-between">
+						<h2 class="text-xl font-semibold">Active Job Postings</h2>
+						<button
+							class="cursor-pointer rounded-[10px] border border-[#272829] bg-[#191919] px-3 py-1.5 hover:bg-[#0f0f0f]"
+							>Manage</button
+						>
+					</div>
 					{#if jobs[0]}
-						{#each jobs as job}
-							<div
-								class="space-y-5 rounded-[10px]
-							border border-[#272829] bg-[#0f0f0f] p-5"
-							>
-								<a href={`/jobs/${job.id}`} class="text-lg font-semibold">{job.title}</a>
-								<div class="flex flex-wrap gap-5">
-									<div class="flex items-center gap-2.5">
-										<MapPin size="16" />
-										{#if job.city}
-											{`${job.city}, ${job.country}`}
-										{:else}
-											Remote
-										{/if}
-									</div>
-									<div class="flex items-center gap-2.5">
-										<Clock size="16" />
-										{job.type}
-									</div>
+						<div class="space-y-5">
+							{#each jobs.filter((job: any) => job.jobStatus === 'published') as job}
+								<div class="rounded-[10px] border border-[#272829] p-5">
+									<h2>{job.title}</h2>
 								</div>
-							</div>
-						{/each}
+							{/each}
+						</div>
 					{/if}
 				</div>
 			</div>
+		{:else if activeView === 'jobs'}
+			<Jobs {jobs} />
 		{:else if activeView === 'applications'}
 			<!-- Application content -->
 		{:else if activeView === 'messages'}

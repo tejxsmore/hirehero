@@ -1,19 +1,21 @@
-import { auth } from '$lib/auth';
-import { job } from '$lib/db/schema';
+import { job, employer } from '$lib/db/schema';
 import { db } from '$lib/db';
 import type { PageServerLoad } from './$types';
-import { redirect } from '@sveltejs/kit';
+import { eq } from 'drizzle-orm';
 
 export const load: PageServerLoad = async ({ request }) => {
-	const session = await auth.api.getSession({
-		headers: request.headers
-	});
-
-	if (!session) {
-		redirect(302, '/sign-in');
-	}
-
-	const jobs = await db.select().from(job);
+	const jobs = await db
+		.select({
+			id: job.id,
+			title: job.title,
+			employer: {
+				id: employer.id,
+				name: employer.companyName,
+				description: employer.companyDescription
+			}
+		})
+		.from(job)
+		.innerJoin(employer, eq(job.employerId, employer.id));
 
 	return {
 		jobs
