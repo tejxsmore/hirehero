@@ -111,12 +111,15 @@
 </script>
 
 <div class="space-y-5">
-	<h2 class="text-3xl font-bold text-white">Jobs</h2>
+	<h2 class="text-3xl font-bold">Jobs</h2>
 
 	<div class="space-y-5 overflow-y-auto">
 		{#if jobs[0]}
 			{#each jobs as job}
-				<div class="space-y-5 rounded-[15px] border border-[#272829] bg-[#0f0f0f] p-5 text-white">
+				<div
+					class="space-y-5 rounded-[15px] border border-gray-300
+				bg-white p-5"
+				>
 					<div class="flex items-center justify-between">
 						<a href={`/jobs/${job.id}`} class="text-lg font-semibold">
 							{job.title}
@@ -124,12 +127,14 @@
 
 						<div class="options-container relative flex items-center gap-2.5">
 							<p
-								class="rounded-[10px] bg-[#272829] px-3 py-1.5 text-sm
-									{job.jobStatus === 'draft'
-									? 'text-yellow-400'
+								class="rounded-[10px] px-3 py-1.5
+								text-sm
+								{job.jobStatus === 'draft'
+									? 'bg-yellow-100 text-yellow-600'
 									: job.jobStatus === 'published'
-										? 'text-[#00FFAB]'
-										: 'text-[#454545]'}"
+										? 'bg-blue-100 text-blue-600'
+										: 'bg-gray-100 text-gray-600'}
+								"
 							>
 								{job.jobStatus === 'draft'
 									? 'Draft'
@@ -137,23 +142,20 @@
 										? 'Published'
 										: 'Closed'}
 							</p>
-
-							{#if job.jobStatus !== 'closed'}
-								<button
-									class="cursor-pointer rounded-[10px] bg-[#272829] p-1.5 py-2 focus:outline-none"
-									onclick={() => toggleOptions(job.id)}
-								>
-									<EllipsisVertical size="16" />
-								</button>
-							{/if}
+							<button
+								class="cursor-pointer rounded-[10px] bg-gray-100 p-1.5 py-2 focus:outline-none"
+								onclick={() => toggleOptions(job.id)}
+							>
+								<EllipsisVertical size="16" class="text-gray-600" />
+							</button>
 
 							{#if openOptionsId === job.id}
 								<div
-									class="absolute top-10 right-0 z-10 w-40 space-y-1 rounded-[15px] border border-[#272829] bg-[#191919] p-1 shadow-lg"
+									class="absolute top-10 right-0 z-10 w-40 space-y-1 rounded-[15px] border border-gray-300 bg-white p-1 shadow-lg"
 								>
 									{#if job.jobStatus !== 'draft'}
 										<button
-											class="block w-full cursor-pointer rounded-[10px] px-3 py-1.5 text-left text-sm hover:bg-[#272829]"
+											class="block w-full cursor-pointer rounded-[10px] px-3 py-1.5 text-left text-sm hover:bg-gray-100"
 											onclick={() => updateJobStatus(job.id, 'draft')}
 										>
 											Mark as Draft
@@ -162,7 +164,7 @@
 
 									{#if job.jobStatus !== 'published'}
 										<button
-											class="cusrsor-pointer block w-full rounded-[10px] px-3 py-1.5 text-left text-sm hover:bg-[#272829]"
+											class="cusrsor-pointer block w-full rounded-[10px] px-3 py-1.5 text-left text-sm hover:bg-gray-100"
 											onclick={() => updateJobStatus(job.id, 'published')}
 										>
 											Publish
@@ -171,7 +173,7 @@
 
 									{#if job.jobStatus !== 'closed'}
 										<button
-											class="block w-full cursor-pointer rounded-[10px] px-3 py-1.5 text-left text-sm hover:bg-[#272829]"
+											class="block w-full cursor-pointer rounded-[10px] px-3 py-1.5 text-left text-sm hover:bg-gray-100"
 											onclick={() => updateJobStatus(job.id, 'closed')}
 										>
 											Close Job
@@ -179,7 +181,7 @@
 									{/if}
 
 									<button
-										class="block w-full cursor-pointer rounded-[10px] px-3 py-1.5 text-left text-sm text-red-400 hover:bg-[#272829]"
+										class="block w-full cursor-pointer rounded-[10px] px-3 py-1.5 text-left text-sm text-red-400 hover:bg-red-100"
 										onclick={() => deleteJob(job.id)}
 									>
 										Delete
@@ -189,32 +191,42 @@
 						</div>
 					</div>
 
-					<div class="flex flex-wrap gap-5 text-sm text-[#ccc]">
+					{#if job.skills}
+						<div class="flex gap-2.5 text-sm">
+							{#each job.skills as skill}
+								<p class="rounded-[10px] bg-gray-100 px-2.5 py-1">{skill}</p>
+							{/each}
+						</div>
+					{/if}
+
+					<div class="flex flex-wrap gap-5 text-sm">
 						<div class="flex items-center gap-2.5">
-							<MapPin size="16" />
-							{#if job.city}
-								{`${job.city}, ${job.country}`}
-							{:else}
-								Remote
-							{/if}
+							<MapPin size="16" class="text-gray-400" />
+							<span class="font-medium text-gray-600">
+								{#if job.city}
+									{`${job.city}, ${job.country} (${job.locationType})`}
+								{:else}
+									{job.locationType}
+								{/if}
+							</span>
 						</div>
 						<div class="flex items-center gap-2.5">
-							<Clock size="16" />
-							{job.type}
+							<Clock size="16" class="text-gray-400" />
+							<span class="font-medium text-gray-600">{job.type}</span>
 						</div>
 						<div>
-							<p class="text-[#00FFAB]">{job.category}</p>
+							<p class="font-medium text-[#FF4F0F]">{job.category}</p>
 						</div>
 					</div>
 
-					<div class="flex items-center gap-5 text-sm text-[#454545]">
+					<div class="flex items-center gap-5 text-sm text-gray-400">
 						<p class="flex items-center gap-2.5">
-							<Users size="16" />
-							0 applicants
+							<Users size="16" class="" />
+							<span class="flex gap-1.5">0 <span class="hidden sm:block">applicants</span></span>
 						</p>
 						<p class="flex items-center gap-2.5">
 							<Eye size="16" />
-							<span>0 views</span>
+							<span class="flex gap-1.5">0 <span class="hidden sm:block">views</span></span>
 						</p>
 						<p>Posted {timeAgo(job.createdAt)}</p>
 					</div>

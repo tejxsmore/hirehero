@@ -42,17 +42,17 @@
 </script>
 
 <nav class="relative">
-	<div class="flex items-center justify-between border-b border-[#272829] p-5">
+	<div class="flex items-center justify-between border-b border-gray-300 bg-white p-5">
 		<div class="flex focus:outline-none">
-			<a href="/" class="mb-1 text-2xl font-bold md:text-4xl">HiREHERO</a>
+			<a href="/" class="mb-1 text-2xl font-bold md:text-4xl">Hirehero</a>
 		</div>
 
 		<!-- Desktop Navigation -->
 		<div class="hidden gap-10 md:flex">
-			<a href="/jobs" class="transition-colors hover:text-[#00FFAB]">Jobs</a>
-			<a href="/jobs/companies" class="transition-colors hover:text-[#00FFAB]">Companies</a>
-			<a href="/jobs/salary" class="transition-colors hover:text-[#00FFAB]">Salary</a>
-			<a href="/jobs/resources" class="transition-colors hover:text-[#00FFAB]">Resources</a>
+			<a href="/jobs" class="transition-colors hover:text-[#FF4F0F]">Jobs</a>
+			<a href="/jobs/companies" class="transition-colors hover:text-[#FF4F0F]">Companies</a>
+			<a href="/jobs/salary" class="transition-colors hover:text-[#FF4F0F]">Salary</a>
+			<a href="/jobs/resources" class="transition-colors hover:text-[#FF4F0F]">Resources</a>
 		</div>
 
 		<!-- Desktop User Actions -->
@@ -60,14 +60,14 @@
 			{#if $userStore}
 				<a
 					href="/employer"
-					class="cursor-pointer rounded-full border border-[#14C38E] bg-[#00FFAB] px-7.5 py-2.5 text-[#0f0f0f] transition-colors duration-200 hover:bg-[#15F5BA]"
+					class="cursor-pointer rounded-full border border-[#E6521F] bg-[#FF4F0F] px-7.5 py-2.5 text-white transition-colors duration-200 hover:bg-[#F14A00]"
 				>
 					Employer
 				</a>
 			{:else}
 				<a
 					href="/sign-in"
-					class="cursor-pointer rounded-full border border-[#14C38E] bg-[#00FFAB] px-7.5 py-2.5 text-[#0f0f0f] transition-colors duration-200 hover:bg-[#15F5BA]"
+					class="cursor-pointer rounded-full border border-[#E6521F] bg-[#FF4F0F] px-7.5 py-2.5 text-white transition-colors duration-200 hover:bg-[#F14A00]"
 				>
 					Sign In
 				</a>
@@ -127,7 +127,8 @@
 	<!-- Mobile Menu Overlay -->
 	{#if mobileMenu}
 		<div
-			class="absolute top-full right-0 left-0 z-50 border-b border-[#272829] bg-[#0f0f0f] shadow-sm transition-all duration-300 ease-out md:hidden"
+			class="absolute top-full right-0 left-0 z-50 border-b border-gray-300
+			bg-white shadow-sm transition-all duration-300 ease-out md:hidden"
 			role="menu"
 			aria-orientation="vertical"
 		>
@@ -136,7 +137,7 @@
 				<a
 					href="/jobs"
 					onclick={closeMobileMenu}
-					class="block py-2.5 transition-colors hover:text-[#00FFAB]"
+					class="block py-2.5 transition-colors hover:text-[#FF4F0F]"
 					role="menuitem"
 				>
 					Jobs
@@ -144,7 +145,7 @@
 				<a
 					href="/jobs/companies"
 					onclick={closeMobileMenu}
-					class="block py-2.5 transition-colors hover:text-[#00FFAB]"
+					class="block py-2.5 transition-colors hover:text-[#FF4F0F]"
 					role="menuitem"
 				>
 					Companies
@@ -152,7 +153,7 @@
 				<a
 					href="/jobs/salary"
 					onclick={closeMobileMenu}
-					class="block py-2.5 transition-colors hover:text-[#00FFAB]"
+					class="block py-2.5 transition-colors hover:text-[#FF4F0F]"
 					role="menuitem"
 				>
 					Salary
@@ -160,7 +161,7 @@
 				<a
 					href="/jobs/resources"
 					onclick={closeMobileMenu}
-					class="block py-2.5 transition-colors hover:text-[#00FFAB]"
+					class="block py-2.5 transition-colors hover:text-[#FF4F0F]"
 					role="menuitem"
 				>
 					Resources
@@ -172,7 +173,7 @@
 						<a
 							onclick={closeMobileMenu}
 							href="/employer"
-							class="block w-full cursor-pointer rounded-full border border-[#14C38E] bg-[#00FFAB] px-7.5 py-2.5 text-center text-[#0f0f0f] transition-colors duration-200 hover:bg-[#15F5BA]"
+							class="block w-full cursor-pointer rounded-full border border-[#E6521F] bg-[#FF4F0F] px-7.5 py-2.5 text-center text-white transition-colors duration-200 hover:bg-[#F14A00]"
 							role="menuitem"
 						>
 							Employer
@@ -181,7 +182,7 @@
 						<a
 							onclick={closeMobileMenu}
 							href="/sign-in"
-							class="block w-full cursor-pointer rounded-full border border-[#14C38E] bg-[#00FFAB] px-7.5 py-2.5 text-center text-[#0f0f0f] transition-colors duration-200 hover:bg-[#15F5BA]"
+							class="block w-full cursor-pointer rounded-full border border-[#14C38E] bg-[#FF4F0F] px-7.5 py-2.5 text-center text-white transition-colors duration-200 hover:bg-[#E6521F]"
 							role="menuitem"
 						>
 							Sign In

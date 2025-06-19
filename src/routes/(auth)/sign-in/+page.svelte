@@ -12,16 +12,16 @@
 	<div class="flex w-full justify-center p-5">
 		<div class="w-full max-w-md space-y-10">
 			<div class="py-5 text-center">
-				<a href="/" class="text-2xl font-bold md:text-4xl">HiREHERO</a>
-				<p class="pt-2.5 text-[#6c757d]">Welcome! Sign in to continue</p>
+				<a href="/" class="text-2xl font-bold md:text-4xl">Hirehero</a>
+				<p class="pt-2.5 text-gray-600">Welcome! Sign in to continue</p>
 			</div>
 
 			<SocialAuthButton provider="google">Google</SocialAuthButton>
 
 			<div class="relative">
-				<hr class="border-[#272829]" />
+				<hr class="border-gray-300" />
 				<span
-					class="absolute top-[-12px] left-1/2 -translate-x-1/2 bg-[#0f0f0f] px-2.5 text-sm text-[#272829]"
+					class="absolute top-[-12px] left-1/2 -translate-x-1/2 bg-[#fbfbfb] px-2.5 text-sm text-gray-300"
 				>
 					or
 				</span>
@@ -29,34 +29,36 @@
 
 			<form method="POST" class="space-y-5">
 				<div
-					class="flex items-center rounded-[10px] border border-[#272829] bg-[#191919] px-5 py-2.5"
+					class="flex items-center rounded-[10px] border border-gray-300
+					bg-gray-200 px-5 py-2.5"
 				>
-					<Mail class="mr-5 h-4 w-4 text-[#454545]" />
+					<Mail class="mr-5 h-4 w-4 text-gray-400" />
 					<input
 						type="email"
 						name="email"
 						id="email"
 						placeholder="Email"
 						required
-						class="w-full bg-transparent placeholder:text-[#454545] focus:outline-none"
+						class="w-full bg-transparent placeholder:text-gray-400 focus:outline-none"
 					/>
 				</div>
 
 				<div
-					class="flex items-center rounded-[10px] border border-[#272829] bg-[#191919] px-5 py-2.5"
+					class="flex items-center rounded-[10px] border border-gray-300
+					 bg-gray-200 px-5 py-2.5"
 				>
-					<Lock class="mr-5 h-4 w-4 text-[#454545]" />
+					<Lock class="mr-5 h-4 w-4 text-gray-400" />
 					<input
 						type={showPassword ? 'text' : 'password'}
 						name="password"
 						id="password"
 						placeholder="Password"
 						required
-						class="w-full bg-transparent placeholder:text-[#454545] focus:outline-none"
+						class="w-full bg-transparent placeholder:text-gray-400 focus:outline-none"
 					/>
 					<button
 						type="button"
-						class="ml-5 cursor-pointer text-[#454545]"
+						class="ml-5 cursor-pointer text-gray-400"
 						onclick={() => (showPassword = !showPassword)}
 						tabindex="-1"
 					>
@@ -70,27 +72,27 @@
 
 				<button
 					type="submit"
-					class="w-full cursor-pointer rounded-full border border-[#14C38E] bg-[#00FFAB] px-5 py-2.5 font-medium text-[#0f0f0f] transition-colors duration-200 hover:bg-[#15F5BA]"
+					class="w-full cursor-pointer rounded-full border border-[#E6521F] bg-[#FF4F0F] px-5 py-2.5 text-white transition-colors duration-200 hover:bg-[#F14A00]"
 				>
 					Sign In
 				</button>
 			</form>
 
 			<div class="space-y-2.5">
-				<div class="text-center text-[#6c757d]">
+				<div class="text-center text-gray-600">
 					<p>
 						Don't have an account?
-						<a href="/sign-up" class="pl-2.5 hover:text-[#00FFAB] hover:underline"> Sign Up </a>
+						<a href="/sign-up" class="pl-2.5 hover:text-[#FF4F0F] hover:underline"> Sign Up </a>
 					</p>
 				</div>
 
 				{#if form?.errorMessage}
 					<div
-						class="rounded-[10px] border border-red-400
-						bg-red-400/10 px-5 py-2.5 text-red-400 transition-colors duration-200"
+						class="rounded-[10px] border border-red-600
+						bg-red-400/30 px-5 py-2.5 text-red-600 transition-colors duration-200"
 					>
 						<p class="flex items-center">
-							<span><AlertCircle class="mr-5 h-4 w-4 text-[#D84040]" /></span>
+							<span><AlertCircle class="mr-5 h-4 w-4 text-red-600" /></span>
 							{form.errorMessage}
 						</p>
 					</div>

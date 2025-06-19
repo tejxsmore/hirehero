@@ -135,29 +135,29 @@
 	}
 </script>
 
-<div class="flex min-h-screen bg-black">
+<div class="flex min-h-screen">
 	<div class="flex w-full justify-center">
 		<div class="w-full max-w-4xl space-y-10 p-5">
 			<div class="space-y-2.5 py-5 text-center">
 				<p class="text-xl font-semibold">Create Job Listing</p>
-				<p class="text-[#6c757d]">Find the perfect candidate for your open position</p>
+				<p class="text-gray-600">Find the perfect candidate for your open position</p>
 			</div>
 
 			<form method="post" action="?/post" class="space-y-10" onsubmit={handleSubmit}>
 				<!-- Job Basic Information -->
-				<div class="rounded-[15px] border border-[#272829] bg-[#0f0f0f] p-5">
-					<h3 class="mb-5 text-lg font-semibold text-[#6c757d]">Basic Information</h3>
+				<div class="rounded-[15px] border border-gray-300 bg-white p-5">
+					<h3 class="mb-5 text-lg font-semibold">Basic Information</h3>
 
 					<div class="grid gap-5 md:grid-cols-2">
 						<!-- Job Title -->
 						<div class="space-y-1 md:col-span-2">
-							<label for="title" class="block text-sm font-medium text-[#6c757d]">
-								Job Title <span class="text-[#00FFAB]">*</span>
+							<label for="title" class="block text-sm font-medium text-gray-600">
+								Job Title <span class="text-[#FF4F0F]">*</span>
 							</label>
 							<div
-								class="flex items-center rounded-[10px] border border-[#272829] bg-[#191919] px-5 py-2.5"
+								class="flex items-center rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5"
 							>
-								<Briefcase class="mr-5 h-4 w-4 text-[#454545]" />
+								<Briefcase class="mr-5 h-4 w-4 text-gray-400" />
 								<input
 									type="text"
 									id="title"
@@ -165,21 +165,21 @@
 									bind:value={formData.title}
 									placeholder="e.g. Senior Software Engineer"
 									required
-									class="w-full bg-transparent placeholder:text-[#454545] focus:outline-none"
+									class="w-full bg-transparent placeholder:text-gray-400 focus:outline-none"
 								/>
 							</div>
 						</div>
 
 						<!-- Job Type -->
 						<div class="space-y-1">
-							<label for="type" class="block text-sm font-medium text-[#6c757d]">
-								Job Type <span class="text-[#00FFAB]">*</span>
+							<label for="type" class="block text-sm font-medium text-gray-600">
+								Job Type <span class="text-[#FF4F0F]">*</span>
 							</label>
 							<div class="relative">
 								<div
-									class="flex items-center rounded-[10px] border border-[#272829] bg-[#191919] px-5 py-2.5"
+									class="flex items-center rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5"
 								>
-									<Clock class="mr-5 h-4 w-4 text-[#454545]" />
+									<Clock class="mr-5 h-4 w-4 text-gray-400" />
 									<select
 										id="type"
 										name="type"
@@ -187,38 +187,38 @@
 										required
 										class="w-full appearance-none bg-transparent focus:outline-none"
 									>
-										<option class="bg-[#0f0f0f]" value="">Select job type</option>
+										<option class="bg-white" value="">Select job type</option>
 										{#each jobTypes as jobType}
-											<option class="bg-[#0f0f0f]" value={jobType}>{jobType}</option>
+											<option class="bg-white" value={jobType}>{jobType}</option>
 										{/each}
 									</select>
-									<ChevronDown class="pointer-events-none ml-5 h-4 w-4 text-[#454545]" />
+									<ChevronDown class="pointer-events-none ml-5 h-4 w-4 text-gray-400" />
 								</div>
 							</div>
 						</div>
 
 						<!-- Category -->
 						<div class="space-y-1">
-							<label for="category" class="block text-sm font-medium text-[#6c757d]">
+							<label for="category" class="block text-sm font-medium text-gray-600">
 								Category
 							</label>
 							<div class="relative">
 								<div
-									class="flex items-center rounded-[10px] border border-[#272829] bg-[#191919] px-5 py-2.5"
+									class="flex items-center rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5"
 								>
-									<Tag class="mr-5 h-4 w-4 text-[#454545]" />
+									<Tag class="mr-5 h-4 w-4 text-gray-400" />
 									<select
 										id="category"
 										name="category"
 										bind:value={formData.category}
 										class="w-full appearance-none bg-transparent focus:outline-none"
 									>
-										<option class="bg-[#0f0f0f]" value="">Select category</option>
+										<option class="bg-white" value="">Select category</option>
 										{#each jobCategories as category}
-											<option class="bg-[#0f0f0f]" value={category}>{category}</option>
+											<option class="bg-white" value={category}>{category}</option>
 										{/each}
 									</select>
-									<ChevronDown class="pointer-events-none ml-5 h-4 w-4 text-[#454545]" />
+									<ChevronDown class="pointer-events-none ml-5 h-4 w-4 text-gray-400" />
 								</div>
 							</div>
 						</div>
@@ -226,10 +226,10 @@
 
 					<!-- Job Description -->
 					<div class="mt-5 space-y-1">
-						<label for="description" class="block text-sm font-medium text-[#6c757d]">
-							Job Description (Markdown) <span class="text-[#00FFAB]">*</span>
+						<label for="description" class="block text-sm font-medium text-gray-600">
+							Job Description (Markdown) <span class="text-[#FF4F0F]">*</span>
 						</label>
-						<div class="flex items-center rounded-[10px] border border-[#272829] bg-[#191919] p-5">
+						<div class="flex items-center rounded-[10px] border border-gray-300 bg-gray-200 p-5">
 							<textarea
 								id="description"
 								name="description"
@@ -237,27 +237,27 @@
 								rows="6"
 								required
 								placeholder="Describe the role, responsibilities, and what you're looking for in a candidate..."
-								class="w-full resize-none bg-transparent placeholder:text-[#454545] focus:outline-none"
+								class="w-full resize-none bg-transparent placeholder:text-gray-400 focus:outline-none"
 							></textarea>
 						</div>
-						<p class="text-xs tracking-wide text-[#454545]">Minimum 100 characters recommended</p>
+						<p class="text-xs tracking-wide text-gray-400">Minimum 100 characters recommended</p>
 					</div>
 				</div>
 
 				<!-- Compensation -->
-				<div class="rounded-[15px] border border-[#272829] bg-[#0f0f0f] p-5">
-					<h3 class="mb-5 text-lg font-semibold text-[#6c757d]">Compensation</h3>
+				<div class="rounded-[15px] border border-gray-300 bg-white p-5">
+					<h3 class="mb-5 text-lg font-semibold">Compensation</h3>
 
 					<div class="grid gap-5 md:grid-cols-3">
 						<!-- Salary Range -->
 						<div class="space-y-1">
-							<label for="salaryMin" class="block text-sm font-medium text-[#6c757d]">
-								Minimum Salary <span class="text-[#00FFAB]">*</span>
+							<label for="salaryMin" class="block text-sm font-medium text-gray-600">
+								Minimum Salary <span class="text-[#FF4F0F]">*</span>
 							</label>
 							<div
-								class="flex items-center rounded-[10px] border border-[#272829] bg-[#191919] px-5 py-2.5"
+								class="flex items-center rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5"
 							>
-								<IndianRupee class="mr-5 h-4 w-4 text-[#454545]" />
+								<IndianRupee class="mr-5 h-4 w-4 text-gray-400" />
 								<input
 									type="number"
 									id="salaryMin"
@@ -265,19 +265,19 @@
 									required
 									bind:value={formData.salaryMin}
 									placeholder="50000"
-									class="w-full bg-transparent placeholder:text-[#454545] focus:outline-none"
+									class="w-full bg-transparent placeholder:text-gray-400 focus:outline-none"
 								/>
 							</div>
 						</div>
 
 						<div class="space-y-1">
-							<label for="salaryMax" class="block text-sm font-medium text-[#6c757d]">
-								Maximum Salary <span class="text-[#00FFAB]">*</span>
+							<label for="salaryMax" class="block text-sm font-medium text-gray-600">
+								Maximum Salary <span class="text-[#FF4F0F]">*</span>
 							</label>
 							<div
-								class="flex items-center rounded-[10px] border border-[#272829] bg-[#191919] px-5 py-2.5"
+								class="flex items-center rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5"
 							>
-								<IndianRupee class="mr-5 h-4 w-4 text-[#454545]" />
+								<IndianRupee class="mr-5 h-4 w-4 text-gray-400" />
 								<input
 									type="number"
 									id="salaryMax"
@@ -285,18 +285,18 @@
 									required
 									bind:value={formData.salaryMax}
 									placeholder="80000"
-									class="w-full bg-transparent placeholder:text-[#454545] focus:outline-none"
+									class="w-full bg-transparent placeholder:text-gray-400 focus:outline-none"
 								/>
 							</div>
 						</div>
 
 						<div class="space-y-1">
-							<label for="salaryCurrency" class="block text-sm font-medium text-[#6c757d]">
+							<label for="salaryCurrency" class="block text-sm font-medium text-gray-600">
 								Currency
 							</label>
 							<div class="relative">
 								<div
-									class="flex items-center rounded-[10px] border border-[#272829] bg-[#191919] px-5 py-2.5"
+									class="flex items-center rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5"
 								>
 									<select
 										id="salaryCurrency"
@@ -305,21 +305,21 @@
 										class="w-full appearance-none bg-transparent focus:outline-none"
 									>
 										{#each currencies as currency}
-											<option class="bg-[#0f0f0f]" value={currency}>{currency}</option>
+											<option class="bg-white" value={currency}>{currency}</option>
 										{/each}
 									</select>
-									<ChevronDown class="pointer-events-none ml-5 h-4 w-4 text-[#454545]" />
+									<ChevronDown class="pointer-events-none ml-5 h-4 w-4 text-gray-400" />
 								</div>
 							</div>
 						</div>
 
 						<div class="space-y-1 md:col-span-3">
-							<label for="salaryType" class="block text-sm font-medium text-[#6c757d]">
-								Salary Type <span class="text-[#00FFAB]">*</span>
+							<label for="salaryType" class="block text-sm font-medium text-gray-600">
+								Salary Type <span class="text-[#FF4F0F]">*</span>
 							</label>
 							<div class="relative">
 								<div
-									class="flex items-center rounded-[10px] border border-[#272829] bg-[#191919] px-5 py-2.5"
+									class="flex items-center rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5"
 								>
 									<select
 										id="salaryType"
@@ -328,12 +328,12 @@
 										bind:value={formData.salaryType}
 										class="w-full appearance-none bg-transparent focus:outline-none"
 									>
-										<option class="bg-[#0f0f0f]" value="">Select salary type</option>
+										<option class="bg-white" value="">Select salary type</option>
 										{#each salaryTypes as salaryType}
-											<option class="bg-[#0f0f0f]" value={salaryType}>{salaryType}</option>
+											<option class="bg-white" value={salaryType}>{salaryType}</option>
 										{/each}
 									</select>
-									<ChevronDown class="pointer-events-none ml-5 h-4 w-4 text-[#454545]" />
+									<ChevronDown class="pointer-events-none ml-5 h-4 w-4 text-gray-400" />
 								</div>
 							</div>
 						</div>
@@ -341,58 +341,58 @@
 				</div>
 
 				<!-- Requirements -->
-				<div class="rounded-[15px] border border-[#272829] bg-[#0f0f0f] p-5">
-					<h3 class="mb-5 text-lg font-semibold text-[#6c757d]">Requirements</h3>
+				<div class="rounded-[15px] border border-gray-300 bg-white p-5">
+					<h3 class="mb-5 text-lg font-semibold">Requirements</h3>
 
 					<div class="grid gap-5 md:grid-cols-2">
 						<!-- Experience Level -->
 						<div class="space-y-1">
-							<label for="experienceLevel" class="block text-sm font-medium text-[#6c757d]">
+							<label for="experienceLevel" class="block text-sm font-medium text-gray-600">
 								Experience Level
 							</label>
 							<div class="relative">
 								<div
-									class="flex items-center rounded-[10px] border border-[#272829] bg-[#191919] px-5 py-2.5"
+									class="flex items-center rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5"
 								>
-									<Users class="mr-5 h-4 w-4 text-[#454545]" />
+									<Users class="mr-5 h-4 w-4 text-gray-400" />
 									<select
 										id="experienceLevel"
 										name="experienceLevel"
 										bind:value={formData.experienceLevel}
 										class="w-full appearance-none bg-transparent focus:outline-none"
 									>
-										<option class="bg-[#0f0f0f]" value="">Select experience level</option>
+										<option class="bg-white" value="">Select experience level</option>
 										{#each experienceLevels as level}
-											<option class="bg-[#0f0f0f]" value={level}>{level}</option>
+											<option class="bg-white" value={level}>{level}</option>
 										{/each}
 									</select>
-									<ChevronDown class="pointer-events-none ml-5 h-4 w-4 text-[#454545]" />
+									<ChevronDown class="pointer-events-none ml-5 h-4 w-4 text-gray-400" />
 								</div>
 							</div>
 						</div>
 
 						<!-- Education Level -->
 						<div class="space-y-1">
-							<label for="educationLevel" class="block text-sm font-medium text-[#6c757d]">
+							<label for="educationLevel" class="block text-sm font-medium text-gray-600">
 								Education Level
 							</label>
 							<div class="relative">
 								<div
-									class="flex items-center rounded-[10px] border border-[#272829] bg-[#191919] px-5 py-2.5"
+									class="flex items-center rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5"
 								>
-									<GraduationCap class="mr-5 h-4 w-4 text-[#454545]" />
+									<GraduationCap class="mr-5 h-4 w-4 text-gray-400" />
 									<select
 										id="educationLevel"
 										name="educationLevel"
 										bind:value={formData.educationLevel}
 										class="w-full appearance-none bg-transparent focus:outline-none"
 									>
-										<option class="bg-[#0f0f0f]" value="">Select education level</option>
+										<option class="bg-white" value="">Select education level</option>
 										{#each educationLevels as level}
-											<option class="bg-[#0f0f0f]" value={level}>{level}</option>
+											<option class="bg-white" value={level}>{level}</option>
 										{/each}
 									</select>
-									<ChevronDown class="pointer-events-none ml-5 h-4 w-4 text-[#454545]" />
+									<ChevronDown class="pointer-events-none ml-5 h-4 w-4 text-gray-400" />
 								</div>
 							</div>
 						</div>
@@ -400,12 +400,12 @@
 
 					<!-- Skills -->
 					<div class="mt-5 space-y-1">
-						<label for="skillInput" class="block text-sm font-medium text-[#6c757d]">
+						<label for="skillInput" class="block text-sm font-medium text-gray-600">
 							Required Skills
 						</label>
 						<div class="flex items-center gap-5">
 							<!-- Input container with border and padding -->
-							<div class="flex-1 rounded-[10px] border border-[#272829] bg-[#191919] px-5 py-2.5">
+							<div class="flex-1 rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5">
 								<input
 									type="text"
 									id="skillInput"
@@ -413,7 +413,7 @@
 									bind:value={skillInput}
 									onkeydown={handleKeyDown}
 									placeholder="Type a skill and press Add"
-									class="w-full bg-transparent text-sm placeholder-[#454545] focus:outline-none"
+									class="w-full bg-transparent text-sm placeholder-gray-400 focus:outline-none"
 								/>
 							</div>
 
@@ -421,7 +421,7 @@
 							<button
 								type="button"
 								onclick={addSkill}
-								class="cursor-pointer rounded-[10px] border border-[#272829] bg-[#191919] px-5 py-2.5 font-medium text-[#00FFAB] transition hover:opacity-80"
+								class="cursor-pointer rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5 font-medium text-[#FF4F0F] transition hover:opacity-80"
 							>
 								Add
 							</button>
@@ -431,13 +431,13 @@
 							<div class="mt-3 flex flex-wrap gap-2">
 								{#each formData.skills as skill}
 									<span
-										class="inline-flex items-center rounded-full bg-[#191919] px-3 py-1 text-sm text-[#6c757d]"
+										class="inline-flex items-center rounded-full bg-gray-200 px-3 py-1 text-sm text-gray-600"
 									>
 										{skill}
 										<button
 											type="button"
 											onclick={() => removeSkill(skill)}
-											class="ml-3 cursor-pointer text-[#454545] hover:text-[#6c757d]"
+											class="ml-3 cursor-pointer text-gray-400 hover:text-gray-600"
 										>
 											<X size="16" />
 										</button>
@@ -454,20 +454,20 @@
 				</div>
 
 				<!-- Location -->
-				<div class="rounded-[15px] border border-[#272829] bg-[#0f0f0f] p-5">
-					<h3 class="mb-5 text-lg font-semibold text-[#6c757d]">Location</h3>
+				<div class="rounded-[15px] border border-gray-300 bg-white p-5">
+					<h3 class="mb-5 text-lg font-semibold">Location</h3>
 
 					<div class="grid gap-5 md:grid-cols-2">
 						<!-- Location Type -->
 						<div class="space-y-1 md:col-span-2">
-							<label for="locationType" class="block text-sm font-medium text-[#6c757d]">
-								Location Type <span class="text-[#00FFAB]">*</span>
+							<label for="locationType" class="block text-sm font-medium text-gray-600">
+								Location Type <span class="text-[#FF4F0F]">*</span>
 							</label>
 							<div class="relative">
 								<div
-									class="flex items-center rounded-[10px] border border-[#272829] bg-[#191919] px-5 py-2.5"
+									class="flex items-center rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5"
 								>
-									<MapPin class="mr-5 h-4 w-4 text-[#454545]" />
+									<MapPin class="mr-5 h-4 w-4 text-gray-400" />
 									<select
 										id="locationType"
 										name="locationType"
@@ -475,12 +475,12 @@
 										required
 										class="w-full appearance-none bg-transparent focus:outline-none"
 									>
-										<option class="bg-[#0f0f0f]" value="">Select location type</option>
+										<option class="bg-white" value="">Select location type</option>
 										{#each locationTypes as locationType}
-											<option class="bg-[#0f0f0f]" value={locationType}>{locationType}</option>
+											<option class="bg-white" value={locationType}>{locationType}</option>
 										{/each}
 									</select>
-									<ChevronDown class="pointer-events-none ml-5 h-4 w-4 text-[#454545]" />
+									<ChevronDown class="pointer-events-none ml-5 h-4 w-4 text-gray-400" />
 								</div>
 							</div>
 						</div>
@@ -488,58 +488,58 @@
 						{#if formData.locationType !== 'Remote'}
 							<!-- City -->
 							<div class="space-y-1">
-								<label for="city" class="block text-sm font-medium text-[#6c757d]"> City </label>
+								<label for="city" class="block text-sm font-medium text-gray-600"> City </label>
 								<div
-									class="flex items-center rounded-[10px] border border-[#272829] bg-[#191919] px-5 py-2.5"
+									class="flex items-center rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5"
 								>
-									<Building2 class="mr-5 h-4 w-4 text-[#454545]" />
+									<Building2 class="mr-5 h-4 w-4 text-gray-400" />
 									<input
 										type="text"
 										id="city"
 										name="city"
 										bind:value={formData.city}
 										placeholder="e.g. Mumbai"
-										class="w-full bg-transparent placeholder:text-[#454545] focus:outline-none"
+										class="w-full bg-transparent placeholder:text-gray-400 focus:outline-none"
 									/>
 								</div>
 							</div>
 
 							<!-- Country -->
 							<div class="space-y-1">
-								<label for="country" class="block text-sm font-medium text-[#6c757d]">
+								<label for="country" class="block text-sm font-medium text-gray-600">
 									Country
 								</label>
 								<div
-									class="flex items-center rounded-[10px] border border-[#272829] bg-[#191919] px-5 py-2.5"
+									class="flex items-center rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5"
 								>
-									<Globe class="mr-5 h-4 w-4 text-[#454545]" />
+									<Globe class="mr-5 h-4 w-4 text-gray-400" />
 									<input
 										type="text"
 										id="country"
 										name="country"
 										bind:value={formData.country}
 										placeholder="e.g. India"
-										class="w-full bg-transparent placeholder:text-[#454545] focus:outline-none"
+										class="w-full bg-transparent placeholder:text-gray-400 focus:outline-none"
 									/>
 								</div>
 							</div>
 
 							<!-- Address -->
 							<div class="space-y-1 md:col-span-2">
-								<label for="address" class="block text-sm font-medium text-[#6c757d]">
+								<label for="address" class="block text-sm font-medium text-gray-600">
 									Address
 								</label>
 								<div
-									class="flex items-center rounded-[10px] border border-[#272829] bg-[#191919] px-5 py-2.5"
+									class="flex items-center rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5"
 								>
-									<MapPin class="mr-5 h-4 w-4 text-[#454545]" />
+									<MapPin class="mr-5 h-4 w-4 text-gray-400" />
 									<input
 										type="text"
 										id="address"
 										name="address"
 										bind:value={formData.address}
 										placeholder="Complete address (optional)"
-										class="w-full bg-transparent placeholder:text-[#454545] focus:outline-none"
+										class="w-full bg-transparent placeholder:text-gray-400 focus:outline-none"
 									/>
 								</div>
 							</div>
@@ -548,78 +548,78 @@
 				</div>
 
 				<!-- Application Method -->
-				<div class="rounded-[15px] border border-[#272829] bg-[#0f0f0f] p-5">
-					<h3 class="mb-5 text-lg font-semibold text-[#6c757d]">Application Method</h3>
+				<div class="rounded-[15px] border border-gray-300 bg-white p-5">
+					<h3 class="mb-5 text-lg font-semibold">Application Method</h3>
 
 					<div class="grid gap-5 md:grid-cols-2">
 						<!-- Application URL -->
 						<div class="space-y-1">
-							<label for="applicationUrl" class="block text-sm font-medium text-[#6c757d]">
+							<label for="applicationUrl" class="block text-sm font-medium text-gray-600">
 								Application URL
 							</label>
 							<div
-								class="flex items-center rounded-[10px] border border-[#272829] bg-[#191919] px-5 py-2.5"
+								class="flex items-center rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5"
 							>
-								<Link class="mr-5 h-4 w-4 text-[#454545]" />
+								<Link class="mr-5 h-4 w-4 text-gray-400" />
 								<input
 									type="url"
 									id="applicationUrl"
 									name="applicationUrl"
 									bind:value={formData.applicationUrl}
 									placeholder="https://careers.company.com/apply"
-									class="w-full bg-transparent placeholder:text-[#454545] focus:outline-none"
+									class="w-full bg-transparent placeholder:text-gray-400 focus:outline-none"
 								/>
 							</div>
 						</div>
 
 						<!-- Application Email -->
 						<div class="space-y-1">
-							<label for="applicationEmail" class="block text-sm font-medium text-[#6c757d]">
+							<label for="applicationEmail" class="block text-sm font-medium text-gray-600">
 								Application Email
 							</label>
 							<div
-								class="flex items-center rounded-[10px] border border-[#272829] bg-[#191919] px-5 py-2.5"
+								class="flex items-center rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5"
 							>
-								<Mail class="mr-5 h-4 w-4 text-[#454545]" />
+								<Mail class="mr-5 h-4 w-4 text-gray-400" />
 								<input
 									type="email"
 									id="applicationEmail"
 									name="applicationEmail"
 									bind:value={formData.applicationEmail}
 									placeholder="careers@company.com"
-									class="w-full bg-transparent placeholder:text-[#454545] focus:outline-none"
+									class="w-full bg-transparent placeholder:text-gray-400 focus:outline-none"
 								/>
 							</div>
 						</div>
 					</div>
-					<p class="mt-1 text-xs text-[#454545]">
+					<p class="mt-1 text-xs text-gray-400">
 						Provide either an application URL or email address where candidates can apply
 					</p>
 				</div>
 
 				<!-- Job Settings -->
-				<div class="rounded-[15px] border border-[#272829] bg-[#0f0f0f] p-5">
-					<h3 class="mb-5 text-lg font-semibold text-[#6c757d]">Job Settings</h3>
+				<div class="rounded-[15px] border border-gray-300 bg-white p-5">
+					<h3 class="mb-5 text-lg font-semibold">Job Settings</h3>
 
 					<div class="space-y-5">
 						<!-- Expiry Date -->
 						<div class="space-y-1">
-							<label for="expiresAt" class="block text-sm font-medium text-[#6c757d]">
+							<label for="expiresAt" class="block text-sm font-medium text-gray-600">
 								Application Deadline
 							</label>
 							<div
-								class="flex items-center rounded-[10px] border border-[#272829] bg-[#191919] px-5 py-2.5"
+								class="flex items-center rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5"
 							>
-								<Calendar class="mr-5 h-4 w-4 text-[#454545]" />
+								<Calendar class="mr-5 h-4 w-4 text-gray-400" />
 								<input
 									type="datetime-local"
 									id="expiresAt"
 									name="expiresAt"
 									bind:value={formData.expiresAt}
-									class="w-full bg-transparent placeholder:text-[#454545] focus:outline-none"
+									class="w-full bg-transparent placeholder:text-gray-400 focus:outline-none"
 								/>
 							</div>
-							<p class="mt-1 text-xs text-[#454545]">Leave empty if no deadline</p>
+							<p class="mt-1 text-xs text-gray-400">Leave empty if no deadline</p>
 						</div>
 
 						<!-- Publish Status -->
@@ -628,14 +628,14 @@
 								type="button"
 								onclick={togglePublished}
 								class="relative mt-0.5 flex h-5 w-5 flex-shrink-0 cursor-pointer items-center justify-center rounded-md border-2 transition-all duration-200 ease-in-out {isPublished
-									? 'border-[#14C38E] bg-[#00FFAB] shadow-md'
-									: 'border-[#272829] hover:border-[#14C38E] hover:shadow-sm'}"
+									? 'border-[#E6521F] bg-[#FF4F0F] shadow-md'
+									: 'border-gray-300 hover:border-[#E6521F] hover:shadow-sm'}"
 								aria-pressed={isPublished}
 								aria-label="Publish this job listing immediately"
 							>
 								{#if isPublished}
 									<svg
-										class="h-3 w-3 text-[#0f0f0f]"
+										class="h-3 w-3 text-white"
 										fill="none"
 										stroke="currentColor"
 										viewBox="0 0 24 24"
@@ -653,7 +653,7 @@
 							<button
 								type="button"
 								onclick={togglePublished}
-								class="cursor-pointer text-sm leading-relaxed text-[#6c757d]"
+								class="cursor-pointer text-sm leading-relaxed text-gray-600"
 							>
 								Publish this job listing immediately
 							</button>
@@ -668,13 +668,14 @@
 				<div class="flex gap-5">
 					<button
 						type="button"
-						class="cursor-pointer rounded-full border border-[#272829] bg-[#0f0f0f] px-5 py-2.5 text-[#6c757d] transition-all duration-100 hover:bg-gray-50 focus:outline-none"
+						class="cursor-pointer rounded-full border border-gray-300 bg-white px-5 py-2.5 text-gray-600 transition-colors
+						duration-200 hover:bg-gray-100 focus:outline-none"
 					>
 						Cancel
 					</button>
 					<button
 						type="submit"
-						class="flex-1 cursor-pointer rounded-full border border-[#14C38E] bg-[#00FFAB] px-5 py-2.5 font-medium text-[#0f0f0f] transition-all duration-100 hover:bg-[#15F5BA] focus:outline-none"
+						class="flex-1 cursor-pointer rounded-full border border-[#E6521F] bg-[#FF4F0F] px-5 py-2.5 font-medium text-white transition-all duration-100 hover:bg-[#F14A00] focus:outline-none"
 					>
 						{isPublished ? 'Create & Publish Job' : 'Save as Draft'}
 					</button>

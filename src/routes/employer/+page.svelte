@@ -13,45 +13,43 @@
 	let isChecked = $state(false);
 </script>
 
-<div class="flex min-h-screen bg-black">
+<div class="flex min-h-screen">
 	{#if hasEmployerProfile}
 		<Dashboard employer={employerProfile} jobs={jobsPosted} {applications} />
 	{:else}
 		<div class="flex w-full justify-center p-5">
-			<div
-				class="w-full max-w-md space-y-10 rounded-[15px] border border-[#272829] bg-[#0f0f0f] p-5"
-			>
+			<div class="w-full max-w-md space-y-10 rounded-[15px] border border-gray-300 bg-white p-5">
 				<div class="space-y-2.5 py-5 text-center">
 					<p class="text-xl font-semibold">Join as an Employer</p>
-					<p class="text-[#6c757d]">Connect with top talent and grow your team</p>
+					<p class="text-gray-600">Connect with top talent and grow your team</p>
 				</div>
 				<form method="post" action="?/register" class="space-y-10">
 					<div class="space-y-1">
-						<label for="name" class="block text-sm font-medium text-[#6c757d]">
-							Company Name <span class="text-[#00FFAB]">*</span></label
+						<label for="name" class="block text-sm font-medium text-gray-600">
+							Company Name <span class="text-[#FF4F0F]">*</span></label
 						>
 						<div
-							class="flex items-center rounded-[10px] border border-[#272829] bg-[#191919] px-5 py-2.5"
+							class="flex items-center rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5"
 						>
-							<Building2 class="mr-5 h-4 w-4 text-[#454545]" />
+							<Building2 class="mr-5 h-4 w-4 text-gray-400" />
 							<input
 								type="text"
 								name="name"
 								id="name"
 								placeholder="Enter your company name"
 								required
-								class="w-full bg-transparent placeholder:text-[#454545] focus:outline-none"
+								class="w-full bg-transparent placeholder:text-gray-400 focus:outline-none"
 							/>
 						</div>
 					</div>
 
 					<!-- Company Description -->
 					<div class="space-y-1">
-						<label for="description" class="block text-sm font-medium text-[#6c757d]">
-							Company Description <span class="text-[#00FFAB]">*</span>
+						<label for="description" class="block text-sm font-medium text-gray-600">
+							Company Description <span class="text-[#FF4F0F]">*</span>
 						</label>
 						<div
-							class="flex resize-none items-center rounded-[10px] border border-[#272829] bg-[#191919] p-5"
+							class="flex resize-none items-center rounded-[10px] border border-gray-300 bg-gray-200 p-5"
 						>
 							<textarea
 								name="description"
@@ -59,71 +57,71 @@
 								rows="4"
 								required
 								placeholder="Tell us about your company, mission, and what makes you unique..."
-								class="w-full resize-none bg-transparent placeholder:text-[#454545] focus:outline-none"
+								class="w-full resize-none bg-transparent placeholder:text-gray-400 focus:outline-none"
 							></textarea>
 						</div>
-						<p class="text-xs tracking-wide text-[#454545]">Minimum 50 characters recommended</p>
+						<p class="text-xs tracking-wide text-gray-400">Minimum 50 characters recommended</p>
 					</div>
 
 					<!-- Company Website -->
 					<div class="space-y-1">
-						<label for="website" class="block text-sm font-medium text-[#6c757d]">
+						<label for="website" class="block text-sm font-medium text-gray-600">
 							Company Website
 						</label>
 						<div
-							class="flex items-center rounded-[10px] border border-[#272829] bg-[#191919] px-5 py-2.5"
+							class="flex items-center rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5"
 						>
-							<Globe class="mr-5 h-4 w-4 text-[#454545]" />
+							<Globe class="mr-5 h-4 w-4 text-gray-400" />
 							<input
 								type="url"
 								name="website"
 								id="website"
 								placeholder="https://www.yourcompany.com"
-								class="w-full placeholder:text-[#454545] focus:outline-none"
+								class="w-full placeholder:text-gray-400 focus:outline-none"
 							/>
 						</div>
 					</div>
 
 					<!-- Contact Email -->
 					<div class="space-y-1">
-						<label for="email" class="block text-sm font-medium text-[#6c757d]">
+						<label for="email" class="block text-sm font-medium text-gray-600">
 							Contact Email
-							<span class="text-[#00FFAB]">*</span>
+							<span class="text-[#FF4F0F]">*</span>
 						</label>
 						<div
-							class="flex items-center rounded-[10px] border border-[#272829] bg-[#191919] px-5 py-2.5"
+							class="flex items-center rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5"
 						>
-							<Mail class="mr-5 h-4 w-4 text-[#454545]" />
+							<Mail class="mr-5 h-4 w-4 text-gray-400" />
 							<input
 								type="email"
 								name="email"
 								id="email"
 								required
 								placeholder="hr@yourcompany.com"
-								class="w-full bg-transparent placeholder:text-[#454545] focus:outline-none"
+								class="w-full bg-transparent placeholder:text-gray-400 focus:outline-none"
 							/>
 						</div>
-						<p class="text-xs tracking-wide text-[#454545]">
+						<p class="text-xs tracking-wide text-gray-400">
 							This will be used for candidate communications
 						</p>
 					</div>
 
 					<!-- Location -->
 					<div class="space-y-1">
-						<label for="location" class="block text-sm font-medium text-[#6c757d]">
-							Location <span class="text-[#00FFAB]">*</span></label
+						<label for="location" class="block text-sm font-medium text-gray-600">
+							Location <span class="text-[#FF4F0F]">*</span></label
 						>
 						<div
-							class="flex items-center rounded-[10px] border border-[#272829] bg-[#191919] px-5 py-2.5"
+							class="flex items-center rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5"
 						>
-							<MapPin class="mr-5 h-4 w-4 text-[#454545]" />
+							<MapPin class="mr-5 h-4 w-4 text-gray-400" />
 							<input
 								type="text"
 								name="location"
 								id="location"
 								required
 								placeholder="City, Country"
-								class="w-full bg-transparent placeholder:text-[#454545] focus:outline-none"
+								class="w-full bg-transparent placeholder:text-gray-400 focus:outline-none"
 							/>
 						</div>
 					</div>
@@ -141,12 +139,12 @@
 							<label
 								for="terms"
 								class="flex h-5 w-5 cursor-pointer items-center justify-center rounded-md border-2 transition-all duration-200 ease-in-out {isChecked
-									? 'border-[#14C38E] bg-[#00FFAB] shadow-md'
-									: 'border-[#272829] bg-[#0f0f0f] hover:border-[#14C38E] hover:shadow-sm'}"
+									? 'border-[#E6521F] bg-[#FF4F0F] shadow-md'
+									: 'border-gray-400 hover:border-[#E6521F] hover:shadow-sm'}"
 							>
 								{#if isChecked}
 									<svg
-										class="h-3 w-3 text-[#0f0f0f]"
+										class="h-3 w-3 text-white"
 										fill="none"
 										stroke="currentColor"
 										viewBox="0 0 24 24"
@@ -163,18 +161,18 @@
 							</label>
 						</div>
 
-						<label for="terms" class="cursor-pointer text-sm leading-relaxed text-[#6c757d]">
+						<label for="terms" class="cursor-pointer text-sm leading-relaxed text-gray-600">
 							I agree to the
 							<a
 								href="/terms"
-								class="font-medium text-[#00FFAB] transition-colors duration-200 hover:text-[#14C38E] hover:underline"
+								class="font-medium text-[#FF4F0F] transition-colors duration-200 hover:text-[#F14A00] hover:underline"
 							>
 								Terms of Service
 							</a>
 							and
 							<a
 								href="/privacy"
-								class="font-medium text-[#00FFAB] transition-colors duration-200 hover:text-[#14C38E] hover:underline"
+								class="font-medium text-[#FF4F0F] transition-colors duration-200 hover:text-[#F14A00] hover:underline"
 							>
 								Privacy Policy
 							</a>
@@ -184,22 +182,22 @@
 					<!-- Submit Button -->
 					<button
 						type="submit"
-						class="w-full cursor-pointer rounded-full border border-[#14C38E] bg-[#00FFAB] px-5 py-2.5 font-medium text-[#0f0f0f] transition-all duration-100 hover:bg-[#15F5BA] focus:outline-none"
+						class="w-full cursor-pointer rounded-full border border-[#E6521F] bg-[#FF4F0F] px-5 py-2.5 text-white transition-colors duration-200 hover:bg-[#F14A00] focus:outline-none"
 					>
 						Create Employer Profile
 					</button>
 				</form>
 
 				<!-- Help Text -->
-				<div class="mt-5 text-sm">
-					<h3 class="mb-2.5 font-medium text-[#6c757d]">Need Help?</h3>
-					<p class="text-[#6c757d]">
+				<div class="mt-5 text-sm text-gray-600">
+					<h3 class="mb-2.5 font-medium">Need Help?</h3>
+					<p class="">
 						Contact our support team at <a
 							href="mailto:support@hirehero.com"
-							class="font-medium text-[#00FFAB] hover:underline">support@hirehero.com</a
+							class="font-medium text-[#FF4F0F] hover:underline">support@hirehero.com</a
 						>
 						or check our
-						<a href="/help" class="font-medium text-[#00FFAB] hover:underline">help center</a> for more
+						<a href="/help" class="font-medium text-[#FF4F0F] hover:underline">help center</a> for more
 						information.
 					</p>
 				</div>
