@@ -126,10 +126,6 @@ export const job = pgTable('job', {
 	city: text('city'),
 	address: text('address'),
 
-	// Application method
-	applicationUrl: text('application_url'),
-	applicationEmail: text('application_email'),
-
 	// Job status and timing
 	isPublished: boolean('is_published')
 		.$defaultFn(() => false)
@@ -187,7 +183,7 @@ export const application = pgTable('application', {
 		.notNull()
 });
 
-export const userProfile = pgTable('user_profile', {
+export const profile = pgTable('profile', {
 	id: text('id')
 		.primaryKey()
 		.references(() => user.id, { onDelete: 'cascade' }),
@@ -221,7 +217,7 @@ export const userProfile = pgTable('user_profile', {
 		.notNull()
 });
 
-export const userEducation = pgTable('user_education', {
+export const education = pgTable('education', {
 	id: text('id').primaryKey(),
 	userId: text('user_id')
 		.notNull()
@@ -243,7 +239,7 @@ export const userEducation = pgTable('user_education', {
 		.notNull()
 });
 
-export const userExperience = pgTable('user_experience', {
+export const experience = pgTable('experience', {
 	id: text('id').primaryKey(),
 	userId: text('user_id')
 		.notNull()
@@ -267,7 +263,7 @@ export const userExperience = pgTable('user_experience', {
 		.notNull()
 });
 
-export const userProject = pgTable('user_project', {
+export const project = pgTable('project', {
 	id: text('id').primaryKey(),
 	userId: text('user_id')
 		.notNull()
@@ -289,7 +285,7 @@ export const userProject = pgTable('user_project', {
 		.notNull()
 });
 
-export const userCertification = pgTable('user_certification', {
+export const certification = pgTable('certification', {
 	id: text('id').primaryKey(),
 	userId: text('user_id')
 		.notNull()

@@ -6,8 +6,6 @@
 		Users,
 		GraduationCap,
 		Calendar,
-		Mail,
-		Link,
 		Tag,
 		Clock,
 		Building2,
@@ -545,56 +543,6 @@
 							</div>
 						{/if}
 					</div>
-				</div>
-
-				<!-- Application Method -->
-				<div class="rounded-[15px] border border-gray-300 bg-white p-5">
-					<h3 class="mb-5 text-lg font-semibold">Application Method</h3>
-
-					<div class="grid gap-5 md:grid-cols-2">
-						<!-- Application URL -->
-						<div class="space-y-1">
-							<label for="applicationUrl" class="block text-sm font-medium text-gray-600">
-								Application URL
-							</label>
-							<div
-								class="flex items-center rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5"
-							>
-								<Link class="mr-5 h-4 w-4 text-gray-400" />
-								<input
-									type="url"
-									id="applicationUrl"
-									name="applicationUrl"
-									bind:value={formData.applicationUrl}
-									placeholder="https://careers.company.com/apply"
-									class="w-full bg-transparent placeholder:text-gray-400 focus:outline-none"
-								/>
-							</div>
-						</div>
-
-						<!-- Application Email -->
-						<div class="space-y-1">
-							<label for="applicationEmail" class="block text-sm font-medium text-gray-600">
-								Application Email
-							</label>
-							<div
-								class="flex items-center rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5"
-							>
-								<Mail class="mr-5 h-4 w-4 text-gray-400" />
-								<input
-									type="email"
-									id="applicationEmail"
-									name="applicationEmail"
-									bind:value={formData.applicationEmail}
-									placeholder="careers@company.com"
-									class="w-full bg-transparent placeholder:text-gray-400 focus:outline-none"
-								/>
-							</div>
-						</div>
-					</div>
-					<p class="mt-1 text-xs text-gray-400">
-						Provide either an application URL or email address where candidates can apply
-					</p>
 				</div>
 
 				<!-- Job Settings -->

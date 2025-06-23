@@ -35,10 +35,6 @@ export const load: PageServerLoad = async ({ url }) => {
 				city: job.city,
 				address: job.address,
 
-				// Application method
-				applicationUrl: job.applicationUrl,
-				applicationEmail: job.applicationEmail,
-
 				// Job status and timing
 				isPublished: job.isPublished,
 				isArchived: job.isArchived,
