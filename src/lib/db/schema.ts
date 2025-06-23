@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp, boolean, numeric, json } from 'drizzle-orm/pg-core';
+import { pgTable, text, timestamp, boolean, numeric, json, date } from 'drizzle-orm/pg-core';
 
 //
 // User Table
@@ -187,21 +187,124 @@ export const application = pgTable('application', {
 		.notNull()
 });
 
-//
-// Message Table
-//
-export const message = pgTable('message', {
+export const userProfile = pgTable('user_profile', {
+	id: text('id')
+		.primaryKey()
+		.references(() => user.id, { onDelete: 'cascade' }),
+
+	// Basic info
+	fullName: text('full_name').notNull(),
+	headline: text('headline'), // e.g. "Frontend Developer at XYZ"
+	bio: text('bio'),
+	profilePictureUrl: text('profile_picture_url'),
+	location: text('location'), // e.g. "New Delhi, India"
+
+	// Contact & social
+	phone: text('phone'),
+	website: text('website'),
+	linkedin: text('linkedin'),
+	github: text('github'),
+	portfolio: text('portfolio'),
+
+	// Resume
+	resumeUrl: text('resume_url'),
+
+	// Skills
+	skills: json('skills').$type<string[]>(),
+
+	// Timestamps
+	createdAt: timestamp('created_at')
+		.$defaultFn(() => new Date())
+		.notNull(),
+	updatedAt: timestamp('updated_at')
+		.$defaultFn(() => new Date())
+		.notNull()
+});
+
+export const userEducation = pgTable('user_education', {
 	id: text('id').primaryKey(),
-
-	fromUserId: text('from_user_id')
-		.notNull()
-		.references(() => user.id, { onDelete: 'cascade' }),
-	toUserId: text('to_user_id')
+	userId: text('user_id')
 		.notNull()
 		.references(() => user.id, { onDelete: 'cascade' }),
 
-	text: text('text').notNull(),
-	isRead: boolean('is_read').default(false).notNull(),
+	institution: text('institution').notNull(),
+	degree: text('degree').notNull(), // e.g. B.Tech, M.Sc
+	fieldOfStudy: text('field_of_study'),
+	startDate: date('start_date'),
+	endDate: date('end_date'),
+	grade: text('grade'), // GPA or % etc.
+	description: text('description'),
 
-	createdAt: timestamp('created_at').defaultNow().notNull()
+	createdAt: timestamp('created_at')
+		.$defaultFn(() => new Date())
+		.notNull(),
+	updatedAt: timestamp('updated_at')
+		.$defaultFn(() => new Date())
+		.notNull()
+});
+
+export const userExperience = pgTable('user_experience', {
+	id: text('id').primaryKey(),
+	userId: text('user_id')
+		.notNull()
+		.references(() => user.id, { onDelete: 'cascade' }),
+
+	company: text('company').notNull(),
+	title: text('title').notNull(),
+	location: text('location'),
+	startDate: date('start_date'),
+	endDate: date('end_date'),
+	isCurrent: boolean('is_current')
+		.$defaultFn(() => false)
+		.notNull(),
+	description: text('description'),
+
+	createdAt: timestamp('created_at')
+		.$defaultFn(() => new Date())
+		.notNull(),
+	updatedAt: timestamp('updated_at')
+		.$defaultFn(() => new Date())
+		.notNull()
+});
+
+export const userProject = pgTable('user_project', {
+	id: text('id').primaryKey(),
+	userId: text('user_id')
+		.notNull()
+		.references(() => user.id, { onDelete: 'cascade' }),
+
+	title: text('title').notNull(),
+	description: text('description'),
+	projectUrl: text('project_url'),
+	githubUrl: text('github_url'),
+	startDate: date('start_date'),
+	endDate: date('end_date'),
+	technologies: json('technologies').$type<string[]>(),
+
+	createdAt: timestamp('created_at')
+		.$defaultFn(() => new Date())
+		.notNull(),
+	updatedAt: timestamp('updated_at')
+		.$defaultFn(() => new Date())
+		.notNull()
+});
+
+export const userCertification = pgTable('user_certification', {
+	id: text('id').primaryKey(),
+	userId: text('user_id')
+		.notNull()
+		.references(() => user.id, { onDelete: 'cascade' }),
+
+	name: text('name').notNull(),
+	issuer: text('issuer'),
+	issueDate: date('issue_date'),
+	expiryDate: date('expiry_date'),
+	certificateUrl: text('certificate_url'),
+
+	createdAt: timestamp('created_at')
+		.$defaultFn(() => new Date())
+		.notNull(),
+	updatedAt: timestamp('updated_at')
+		.$defaultFn(() => new Date())
+		.notNull()
 });

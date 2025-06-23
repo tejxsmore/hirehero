@@ -29,7 +29,7 @@
 			{#if job.skills && job.skills.length > 0}
 				<div class="mt-4 flex flex-wrap gap-2.5">
 					{#each job.skills as skill}
-						<p class="rounded-[10px] bg-gray-200 p-1 px-2.5">
+						<p class="rounded-[5px] bg-gray-200 p-1 px-2.5">
 							{skill}
 						</p>
 					{/each}

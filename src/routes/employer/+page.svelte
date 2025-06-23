@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Mail, Globe, Building2, MapPin, AlertCircle } from '@lucide/svelte';
+	import { Mail, Globe, Building2, MapPin } from '@lucide/svelte';
 	import { goto } from '$app/navigation';
 
 	const { data } = $props();

@@ -43,27 +43,36 @@
 
 <nav class="relative">
 	<div class="flex items-center justify-between border-b border-gray-300 bg-white p-5">
-		<div class="flex focus:outline-none">
-			<a href="/" class="mb-1 text-2xl font-bold md:text-4xl">Hirehero</a>
-		</div>
+		<div class="flex items-center gap-10">
+			<div class="flex focus:outline-none">
+				<a href="/" class="mb-1 text-2xl font-bold md:text-4xl">Hirehero</a>
+			</div>
 
-		<!-- Desktop Navigation -->
-		<div class="hidden gap-10 md:flex">
-			<a href="/jobs" class="transition-colors hover:text-[#FF4F0F]">Jobs</a>
-			<a href="/jobs/companies" class="transition-colors hover:text-[#FF4F0F]">Companies</a>
-			<a href="/jobs/salary" class="transition-colors hover:text-[#FF4F0F]">Salary</a>
-			<a href="/jobs/resources" class="transition-colors hover:text-[#FF4F0F]">Resources</a>
+			<!-- Desktop Navigation -->
+			<div class="hidden gap-10 md:flex">
+				<a href="/jobs" class="transition-colors hover:text-[#FF4F0F]">Jobs</a>
+				<a href="/jobs/companies" class="transition-colors hover:text-[#FF4F0F]">Companies</a>
+				<a href="/jobs/salary" class="transition-colors hover:text-[#FF4F0F]">Salary</a>
+				<a href="/jobs/resources" class="transition-colors hover:text-[#FF4F0F]">Resources</a>
+			</div>
 		</div>
 
 		<!-- Desktop User Actions -->
 		<div class="hidden items-center md:flex">
 			{#if $userStore}
-				<a
-					href="/employer"
-					class="cursor-pointer rounded-full border border-[#E6521F] bg-[#FF4F0F] px-7.5 py-2.5 text-white transition-colors duration-200 hover:bg-[#F14A00]"
-				>
-					Employer
-				</a>
+				<div class="flex gap-5">
+					<a
+						href="/employer"
+						class="cursor-pointer rounded-full border border-[#E6521F] px-7.5 py-2.5 text-[#F14A00] transition-colors duration-200 hover:bg-[#F14A00] hover:text-white"
+					>
+						Employer
+					</a>
+					<a
+						href="/user/profile"
+						class="cursor-pointer rounded-full border border-[#E6521F] bg-[#FF4F0F] px-7.5 py-2.5 text-white transition-colors duration-200 hover:bg-[#F14A00]"
+						>Profile</a
+					>
+				</div>
 			{:else}
 				<a
 					href="/sign-in"
@@ -168,21 +177,27 @@
 				</a>
 
 				<!-- Mobile User Actions -->
-				<div class="pt-2">
+				<div class="space-y-5 pt-2">
 					{#if $userStore}
 						<a
 							onclick={closeMobileMenu}
 							href="/employer"
-							class="block w-full cursor-pointer rounded-full border border-[#E6521F] bg-[#FF4F0F] px-7.5 py-2.5 text-center text-white transition-colors duration-200 hover:bg-[#F14A00]"
+							class="block w-full cursor-pointer rounded-full border border-[#E6521F] px-7.5 py-2.5 text-center text-[#F14A00] transition-colors duration-200 hover:bg-[#F14A00] hover:text-white"
 							role="menuitem"
 						>
 							Employer
 						</a>
+						<a
+							onclick={closeMobileMenu}
+							href="/user/profile"
+							class="block w-full cursor-pointer rounded-full border border-[#E6521F] bg-[#FF4F0F] px-7.5 py-2.5 text-center text-white transition-colors duration-200 hover:bg-[#F14A00]"
+							role="menuitem">Profile</a
+						>
 					{:else}
 						<a
 							onclick={closeMobileMenu}
 							href="/sign-in"
-							class="block w-full cursor-pointer rounded-full border border-[#14C38E] bg-[#FF4F0F] px-7.5 py-2.5 text-center text-white transition-colors duration-200 hover:bg-[#E6521F]"
+							class="block w-full cursor-pointer rounded-full border border-[#E6521F] bg-[#FF4F0F] px-7.5 py-2.5 text-center text-white transition-colors duration-200 hover:bg-[#E6521F]"
 							role="menuitem"
 						>
 							Sign In

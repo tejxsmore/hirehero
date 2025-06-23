@@ -127,7 +127,7 @@
 
 						<div class="options-container relative flex items-center gap-2.5">
 							<p
-								class="rounded-[10px] px-3 py-1.5
+								class="rounded-[10px] px-3 py-1
 								text-sm
 								{job.jobStatus === 'draft'
 									? 'bg-yellow-100 text-yellow-600'
@@ -143,7 +143,7 @@
 										: 'Closed'}
 							</p>
 							<button
-								class="cursor-pointer rounded-[10px] bg-gray-100 p-1.5 py-2 focus:outline-none"
+								class="cursor-pointer rounded-[10px] bg-gray-100 p-1 py-2 focus:outline-none"
 								onclick={() => toggleOptions(job.id)}
 							>
 								<EllipsisVertical size="16" class="text-gray-600" />
@@ -192,9 +192,9 @@
 					</div>
 
 					{#if job.skills}
-						<div class="flex gap-2.5 text-sm">
+						<div class="flex flex-wrap gap-2.5 text-sm">
 							{#each job.skills as skill}
-								<p class="rounded-[10px] bg-gray-100 px-2.5 py-1">{skill}</p>
+								<p class="rounded-[5px] bg-gray-100 px-2.5 py-1">{skill}</p>
 							{/each}
 						</div>
 					{/if}
@@ -213,9 +213,6 @@
 						<div class="flex items-center gap-2.5">
 							<Clock size="16" class="text-gray-400" />
 							<span class="font-medium text-gray-600">{job.type}</span>
-						</div>
-						<div>
-							<p class="font-medium text-[#FF4F0F]">{job.category}</p>
 						</div>
 					</div>
 
