@@ -127,12 +127,12 @@
 
 						<div class="options-container relative flex items-center gap-2.5">
 							<p
-								class="rounded-[10px] px-3 py-1
+								class="rounded-[5px] px-3 py-1
 								text-sm
 								{job.jobStatus === 'draft'
-									? 'bg-yellow-100 text-yellow-600'
+									? 'bg-yellow-50 text-yellow-600'
 									: job.jobStatus === 'published'
-										? 'bg-blue-100 text-blue-600'
+										? 'bg-blue-50 text-blue-600'
 										: 'bg-gray-100 text-gray-600'}
 								"
 							>
@@ -143,7 +143,7 @@
 										: 'Closed'}
 							</p>
 							<button
-								class="cursor-pointer rounded-[10px] bg-gray-100 p-1 py-2 focus:outline-none"
+								class="cursor-pointer rounded-[5px] bg-gray-100 p-1 py-2 focus:outline-none"
 								onclick={() => toggleOptions(job.id)}
 							>
 								<EllipsisVertical size="16" class="text-gray-600" />
@@ -199,30 +199,28 @@
 						</div>
 					{/if}
 
-					<div class="flex flex-wrap gap-5 text-sm">
+					<div class="flex flex-wrap gap-5 text-sm text-gray-600">
 						<div class="flex items-center gap-2.5">
-							<MapPin size="16" class="text-gray-400" />
-							<span class="font-medium text-gray-600">
-								{#if job.city}
-									{`${job.city}, ${job.country} (${job.locationType})`}
-								{:else}
-									{job.locationType}
-								{/if}
-							</span>
+							<MapPin size="14" />
+							{#if job.city}
+								{`${job.city}, ${job.country} (${job.locationType})`}
+							{:else}
+								{job.locationType}
+							{/if}
 						</div>
 						<div class="flex items-center gap-2.5">
-							<Clock size="16" class="text-gray-400" />
-							<span class="font-medium text-gray-600">{job.type}</span>
+							<Clock size="14" />
+							<span>{job.type}</span>
 						</div>
 					</div>
 
 					<div class="flex items-center gap-5 text-sm text-gray-400">
 						<p class="flex items-center gap-2.5">
-							<Users size="16" class="" />
+							<Users size="14" class="" />
 							<span class="flex gap-1.5">0 <span class="hidden sm:block">applicants</span></span>
 						</p>
 						<p class="flex items-center gap-2.5">
-							<Eye size="16" />
+							<Eye size="14" />
 							<span class="flex gap-1.5">0 <span class="hidden sm:block">views</span></span>
 						</p>
 						<p>Posted {timeAgo(job.createdAt)}</p>

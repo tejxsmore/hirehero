@@ -2,7 +2,7 @@
 	const { data } = $props();
 	const { jobs } = data;
 
-	import { Briefcase, MapPin, Clock, X, DollarSign, GraduationCap, Star } from '@lucide/svelte';
+	import { Briefcase, MapPin, Clock, X, IndianRupee, GraduationCap, Star } from '@lucide/svelte';
 	import Fuse from 'fuse.js';
 	import MarkdownParser from '$lib/components/MarkdownParser.svelte';
 
@@ -476,7 +476,7 @@
 
 							{#if selectedJob.salaryMin && selectedJob.salaryMax}
 								<div class="flex items-start gap-2.5">
-									<DollarSign size="16" class="mt-1 text-gray-400" />
+									<IndianRupee size="16" class="mt-1 text-gray-400" />
 									<div>
 										<p class="text-gray-600">Salary</p>
 										<p class="font-medium">{formatSalary(selectedJob)}</p>
@@ -622,7 +622,7 @@
 
 					{#if selectedJob.salaryMin && selectedJob.salaryMax}
 						<div class="flex items-start gap-2.5">
-							<DollarSign size="16" class="mt-1 text-gray-400" />
+							<IndianRupee size="16" class="mt-1 text-gray-400" />
 							<div>
 								<p class="text-gray-600">Salary</p>
 								<p class="font-medium">{formatSalary(selectedJob)}</p>

@@ -42,13 +42,9 @@
 
 	// Enum options
 	const jobTypes = ['Full Time', 'Part Time', 'Contract', 'Internship', 'Freelance'];
-
 	const salaryTypes = ['Per Year', 'Per Month', 'Per Week', 'Per Day', 'Per Hour'];
-
 	const locationTypes = ['Remote', 'On-site', 'Hybrid'];
-
 	const experienceLevels = ['Entry Level', 'Mid Level', 'Senior Level', 'Lead', 'Executive'];
-
 	const educationLevels = [
 		'High School',
 		'Diploma',
@@ -57,7 +53,6 @@
 		'PhD',
 		'Not Required'
 	];
-
 	const jobCategories = [
 		'Technology',
 		'Marketing',
@@ -73,10 +68,8 @@
 		'Legal',
 		'Other'
 	];
-
 	const currencies = ['₹ INR', '$ USD', '€ EUR', '£ GBP'];
 
-	// Functions
 	function addSkill() {
 		if (skillInput.trim() && !formData.skills.includes(skillInput.trim())) {
 			formData.skills = [...formData.skills, skillInput.trim()];
@@ -99,7 +92,7 @@
 		isPublished = !isPublished;
 	}
 
-	function handleSubmit(event: Event) {
+	async function handleSubmit(event: Event) {
 		event.preventDefault();
 
 		const form = event.target as HTMLFormElement;
