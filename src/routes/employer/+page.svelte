@@ -18,7 +18,7 @@
 		<Dashboard employer={employerProfile} jobs={jobsPosted} {applications} />
 	{:else}
 		<div class="flex w-full justify-center p-5">
-			<div class="w-full max-w-md space-y-10 rounded-[15px] border border-gray-300 bg-white p-5">
+			<div class="w-full max-w-2xl space-y-10 rounded-[15px] border border-gray-300 bg-white p-5">
 				<div class="space-y-2.5 py-5 text-center">
 					<p class="text-xl font-semibold">Join as an Employer</p>
 					<p class="text-gray-600">Connect with top talent and grow your team</p>

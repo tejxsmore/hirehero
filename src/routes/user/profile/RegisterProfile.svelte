@@ -22,6 +22,7 @@
 
 	let currentStep = $state(1);
 	let skillInput = $state('');
+	let isSubmitting = $state(false);
 
 	let resumeUpload = $state(false);
 	let resumeName = $state('');
@@ -246,7 +247,7 @@
 				body: JSON.stringify({
 					fileName: file.name,
 					fileType: file.type,
-					fileSize: file.size // Add file size for additional validation
+					fileSize: file.size
 				}),
 				headers: {
 					'Content-Type': 'application/json'
@@ -286,9 +287,11 @@
 		}
 	}
 
-	// Fixed handleSubmit function with better error handling and validation
+	// Fixed handleSubmit function with proper form submission
 	async function handleSubmit(event: Event) {
 		event.preventDefault();
+
+		if (isSubmitting) return; // Prevent double submission
 
 		// Basic validation before submission
 		if (!formData.fullName || !formData.email || !formData.location || !formData.headline) {
@@ -308,66 +311,42 @@
 			return;
 		}
 
+		isSubmitting = true;
+
 		try {
 			console.log('Submitting form data:', formData);
 
-			// Use the standard SvelteKit form action approach
+			// Create FormData and submit to the register action
 			const form = new FormData();
 			form.append('data', JSON.stringify(formData));
 
-			const response = await fetch('', {
-				// Empty string means current page
+			const response = await fetch('?/register', {
 				method: 'POST',
-				body: form,
-				headers: {
-					// Don't set Content-Type - let browser handle it for FormData
-				}
+				body: form
 			});
 
 			console.log('Response status:', response.status);
-			console.log('Response headers:', response.headers);
 
-			// Check if response is ok
-			if (!response.ok) {
-				const errorText = await response.text();
-				console.error('Server error response:', errorText);
-				throw new Error(`Server error: ${response.status} - ${errorText}`);
-			}
-
-			// Try to parse as JSON, but handle cases where it might not be JSON
-			let result;
-			const contentType = response.headers.get('content-type');
-
-			if (contentType && contentType.includes('application/json')) {
-				result = await response.json();
-			} else {
-				// If it's not JSON, it might be a redirect or HTML response
-				const text = await response.text();
-				console.log('Non-JSON response:', text);
-
-				// If we get here and status is 200, assume success
-				if (response.status === 200) {
-					console.log('Profile registered successfully (non-JSON response)');
-					goto('/jobs');
+			if (response.ok) {
+				// Check if it's a redirect response
+				if (response.redirected) {
+					window.location.href = response.url;
 					return;
-				} else {
-					throw new Error(`Unexpected response: ${text}`);
 				}
-			}
 
-			console.log('Parsed result:', result);
+				// Try to parse response
+				const result = await response.json().catch(() => null);
 
-			// Handle SvelteKit form action responses
-			if (result.type === 'success' || result.success === true) {
-				console.log('Profile registered successfully!');
+				if (result?.type === 'success') {
+					console.log('Profile registered successfully!');
+				}
+
+				// Navigate to jobs page
 				goto('/jobs');
-			} else if (result.type === 'failure' || result.type === 'error') {
-				const errorMessage = result.data?.error || result.error || 'Registration failed';
-				throw new Error(errorMessage);
 			} else {
-				// Assume success if no explicit error
-				console.log('Profile registered successfully (assumed)');
-				goto('/jobs');
+				// Handle error response
+				const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+				throw new Error(errorData.error || `Server error: ${response.status}`);
 			}
 		} catch (error: any) {
 			console.error('Form submission error:', error);
@@ -375,7 +354,7 @@
 			// More user-friendly error messages
 			let errorMessage = 'Failed to register profile. ';
 
-			if (error.message.includes('fetch')) {
+			if (error.message.includes('fetch') || error.message.includes('network')) {
 				errorMessage += 'Please check your internet connection and try again.';
 			} else if (error.message.includes('401')) {
 				errorMessage += 'You are not logged in. Please sign in and try again.';
@@ -388,6 +367,8 @@
 			}
 
 			alert(errorMessage);
+		} finally {
+			isSubmitting = false;
 		}
 	}
 </script>
@@ -406,11 +387,11 @@
 					style="width: {(currentStep / totalSteps) * 100}%"
 				></div>
 			</div>
-			<p class="mt-2 text-center font-medium text-gray-600">{stepTitles[currentStep - 1]}</p>
+			<!-- <p class="mt-2 text-center font-medium text-gray-600">{stepTitles[currentStep - 1]}</p> -->
 		</div>
 
 		<!-- Form Container -->
-		<div class="rounded-[15px] border border-gray-300 bg-white p-5">
+		<form onsubmit={handleSubmit} class="rounded-[15px] border border-gray-300 bg-white p-5">
 			{#if currentStep === 1}
 				<!-- Step 1: Basic Information -->
 				<div class="space-y-5">
@@ -469,25 +450,25 @@
 								type="tel"
 								id="phone"
 								bind:value={formData.phone}
-								placeholder="+1 (555) 123-4567"
+								placeholder="+91 9191919191"
 								class="w-full bg-transparent placeholder:text-gray-400 focus:outline-none"
 							/>
 						</div>
 					</div>
 
 					<div class="space-y-1">
-						<label for="resume" class="block text-sm font-medium text-gray-600">
+						<label for="resume-upload" class="block text-sm font-medium text-gray-600">
 							Upload Resume <span class="text-[#FF4F0F]">*</span>
 						</label>
 
 						{#if !resumeUpload}
 							<div class="group relative">
 								<div
-									class="cursor-pointer rounded-[10px] border-2 border-dashed border-gray-300 bg-gray-50 px-6 py-8 text-center transition-all duration-200 hover:border-gray-400 hover:bg-gray-100"
+									class="cursor-pointer rounded-[10px] border-2 border-dashed border-gray-300 px-6 py-8 text-center transition-all duration-200 hover:border-gray-400 hover:bg-gray-100"
 								>
 									<input
 										type="file"
-										id="resume"
+										id="resume-upload"
 										accept=".pdf,.doc,.docx"
 										onchange={handleResumeUpload}
 										required
@@ -554,6 +535,7 @@
 										resumeUpload = false;
 										resumeName = '';
 										resumeSize = '';
+										formData.resumeUrl = '';
 									}}
 								>
 									Change
@@ -705,7 +687,7 @@
 					</div>
 
 					<div class="space-y-1">
-						<label for="skills" class="block text-sm font-medium text-gray-600">
+						<label for="skills-input" class="block text-sm font-medium text-gray-600">
 							Add Skills <span class="text-[#FF4F0F]">*</span>
 						</label>
 						<div class="flex gap-2">
@@ -714,7 +696,7 @@
 							>
 								<input
 									type="text"
-									id="skills"
+									id="skills-input"
 									bind:value={skillInput}
 									placeholder="e.g. JavaScript, React, Python"
 									class="w-full bg-transparent placeholder:text-gray-400 focus:outline-none"
@@ -724,9 +706,9 @@
 							<button
 								type="button"
 								onclick={addSkill}
-								class="rounded-[10px] bg-[#FF4F0F] px-4 py-2.5 text-white transition-colors duration-200 hover:bg-[#F14A00]"
+								class="cursor-pointer rounded-full bg-[#FF4F0F] px-2.75 text-white transition-colors duration-200 hover:bg-[#F14A00]"
 							>
-								<Plus class="h-4 w-4" />
+								<Plus />
 							</button>
 						</div>
 						<p class="text-xs tracking-wide text-gray-400">
@@ -737,16 +719,14 @@
 					{#if formData.skills.length > 0}
 						<div class="space-y-2">
 							<p class="text-sm font-medium text-gray-600">Your Skills:</p>
-							<div class="flex flex-wrap gap-2">
+							<div class="flex flex-wrap gap-2.5">
 								{#each formData.skills as skill}
-									<span
-										class="inline-flex items-center gap-1 rounded-full bg-[#FF4F0F] px-3 py-1 text-sm text-white"
-									>
-										{skill}
+									<span class="flex gap-3 rounded-full bg-[#FF4F0F] p-1 pl-3 text-white">
+										<span class="mb-0.5">{skill}</span>
 										<button
 											type="button"
 											onclick={() => removeSkill(skill)}
-											class="rounded-full p-0.5 transition-colors hover:bg-[#F14A00]"
+											class="cursor-pointer rounded-full px-1.5 hover:bg-[#F14A00]"
 										>
 											<Trash2 class="h-3 w-3" />
 										</button>
@@ -781,7 +761,7 @@
 
 							<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
 								<div class="space-y-1">
-									<label for="companyName" class="block text-sm font-medium text-gray-600">
+									<label for="company-{exp.id}" class="block text-sm font-medium text-gray-600">
 										Company <span class="text-[#FF4F0F]">*</span>
 									</label>
 									<div
@@ -790,17 +770,16 @@
 										<Building2 class="mr-5 h-4 w-4 text-gray-400" />
 										<input
 											type="text"
+											id="company-{exp.id}"
 											bind:value={exp.company}
 											placeholder="Company name"
-											required
-											name="companyName"
 											class="w-full bg-transparent placeholder:text-gray-400 focus:outline-none"
 										/>
 									</div>
 								</div>
 
 								<div class="space-y-1">
-									<label class="block text-sm font-medium text-gray-600">
+									<label for="title-{exp.id}" class="block text-sm font-medium text-gray-600">
 										Job Title <span class="text-[#FF4F0F]">*</span>
 									</label>
 									<div
@@ -809,47 +788,63 @@
 										<Briefcase class="mr-5 h-4 w-4 text-gray-400" />
 										<input
 											type="text"
+											id="title-{exp.id}"
 											bind:value={exp.title}
 											placeholder="Your role"
-											required
-											name=""
 											class="w-full bg-transparent placeholder:text-gray-400 focus:outline-none"
 										/>
 									</div>
 								</div>
 
 								<div class="space-y-1">
-									<label class="block text-sm font-medium text-gray-600">Start Date</label>
+									<label for="start-date-{exp.id}" class="block text-sm font-medium text-gray-600"
+										>Start Date</label
+									>
 									<input
 										type="month"
+										id="start-date-{exp.id}"
 										bind:value={exp.startDate}
 										class="w-full rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5 focus:outline-none"
 									/>
 								</div>
 
 								<div class="space-y-1">
-									<label class="block text-sm font-medium text-gray-600">End Date</label>
+									<label for="end-date-{exp.id}" class="block text-sm font-medium text-gray-600"
+										>End Date</label
+									>
 									<input
 										type="month"
+										id="end-date-{exp.id}"
 										bind:value={exp.endDate}
 										disabled={exp.isCurrent}
 										class="w-full rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5 focus:outline-none disabled:opacity-50"
 									/>
-									<label class="flex items-center gap-2 text-sm text-gray-600">
-										<input type="checkbox" bind:checked={exp.isCurrent} class="rounded" />
+									<label
+										for="current-{exp.id}"
+										class="flex items-center gap-2 text-sm text-gray-600"
+									>
+										<input
+											type="checkbox"
+											id="current-{exp.id}"
+											bind:checked={exp.isCurrent}
+											class="rounded"
+										/>
 										I currently work here
 									</label>
 								</div>
 							</div>
 
 							<div class="space-y-1">
-								<label class="block text-sm font-medium text-gray-600">Location</label>
+								<label for="exp-location-{exp.id}" class="block text-sm font-medium text-gray-600"
+									>Location</label
+								>
 								<div
 									class="flex items-center rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5"
 								>
 									<MapPin class="mr-5 h-4 w-4 text-gray-400" />
 									<input
 										type="text"
+										id="exp-location-{exp.id}"
 										bind:value={exp.location}
 										placeholder="City, Country"
 										class="w-full bg-transparent placeholder:text-gray-400 focus:outline-none"
@@ -858,13 +853,21 @@
 							</div>
 
 							<div class="space-y-1">
-								<label class="block text-sm font-medium text-gray-600">Description</label>
-								<textarea
-									bind:value={exp.description}
-									rows="3"
-									placeholder="Describe your responsibilities and achievements..."
-									class="w-full resize-none rounded-[10px] border border-gray-300 bg-gray-200 p-5 placeholder:text-gray-400 focus:outline-none"
-								></textarea>
+								<label
+									for="exp-description-{exp.id}"
+									class="block text-sm font-medium text-gray-600"
+								>
+									Job Description
+								</label>
+								<div class="rounded-[10px] border border-gray-300 bg-gray-200 p-5">
+									<textarea
+										id="exp-description-{exp.id}"
+										bind:value={exp.description}
+										rows="3"
+										placeholder="Describe your role, responsibilities, and achievements..."
+										class="w-full resize-none bg-transparent placeholder:text-gray-400 focus:outline-none"
+									></textarea>
+								</div>
 							</div>
 						</div>
 					{/each}
@@ -872,7 +875,7 @@
 					<button
 						type="button"
 						onclick={addExperience}
-						class="flex w-full items-center justify-center gap-2 rounded-[10px] border-2 border-dashed border-gray-300 py-3 text-gray-600 transition-colors hover:border-[#FF4F0F] hover:text-[#FF4F0F]"
+						class="flex w-full cursor-pointer items-center justify-center gap-2 rounded-[10px] border-2 border-dashed border-gray-300 bg-gray-50 px-4 py-3 text-gray-600 transition-colors hover:border-gray-400 hover:bg-gray-100"
 					>
 						<Plus class="h-4 w-4" />
 						Add Another Experience
@@ -903,7 +906,7 @@
 
 							<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
 								<div class="space-y-1">
-									<label class="block text-sm font-medium text-gray-600">
+									<label for="institution-{edu.id}" class="block text-sm font-medium text-gray-600">
 										Institution <span class="text-[#FF4F0F]">*</span>
 									</label>
 									<div
@@ -912,60 +915,85 @@
 										<GraduationCap class="mr-5 h-4 w-4 text-gray-400" />
 										<input
 											type="text"
+											id="institution-{edu.id}"
 											bind:value={edu.institution}
-											placeholder="University name"
-											required
+											placeholder="University/College name"
 											class="w-full bg-transparent placeholder:text-gray-400 focus:outline-none"
 										/>
 									</div>
 								</div>
 
 								<div class="space-y-1">
-									<label class="block text-sm font-medium text-gray-600">
+									<label for="degree-{edu.id}" class="block text-sm font-medium text-gray-600">
 										Degree <span class="text-[#FF4F0F]">*</span>
 									</label>
-									<input
-										type="text"
-										bind:value={edu.degree}
-										placeholder="e.g. Bachelor's, Master's"
-										required
-										class="w-full rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5 placeholder:text-gray-400 focus:outline-none"
-									/>
+									<div
+										class="flex items-center rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5"
+									>
+										<Award class="mr-5 h-4 w-4 text-gray-400" />
+										<input
+											type="text"
+											id="degree-{edu.id}"
+											bind:value={edu.degree}
+											placeholder="e.g. Bachelor's, Master's"
+											class="w-full bg-transparent placeholder:text-gray-400 focus:outline-none"
+										/>
+									</div>
 								</div>
 
 								<div class="space-y-1">
-									<label class="block text-sm font-medium text-gray-600">Field of Study</label>
-									<input
-										type="text"
-										bind:value={edu.fieldOfStudy}
-										placeholder="e.g. Computer Science"
-										class="w-full rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5 placeholder:text-gray-400 focus:outline-none"
-									/>
+									<label for="field-{edu.id}" class="block text-sm font-medium text-gray-600">
+										Field of Study
+									</label>
+									<div
+										class="flex items-center rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5"
+									>
+										<input
+											type="text"
+											id="field-{edu.id}"
+											bind:value={edu.fieldOfStudy}
+											placeholder="e.g. Computer Science"
+											class="w-full bg-transparent placeholder:text-gray-400 focus:outline-none"
+										/>
+									</div>
 								</div>
 
 								<div class="space-y-1">
-									<label class="block text-sm font-medium text-gray-600">Grade/GPA</label>
-									<input
-										type="text"
-										bind:value={edu.grade}
-										placeholder="e.g. 3.8/4.0"
-										class="w-full rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5 placeholder:text-gray-400 focus:outline-none"
-									/>
+									<label for="grade-{edu.id}" class="block text-sm font-medium text-gray-600">
+										Grade/GPA
+									</label>
+									<div
+										class="flex items-center rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5"
+									>
+										<input
+											type="text"
+											id="grade-{edu.id}"
+											bind:value={edu.grade}
+											placeholder="e.g. 3.8/4.0, First Class"
+											class="w-full bg-transparent placeholder:text-gray-400 focus:outline-none"
+										/>
+									</div>
 								</div>
 
 								<div class="space-y-1">
-									<label class="block text-sm font-medium text-gray-600">Start Date</label>
+									<label for="edu-start-{edu.id}" class="block text-sm font-medium text-gray-600"
+										>Start Date</label
+									>
 									<input
 										type="month"
+										id="edu-start-{edu.id}"
 										bind:value={edu.startDate}
 										class="w-full rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5 focus:outline-none"
 									/>
 								</div>
 
 								<div class="space-y-1">
-									<label class="block text-sm font-medium text-gray-600">End Date</label>
+									<label for="edu-end-{edu.id}" class="block text-sm font-medium text-gray-600"
+										>End Date</label
+									>
 									<input
 										type="month"
+										id="edu-end-{edu.id}"
 										bind:value={edu.endDate}
 										class="w-full rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5 focus:outline-none"
 									/>
@@ -973,13 +1001,21 @@
 							</div>
 
 							<div class="space-y-1">
-								<label class="block text-sm font-medium text-gray-600">Description</label>
-								<textarea
-									bind:value={edu.description}
-									rows="2"
-									placeholder="Relevant coursework, achievements, activities..."
-									class="w-full resize-none rounded-[10px] border border-gray-300 bg-gray-200 p-5 placeholder:text-gray-400 focus:outline-none"
-								></textarea>
+								<label
+									for="edu-description-{edu.id}"
+									class="block text-sm font-medium text-gray-600"
+								>
+									Description
+								</label>
+								<div class="rounded-[10px] border border-gray-300 bg-gray-200 p-5">
+									<textarea
+										id="edu-description-{edu.id}"
+										bind:value={edu.description}
+										rows="3"
+										placeholder="Relevant coursework, achievements, activities..."
+										class="w-full resize-none bg-transparent placeholder:text-gray-400 focus:outline-none"
+									></textarea>
+								</div>
 							</div>
 						</div>
 					{/each}
@@ -987,7 +1023,7 @@
 					<button
 						type="button"
 						onclick={addEducation}
-						class="flex w-full items-center justify-center gap-2 rounded-[10px] border-2 border-dashed border-gray-300 py-3 text-gray-600 transition-colors hover:border-[#FF4F0F] hover:text-[#FF4F0F]"
+						class="flex w-full cursor-pointer items-center justify-center gap-2 rounded-[10px] border-2 border-dashed border-gray-300 bg-gray-50 px-4 py-3 text-gray-600 transition-colors hover:border-gray-400 hover:bg-gray-100"
 					>
 						<Plus class="h-4 w-4" />
 						Add Another Education
@@ -1002,7 +1038,7 @@
 					</div>
 
 					<!-- Projects Section -->
-					<div class="space-y-4">
+					<div class="space-y-6">
 						<h4 class="text-lg font-medium text-gray-700">Projects</h4>
 
 						{#each formData.projects as project, index}
@@ -1022,23 +1058,39 @@
 
 								<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
 									<div class="space-y-1">
-										<label class="block text-sm font-medium text-gray-600">Project Title</label>
-										<input
-											type="text"
-											bind:value={project.title}
-											placeholder="Project name"
-											class="w-full rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5 placeholder:text-gray-400 focus:outline-none"
-										/>
+										<label
+											for="project-title-{project.id}"
+											class="block text-sm font-medium text-gray-600"
+										>
+											Project Title
+										</label>
+										<div
+											class="flex items-center rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5"
+										>
+											<input
+												type="text"
+												id="project-title-{project.id}"
+												bind:value={project.title}
+												placeholder="Project name"
+												class="w-full bg-transparent placeholder:text-gray-400 focus:outline-none"
+											/>
+										</div>
 									</div>
 
 									<div class="space-y-1">
-										<label class="block text-sm font-medium text-gray-600">Project URL</label>
+										<label
+											for="project-url-{project.id}"
+											class="block text-sm font-medium text-gray-600"
+										>
+											Project URL
+										</label>
 										<div
 											class="flex items-center rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5"
 										>
 											<Globe class="mr-5 h-4 w-4 text-gray-400" />
 											<input
 												type="url"
+												id="project-url-{project.id}"
 												bind:value={project.projectUrl}
 												placeholder="https://project-demo.com"
 												class="w-full bg-transparent placeholder:text-gray-400 focus:outline-none"
@@ -1047,29 +1099,89 @@
 									</div>
 
 									<div class="space-y-1">
-										<label class="block text-sm font-medium text-gray-600">GitHub URL</label>
+										<label
+											for="github-url-{project.id}"
+											class="block text-sm font-medium text-gray-600"
+										>
+											GitHub URL
+										</label>
 										<div
 											class="flex items-center rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5"
 										>
 											<Github class="mr-5 h-4 w-4 text-gray-400" />
 											<input
 												type="url"
+												id="github-url-{project.id}"
 												bind:value={project.githubUrl}
-												placeholder="https://github.com/..."
+												placeholder="https://github.com/username/repo"
 												class="w-full bg-transparent placeholder:text-gray-400 focus:outline-none"
 											/>
 										</div>
 									</div>
+
+									<div class="space-y-1">
+										<label
+											for="project-tech-{project.id}"
+											class="block text-sm font-medium text-gray-600"
+										>
+											Technologies Used
+										</label>
+										<div
+											class="flex items-center rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5"
+										>
+											<input
+												type="text"
+												id="project-tech-{project.id}"
+												bind:value={project.technologies}
+												placeholder="React, Node.js, MongoDB"
+												class="w-full bg-transparent placeholder:text-gray-400 focus:outline-none"
+											/>
+										</div>
+									</div>
+
+									<div class="space-y-1">
+										<label
+											for="project-start-{project.id}"
+											class="block text-sm font-medium text-gray-600">Start Date</label
+										>
+										<input
+											type="month"
+											id="project-start-{project.id}"
+											bind:value={project.startDate}
+											class="w-full rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5 focus:outline-none"
+										/>
+									</div>
+
+									<div class="space-y-1">
+										<label
+											for="project-end-{project.id}"
+											class="block text-sm font-medium text-gray-600">End Date</label
+										>
+										<input
+											type="month"
+											id="project-end-{project.id}"
+											bind:value={project.endDate}
+											class="w-full rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5 focus:outline-none"
+										/>
+									</div>
 								</div>
 
 								<div class="space-y-1">
-									<label class="block text-sm font-medium text-gray-600">Description</label>
-									<textarea
-										bind:value={project.description}
-										rows="3"
-										placeholder="Describe what you built and the impact it had..."
-										class="w-full resize-none rounded-[10px] border border-gray-300 bg-gray-200 p-5 placeholder:text-gray-400 focus:outline-none"
-									></textarea>
+									<label
+										for="project-description-{project.id}"
+										class="block text-sm font-medium text-gray-600"
+									>
+										Project Description
+									</label>
+									<div class="rounded-[10px] border border-gray-300 bg-gray-200 p-5">
+										<textarea
+											id="project-description-{project.id}"
+											bind:value={project.description}
+											rows="3"
+											placeholder="Describe the project, your role, and key achievements..."
+											class="w-full resize-none bg-transparent placeholder:text-gray-400 focus:outline-none"
+										></textarea>
+									</div>
 								</div>
 							</div>
 						{/each}
@@ -1077,7 +1189,7 @@
 						<button
 							type="button"
 							onclick={addProject}
-							class="flex w-full items-center justify-center gap-2 rounded-[10px] border-2 border-dashed border-gray-300 py-3 text-gray-600 transition-colors hover:border-[#FF4F0F] hover:text-[#FF4F0F]"
+							class="flex w-full cursor-pointer items-center justify-center gap-2 rounded-[10px] border-2 border-dashed border-gray-300 bg-gray-50 px-4 py-3 text-gray-600 transition-colors hover:border-gray-400 hover:bg-gray-100"
 						>
 							<Plus class="h-4 w-4" />
 							Add Another Project
@@ -1085,7 +1197,7 @@
 					</div>
 
 					<!-- Certifications Section -->
-					<div class="space-y-4">
+					<div class="space-y-6">
 						<h4 class="text-lg font-medium text-gray-700">Certifications</h4>
 
 						{#each formData.certifications as cert, index}
@@ -1105,46 +1217,68 @@
 
 								<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
 									<div class="space-y-1">
-										<label class="block text-sm font-medium text-gray-600">Certification Name</label
+										<label
+											for="cert-name-{cert.id}"
+											class="block text-sm font-medium text-gray-600"
 										>
+											Certificate Name
+										</label>
 										<div
 											class="flex items-center rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5"
 										>
 											<Award class="mr-5 h-4 w-4 text-gray-400" />
 											<input
 												type="text"
+												id="cert-name-{cert.id}"
 												bind:value={cert.name}
-												placeholder="Certification title"
+												placeholder="e.g. AWS Solutions Architect"
 												class="w-full bg-transparent placeholder:text-gray-400 focus:outline-none"
 											/>
 										</div>
 									</div>
 
 									<div class="space-y-1">
-										<label class="block text-sm font-medium text-gray-600"
-											>Issuing Organization</label
+										<label
+											for="cert-issuer-{cert.id}"
+											class="block text-sm font-medium text-gray-600"
 										>
-										<input
-											type="text"
-											bind:value={cert.issuer}
-											placeholder="e.g. Google, Microsoft, AWS"
-											class="w-full rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5 placeholder:text-gray-400 focus:outline-none"
-										/>
+											Issuing Organization
+										</label>
+										<div
+											class="flex items-center rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5"
+										>
+											<Building2 class="mr-5 h-4 w-4 text-gray-400" />
+											<input
+												type="text"
+												id="cert-issuer-{cert.id}"
+												bind:value={cert.issuer}
+												placeholder="e.g. Amazon Web Services"
+												class="w-full bg-transparent placeholder:text-gray-400 focus:outline-none"
+											/>
+										</div>
 									</div>
 
 									<div class="space-y-1">
-										<label class="block text-sm font-medium text-gray-600">Issue Date</label>
+										<label
+											for="cert-issue-{cert.id}"
+											class="block text-sm font-medium text-gray-600">Issue Date</label
+										>
 										<input
 											type="month"
+											id="cert-issue-{cert.id}"
 											bind:value={cert.issueDate}
 											class="w-full rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5 focus:outline-none"
 										/>
 									</div>
 
 									<div class="space-y-1">
-										<label class="block text-sm font-medium text-gray-600">Expiry Date</label>
+										<label
+											for="cert-expiry-{cert.id}"
+											class="block text-sm font-medium text-gray-600">Expiry Date</label
+										>
 										<input
 											type="month"
+											id="cert-expiry-{cert.id}"
 											bind:value={cert.expiryDate}
 											class="w-full rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5 focus:outline-none"
 										/>
@@ -1152,15 +1286,18 @@
 								</div>
 
 								<div class="space-y-1">
-									<label class="block text-sm font-medium text-gray-600">Certificate URL</label>
+									<label for="cert-url-{cert.id}" class="block text-sm font-medium text-gray-600">
+										Certificate URL
+									</label>
 									<div
 										class="flex items-center rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5"
 									>
 										<FileText class="mr-5 h-4 w-4 text-gray-400" />
 										<input
 											type="url"
+											id="cert-url-{cert.id}"
 											bind:value={cert.certificateUrl}
-											placeholder="https://certificate-link.com"
+											placeholder="https://certificate-url.com"
 											class="w-full bg-transparent placeholder:text-gray-400 focus:outline-none"
 										/>
 									</div>
@@ -1171,7 +1308,7 @@
 						<button
 							type="button"
 							onclick={addCertification}
-							class="flex w-full items-center justify-center gap-2 rounded-[10px] border-2 border-dashed border-gray-300 py-3 text-gray-600 transition-colors hover:border-[#FF4F0F] hover:text-[#FF4F0F]"
+							class="flex w-full cursor-pointer items-center justify-center gap-2 rounded-[10px] border-2 border-dashed border-gray-300 bg-gray-50 px-4 py-3 text-gray-600 transition-colors hover:border-gray-400 hover:bg-gray-100"
 						>
 							<Plus class="h-4 w-4" />
 							Add Another Certification
@@ -1181,48 +1318,47 @@
 			{/if}
 
 			<!-- Navigation Buttons -->
-			<div class="flex items-center justify-between pt-5">
+			<div class="mt-8 flex items-center justify-between">
 				<button
 					type="button"
 					onclick={prevStep}
 					disabled={currentStep === 1}
-					class="flex cursor-pointer items-center gap-2 rounded-[10px] border border-gray-300 px-6 py-2.5 text-gray-600 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+					class="flex cursor-pointer items-center gap-5 rounded-full border border-gray-300 bg-gray-200
+					px-7.5 py-2.5 text-gray-600 transition-colors duration-200 hover:bg-gray-300
+					disabled:cursor-not-allowed disabled:opacity-50"
 				>
 					<ChevronLeft class="h-4 w-4" />
 					Previous
 				</button>
 
-				{#if currentStep < totalSteps}
+				{#if currentStep === totalSteps}
+					<button
+						type="submit"
+						disabled={isSubmitting}
+						class="flex cursor-pointer items-center gap-5 rounded-full
+						border border-[#E6521F] bg-[#FF4F0F] px-7.5 py-2.5 text-white transition-colors duration-200 hover:bg-[#F14A00] disabled:cursor-not-allowed disabled:opacity-50"
+					>
+						{#if isSubmitting}
+							<div
+								class="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"
+							></div>
+							Submitting...
+						{:else}
+							<Check class="h-4 w-4" />
+							Complete Profile
+						{/if}
+					</button>
+				{:else}
 					<button
 						type="button"
 						onclick={nextStep}
-						class="flex cursor-pointer items-center gap-2 rounded-[10px] bg-[#FF4F0F] px-6 py-2.5 text-white transition-colors
-						hover:bg-[#F14A00]"
+						class="flex cursor-pointer items-center gap-5 rounded-full border border-[#E6521F] bg-[#FF4F0F] px-7.5 py-2.5 text-white transition-colors duration-200 hover:bg-[#F14A00]"
 					>
 						Next
 						<ChevronRight class="h-4 w-4" />
 					</button>
-				{:else}
-					<button
-						type="submit"
-						onclick={handleSubmit}
-						class="flex cursor-pointer items-center gap-2 rounded-[10px] bg-[#FF4F0F] px-6 py-2.5 text-white transition-colors hover:bg-[#F14A00]"
-					>
-						<Check class="h-4 w-4" />
-						Complete Profile
-					</button>
 				{/if}
 			</div>
-		</div>
-
-		<!-- Help Section -->
-		<div class="mt-8 text-center text-sm text-gray-600">
-			<p>
-				Need help? Contact us at
-				<a href="mailto:support@hirehero.com" class="font-medium text-[#FF4F0F] hover:underline">
-					support@hirehero.com
-				</a>
-			</p>
-		</div>
+		</form>
 	</div>
 </div>

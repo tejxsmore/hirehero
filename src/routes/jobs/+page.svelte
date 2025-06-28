@@ -2,7 +2,16 @@
 	const { data } = $props();
 	const { jobs } = data;
 
-	import { Briefcase, MapPin, Clock, X, IndianRupee, GraduationCap, Star } from '@lucide/svelte';
+	import {
+		Briefcase,
+		MapPin,
+		Clock,
+		X,
+		IndianRupee,
+		GraduationCap,
+		Star,
+		ArrowUpRight
+	} from '@lucide/svelte';
 	import Fuse from 'fuse.js';
 	import MarkdownParser from '$lib/components/MarkdownParser.svelte';
 
@@ -155,6 +164,48 @@
 
 	function handleModalContentKeydown(event: KeyboardEvent) {
 		event.stopPropagation();
+	}
+
+	// Complete handleJobApply function
+	async function handleJobApply() {
+		if (!selectedJobId) return;
+
+		try {
+			console.log('Applied for Job Id: ', selectedJobId);
+
+			// Create FormData for SvelteKit form action
+			const formData = new FormData();
+			formData.append('selectedJobId', selectedJobId.toString());
+
+			// Submit the application
+			const res = await fetch('?/apply', {
+				method: 'POST',
+				body: formData
+			});
+
+			// Parse response
+			const result = await res.json();
+
+			if (result.type === 'success') {
+				console.log('Application submitted successfully');
+				// Show success message to user
+				alert(`Application submitted successfully for ${result.data.jobTitle}!`);
+
+				// Reload page to update UI and show applied status
+				window.location.reload();
+			} else if (result.type === 'failure') {
+				console.error('Application failed:', result.data?.message);
+				// Show error message to user
+				alert(result.data?.message || 'Failed to submit application');
+			} else {
+				// Handle unexpected response format
+				console.error('Unexpected response:', result);
+				alert('An unexpected error occurred');
+			}
+		} catch (error) {
+			console.error('Error submitting application:', error);
+			alert('An error occurred while submitting your application. Please try again.');
+		}
 	}
 </script>
 
@@ -530,13 +581,16 @@
 							<button class="cursor-pointer rounded-full border border-gray-300 px-5 py-2.5"
 								>Save</button
 							>
-							<a
-								href={`/jobs/${selectedJobId}/apply`}
+							<a href={`/jobs/${selectedJobId}/apply`}>
+								<ArrowUpRight />
+							</a>
+							<button
+								onclick={handleJobApply}
 								class="block w-full rounded-full border
-						border-[#E6521F] bg-[#FF4F0F] px-7.5 py-2.5 text-center text-white hover:bg-[#F14A00]"
+								border-[#E6521F] bg-[#FF4F0F] px-7.5 py-2.5 text-center text-white hover:bg-[#F14A00]"
 							>
 								Apply Now
-							</a>
+							</button>
 						</div>
 					</div>
 				{:else}
