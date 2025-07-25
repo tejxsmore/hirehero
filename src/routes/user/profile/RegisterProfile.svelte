@@ -353,12 +353,12 @@
 	}
 </script>
 
-<div class="flex min-h-screen justify-center p-5">
-	<div class="w-full max-w-2xl">
+<div class="flex w-full justify-center p-4.5 lg:px-20 xl:px-40">
+	<div class="w-full max-w-xl space-y-12">
 		<!-- Progress Bar -->
-		<div class="space-y-5 py-10">
+		<div class="space-y-3 py-9">
 			<div class="flex items-center justify-between">
-				<h2 class="text-2xl font-bold">Complete Your Profile</h2>
+				<h2 class="text-xl font-semibold">Complete Your Profile</h2>
 				<span class="text-sm text-gray-600">Step {currentStep} of {totalSteps}</span>
 			</div>
 			<div class="h-2 w-full rounded-full bg-gray-200">
@@ -371,124 +371,62 @@
 		</div>
 
 		<!-- Form Container -->
-		<form onsubmit={handleSubmit} class="rounded-[15px] border border-gray-300 bg-white p-5">
+		<form onsubmit={handleSubmit}>
 			{#if currentStep === 1}
+				<div class="py-5 text-center">
+					<h3 class="text-xl font-semibold">Tell us about yourself</h3>
+					<p class="text-gray-600">Basic information to get started</p>
+				</div>
 				<!-- Step 1: Basic Information -->
-				<div class="space-y-5">
-					<div class="py-5 text-center">
-						<h3 class="text-xl font-semibold">Tell us about yourself</h3>
-						<p class="text-gray-600">Basic information to get started</p>
-					</div>
+				<div class="space-y-3">
+					<input
+						type="text"
+						id="fullName"
+						bind:value={formData.fullName}
+						placeholder="Enter your full name"
+						required
+						class="w-full rounded-[12px] border border-[#D4D7DD]
+						bg-[#e8e8e8] px-4.5 py-1.5 placeholder:text-[#57564F] focus:outline-none"
+					/>
 
-					<div class="space-y-1">
-						<label for="fullName" class="block text-sm font-medium text-gray-600">
-							Full Name <span class="text-[#FF4F0F]">*</span>
-						</label>
-						<div
-							class="flex items-center rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5"
-						>
-							<User class="mr-5 h-4 w-4 text-gray-400" />
-							<input
-								type="text"
-								id="fullName"
-								bind:value={formData.fullName}
-								placeholder="Enter your full name"
-								required
-								class="w-full bg-transparent placeholder:text-gray-400 focus:outline-none"
-							/>
-						</div>
-					</div>
+					<input
+						type="email"
+						id="email"
+						bind:value={formData.email}
+						placeholder="your.email@example.com"
+						required
+						class="w-full rounded-[12px] border border-[#D4D7DD]
+						bg-[#e8e8e8] px-4.5 py-1.5 placeholder:text-[#57564F] focus:outline-none"
+					/>
 
-					<div class="space-y-1">
-						<label for="email" class="block text-sm font-medium text-gray-600">
-							Email Address <span class="text-[#FF4F0F]">*</span>
-						</label>
-						<div
-							class="flex items-center rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5"
-						>
-							<Mail class="mr-5 h-4 w-4 text-gray-400" />
-							<input
-								type="email"
-								id="email"
-								bind:value={formData.email}
-								placeholder="your.email@example.com"
-								required
-								class="w-full bg-transparent placeholder:text-gray-400 focus:outline-none"
-							/>
-						</div>
-					</div>
+					<input
+						type="tel"
+						id="phone"
+						bind:value={formData.phone}
+						placeholder="+91 9191919191"
+						class="w-full rounded-[12px] border border-[#D4D7DD]
+						bg-[#e8e8e8] px-4.5 py-1.5 placeholder:text-[#57564F] focus:outline-none"
+					/>
 
-					<div class="space-y-1">
-						<label for="phone" class="block text-sm font-medium text-gray-600">
-							Phone Number
-						</label>
-						<div
-							class="flex items-center rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5"
-						>
-							<Phone class="mr-5 h-4 w-4 text-gray-400" />
-							<input
-								type="tel"
-								id="phone"
-								bind:value={formData.phone}
-								placeholder="+91 9191919191"
-								class="w-full bg-transparent placeholder:text-gray-400 focus:outline-none"
-							/>
-						</div>
-					</div>
-
-					<div class="space-y-1">
-						<label for="resume-upload" class="block text-sm font-medium text-gray-600">
-							Upload Resume <span class="text-[#FF4F0F]">*</span>
-						</label>
-
-						{#if !resumeUpload}
-							<div class="group relative">
-								<div
-									class="cursor-pointer rounded-[10px] border-2 border-dashed border-gray-300 px-6 py-8 text-center transition-all duration-200 hover:border-gray-400 hover:bg-gray-100"
-								>
-									<input
-										type="file"
-										id="resume-upload"
-										accept=".pdf,.doc,.docx"
-										onchange={handleResumeUpload}
-										required
-										class="absolute inset-0 h-full w-full cursor-pointer opacity-0"
-									/>
-									<div class="flex flex-col items-center space-y-2">
-										<div
-											class="flex h-12 w-12 items-center justify-center rounded-full bg-gray-200 transition-colors group-hover:bg-gray-300"
-										>
-											<svg
-												class="h-6 w-6 text-gray-500"
-												fill="none"
-												stroke="currentColor"
-												viewBox="0 0 24 24"
-											>
-												<path
-													stroke-linecap="round"
-													stroke-linejoin="round"
-													stroke-width="2"
-													d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-												/>
-											</svg>
-										</div>
-										<div>
-											<p class="text-sm font-medium text-gray-700">
-												Click to upload or drag and drop
-											</p>
-											<p class="mt-1 text-xs text-gray-500">PDF, DOC, DOCX (Max 10MB)</p>
-										</div>
-									</div>
-								</div>
-							</div>
-						{:else}
+					{#if !resumeUpload}
+						<div class="group relative">
 							<div
-								class="flex items-center justify-between rounded-[10px] border-2 border-dashed border-green-400 bg-green-50 px-6 py-6 text-left transition-all duration-200"
+								class="cursor-pointer rounded-[10px] border-2 border-dashed border-gray-300 px-6 py-8 text-center transition-all duration-200 hover:border-gray-400 hover:bg-gray-100"
 							>
-								<div class="flex items-center space-x-3">
-									<div class="flex h-10 w-10 items-center justify-center rounded-full bg-green-100">
+								<input
+									type="file"
+									id="resume-upload"
+									accept=".pdf,.doc,.docx"
+									onchange={handleResumeUpload}
+									required
+									class="absolute inset-0 h-full w-full cursor-pointer opacity-0"
+								/>
+								<div class="flex flex-col items-center space-y-2">
+									<div
+										class="flex h-12 w-12 items-center justify-center rounded-full bg-gray-200 transition-colors group-hover:bg-gray-300"
+									>
 										<svg
-											class="h-6 w-6 text-green-600"
+											class="h-6 w-6 text-gray-500"
 											fill="none"
 											stroke="currentColor"
 											viewBox="0 0 24 24"
@@ -497,86 +435,88 @@
 												stroke-linecap="round"
 												stroke-linejoin="round"
 												stroke-width="2"
-												d="M5 13l4 4L19 7"
+												d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
 											/>
 										</svg>
 									</div>
 									<div>
-										<p class="text-sm font-medium text-green-700">
-											{`${resumeName} (${(Number.parseInt(resumeSize) / 1024).toFixed(1)}KB)`}
+										<p class="text-sm font-medium text-gray-700">
+											Click to upload or drag and drop
 										</p>
-										<p class="text-xs text-gray-500">Uploaded successfully</p>
+										<p class="mt-1 text-xs text-gray-500">PDF, DOC, DOCX (Max 10MB)</p>
 									</div>
 								</div>
-								<button
-									type="button"
-									class="cursor-pointer rounded-[5px] border border-[#E6521F] bg-orange-50 px-3 py-1 text-sm text-[#FF4F0F] hover:bg-orange-100"
-									onclick={() => {
-										resumeUpload = false;
-										resumeName = '';
-										resumeSize = '';
-										formData.resumeUrl = '';
-									}}
-								>
-									Change
-								</button>
 							</div>
-						{/if}
-					</div>
-
-					<div class="space-y-1">
-						<label for="location" class="block text-sm font-medium text-gray-600">
-							Location <span class="text-[#FF4F0F]">*</span>
-						</label>
+						</div>
+					{:else}
 						<div
-							class="flex items-center rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5"
+							class="flex items-center justify-between rounded-[10px] border-2 border-dashed border-green-400 bg-green-50 px-6 py-6 text-left transition-all duration-200"
 						>
-							<MapPin class="mr-5 h-4 w-4 text-gray-400" />
-							<input
-								type="text"
-								id="location"
-								bind:value={formData.location}
-								placeholder="City, Country"
-								required
-								class="w-full bg-transparent placeholder:text-gray-400 focus:outline-none"
-							/>
+							<div class="flex items-center space-x-3">
+								<div class="flex h-10 w-10 items-center justify-center rounded-full bg-green-100">
+									<svg
+										class="h-6 w-6 text-green-600"
+										fill="none"
+										stroke="currentColor"
+										viewBox="0 0 24 24"
+									>
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											stroke-width="2"
+											d="M5 13l4 4L19 7"
+										/>
+									</svg>
+								</div>
+								<div>
+									<p class="text-sm font-medium text-green-700">
+										{`${resumeName} (${(Number.parseInt(resumeSize) / 1024).toFixed(1)}KB)`}
+									</p>
+									<p class="text-xs text-gray-500">Uploaded successfully</p>
+								</div>
+							</div>
+							<button
+								type="button"
+								class="cursor-pointer rounded-[5px] border border-[#E6521F] bg-orange-50 px-3 py-1 text-sm text-[#FF4F0F] hover:bg-orange-100"
+								onclick={() => {
+									resumeUpload = false;
+									resumeName = '';
+									resumeSize = '';
+									formData.resumeUrl = '';
+								}}
+							>
+								Change
+							</button>
 						</div>
-					</div>
+					{/if}
+					<input
+						type="text"
+						id="location"
+						bind:value={formData.location}
+						placeholder="City, Country"
+						required
+						class="w-full rounded-[12px] border border-[#D4D7DD]
+						bg-[#e8e8e8] px-4.5 py-1.5 placeholder:text-[#57564F] focus:outline-none"
+					/>
 
-					<div class="space-y-1">
-						<label for="headline" class="block text-sm font-medium text-gray-600">
-							Professional Headline <span class="text-[#FF4F0F]">*</span>
-						</label>
-						<div
-							class="flex items-center rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5"
-						>
-							<Briefcase class="mr-5 h-4 w-4 text-gray-400" />
-							<input
-								type="text"
-								id="headline"
-								bind:value={formData.headline}
-								placeholder="e.g. Senior Software Engineer"
-								required
-								class="w-full bg-transparent placeholder:text-gray-400 focus:outline-none"
-							/>
-						</div>
-					</div>
+					<input
+						type="text"
+						id="headline"
+						bind:value={formData.headline}
+						placeholder="e.g. Senior Software Engineer"
+						required
+						class="w-full rounded-[12px] border border-[#D4D7DD]
+						bg-[#e8e8e8] px-4.5 py-1.5 placeholder:text-[#57564F] focus:outline-none"
+					/>
 
-					<div class="space-y-1">
-						<label for="bio" class="block text-sm font-medium text-gray-600"> About You </label>
-						<div class="rounded-[10px] border border-gray-300 bg-gray-200 p-5">
-							<textarea
-								id="bio"
-								bind:value={formData.bio}
-								rows="4"
-								placeholder="Tell us about your background, interests, and what you're looking for..."
-								class="w-full resize-none bg-transparent placeholder:text-gray-400 focus:outline-none"
-							></textarea>
-						</div>
-						<p class="text-xs tracking-wide text-gray-400">
-							This helps us understand your career goals
-						</p>
-					</div>
+					<textarea
+						id="bio"
+						bind:value={formData.bio}
+						rows="4"
+						placeholder="Tell us about your background, interests, and what you're looking for..."
+						class="w-full resize-none rounded-[12px] border
+						border-[#D4D7DD] bg-[#e8e8e8] px-4.5 py-1.5 placeholder:text-[#57564F] focus:outline-none"
+					></textarea>
 				</div>
 			{:else if currentStep === 2}
 				<!-- Step 2: Social Links -->

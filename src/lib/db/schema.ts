@@ -249,20 +249,36 @@ export const certification = pgTable('certification', {
 //
 export const employer = pgTable('employer', {
 	id: text('id').primaryKey(),
+
 	userId: text('user_id')
 		.notNull()
 		.references(() => user.id, { onDelete: 'cascade' }),
+
+	// Company Info
 	companyName: text('company_name').notNull(),
 	companyDescription: text('company_description').notNull(),
 	companyWebsite: text('company_website'),
 	companyLocation: text('company_location').notNull(),
-	contactEmail: text('contact_email').notNull(),
+	industry: text('industry'),
+
+	// Verification Info
+	registrationNumber: text('registration_number'),
+	verificationDocUrl: text('verification_doc_url'),
 	isVerified: boolean('is_verified')
-		.$defaultFn(() => false) // Changed to false for better security
+		.$defaultFn(() => false)
 		.notNull(),
+
+	// Contact Info
+	representativeName: text('representative_name'),
+	representativeTitle: text('representative_title'),
+	contactEmail: text('contact_email').notNull(),
+	contactPhone: text('contact_phone'),
+
+	// Metadata
 	createdAt: timestamp('created_at')
 		.$defaultFn(() => new Date())
 		.notNull(),
+
 	updatedAt: timestamp('updated_at')
 		.$defaultFn(() => new Date())
 		.notNull()

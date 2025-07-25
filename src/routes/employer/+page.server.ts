@@ -4,8 +4,7 @@ import { db } from '$lib/db';
 import { eq } from 'drizzle-orm';
 import type { PageServerLoad, Actions } from './$types';
 import { randomUUID } from 'crypto';
-import { fail } from 'assert';
-import { redirect } from '@sveltejs/kit';
+import { fail, redirect } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async ({ request }) => {
 	const session = await auth.api.getSession({
@@ -13,7 +12,7 @@ export const load: PageServerLoad = async ({ request }) => {
 	});
 
 	if (!session) {
-		redirect(302, '/sign-in');
+		redirect(302, '/login');
 	}
 
 	const employerProfile = await db
@@ -40,7 +39,6 @@ export const load: PageServerLoad = async ({ request }) => {
 		applications
 	};
 };
-
 export const actions = {
 	register: async ({ request }) => {
 		try {
@@ -55,16 +53,21 @@ export const actions = {
 			const formData = await request.formData();
 			const companyName = formData.get('name') as string;
 			const companyDescription = formData.get('description') as string;
-			const companyWebsite = formData.get('website') as string;
-			const contactEmail = formData.get('email') as string;
+			const companyWebsite = formData.get('website') as string | null;
 			const companyLocation = formData.get('location') as string;
+			const industry = formData.get('industry') as string | null;
 
-			// Optional: email format validation
+			const registrationNumber = formData.get('registrationNumber') as string | null;
+			const verificationDocUrl = formData.get('VerificationDoc') as string | null;
+
+			const representativeName = formData.get('representativeName') as string | null;
+			const representativeTitle = formData.get('representativeTitle') as string | null;
+			const contactEmail = formData.get('email') as string;
+			const contactPhone = formData.get('phone') as string | null;
+
 			const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 			if (!emailRegex.test(contactEmail)) {
-				return fail(400, {
-					errorMessage: 'Please enter a valid email address.'
-				});
+				return fail(400, { errorMessage: 'Please enter a valid email address.' });
 			}
 
 			await db.insert(employer).values({
@@ -74,14 +77,22 @@ export const actions = {
 				companyDescription,
 				companyWebsite,
 				companyLocation,
+				industry,
+				registrationNumber,
+				verificationDocUrl,
+				representativeName,
+				representativeTitle,
 				contactEmail,
-				isVerified: true,
+				contactPhone,
+				isVerified: true, // Or false if manual review needed
 				createdAt: new Date(),
 				updatedAt: new Date()
 			});
 		} catch (err) {
 			console.error('Employer registration failed:', err);
+			return fail(500, { errorMessage: 'Something went wrong. Please try again.' });
 		}
+
 		redirect(302, '/employer');
 	}
 };

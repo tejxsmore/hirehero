@@ -6,30 +6,38 @@ import { fail, redirect } from '@sveltejs/kit';
 export const actions = {
 	default: async ({ request, cookies }) => {
 		const formData = await request.formData();
+
+		const firstName = formData.get('firstname') as string;
+		const lastName = formData.get('lastname') as string;
 		const email = formData.get('email') as string;
 		const password = formData.get('password') as string;
 
+		const fullName = `${firstName} ${lastName}`;
+
 		try {
-			const response = await auth.api.signInEmail({
-				body: { email, password },
+			const response = await auth.api.signUpEmail({
+				body: {
+					name: fullName,
+					email,
+					password
+				},
 				asResponse: true
 			});
 
-			// Handle known API error codes
 			switch (response.status) {
-				case 401:
-					return fail(401, { errorMessage: 'User not found or wrong credentials.' });
+				case 422:
+					return fail(422, {
+						errorMessage: 'User already exists'
+					});
 				case 400:
 					return fail(400, { errorMessage: 'Invalid email format or request.' });
 			}
 
-			// Read Set-Cookie header
 			const rawSetCookie = response.headers.get('set-cookie');
 			if (!rawSetCookie) {
-				console.warn('No Set-Cookie header received from auth server.');
+				console.warn('No Set-Cookie header received from signup response.');
 			}
 
-			// Handle multiple Set-Cookie headers split by comma not inside value
 			const setCookieHeaders = rawSetCookie ? rawSetCookie.split(/,(?=\s*[^=]+=[^;]+)/) : [];
 
 			for (const cookieHeader of setCookieHeaders) {

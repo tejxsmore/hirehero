@@ -1,7 +1,6 @@
 <script lang="ts">
 	const { data } = $props();
 	const { jobs } = data;
-
 	import {
 		Briefcase,
 		MapPin,
@@ -10,7 +9,9 @@
 		IndianRupee,
 		GraduationCap,
 		Star,
-		ArrowUpRight
+		ArrowUpRight,
+		ChevronDown,
+		Check
 	} from '@lucide/svelte';
 	import Fuse from 'fuse.js';
 	import MarkdownParser from '$lib/components/MarkdownParser.svelte';
@@ -19,11 +20,16 @@
 	let mobileModal = $state(false);
 	let searchQuery = $state('');
 	let searchLocation = $state('');
-
 	let selectedJobType = $state('');
 	let selectedExperienceLevel = $state('');
 	let selectedLocationType = $state('');
 	let selectedCategory = $state('');
+
+	// Dropdown states
+	let isJobTypeDropdownOpen = $state(false);
+	let isExperienceLevelDropdownOpen = $state(false);
+	let isLocationTypeDropdownOpen = $state(false);
+	let isCategoryDropdownOpen = $state(false);
 
 	const jobTypes = [...new Set(jobs?.map((job: any) => job.type).filter(Boolean))];
 	const experienceLevels = [
@@ -50,12 +56,10 @@
 
 	const filteredJobs = $derived.by(() => {
 		let result = jobs || [];
-
 		if (searchQuery.trim()) {
 			const fuseResults = fuse.search(searchQuery);
 			result = fuseResults.map((item) => item.item);
 		}
-
 		if (searchLocation.trim()) {
 			result = result.filter(
 				(job: any) =>
@@ -63,7 +67,6 @@
 					(job.country && job.country.toLowerCase().includes(searchLocation.toLowerCase()))
 			);
 		}
-
 		if (selectedJobType) {
 			result = result.filter((job: any) => job.type === selectedJobType);
 		}
@@ -76,7 +79,6 @@
 		if (selectedCategory) {
 			result = result.filter((job: any) => job.category === selectedCategory);
 		}
-
 		return result;
 	});
 
@@ -166,145 +168,323 @@
 		event.stopPropagation();
 	}
 
-	// Complete handleJobApply function
-	async function handleJobApply() {
-		if (!selectedJobId) return;
+	// Dropdown functions
+	function toggleJobTypeDropdown() {
+		isJobTypeDropdownOpen = !isJobTypeDropdownOpen;
+		isExperienceLevelDropdownOpen = false;
+		isLocationTypeDropdownOpen = false;
+		isCategoryDropdownOpen = false;
+	}
 
-		try {
-			console.log('Applied for Job Id: ', selectedJobId);
+	function toggleExperienceLevelDropdown() {
+		isExperienceLevelDropdownOpen = !isExperienceLevelDropdownOpen;
+		isJobTypeDropdownOpen = false;
+		isLocationTypeDropdownOpen = false;
+		isCategoryDropdownOpen = false;
+	}
 
-			// Create FormData for SvelteKit form action
-			const formData = new FormData();
-			formData.append('selectedJobId', selectedJobId.toString());
+	function toggleLocationTypeDropdown() {
+		isLocationTypeDropdownOpen = !isLocationTypeDropdownOpen;
+		isJobTypeDropdownOpen = false;
+		isExperienceLevelDropdownOpen = false;
+		isCategoryDropdownOpen = false;
+	}
 
-			// Submit the application
-			const res = await fetch('?/apply', {
-				method: 'POST',
-				body: formData
-			});
+	function toggleCategoryDropdown() {
+		isCategoryDropdownOpen = !isCategoryDropdownOpen;
+		isJobTypeDropdownOpen = false;
+		isExperienceLevelDropdownOpen = false;
+		isLocationTypeDropdownOpen = false;
+	}
 
-			// Parse response
-			const result = await res.json();
+	function selectJobType(type: string) {
+		selectedJobType = type;
+		isJobTypeDropdownOpen = false;
+	}
 
-			if (result.type === 'success') {
-				console.log('Application submitted successfully');
-				// Show success message to user
-				alert(`Application submitted successfully for ${result.data.jobTitle}!`);
+	function selectExperienceLevel(level: string) {
+		selectedExperienceLevel = level;
+		isExperienceLevelDropdownOpen = false;
+	}
 
-				// Reload page to update UI and show applied status
-				window.location.reload();
-			} else if (result.type === 'failure') {
-				console.error('Application failed:', result.data?.message);
-				// Show error message to user
-				alert(result.data?.message || 'Failed to submit application');
-			} else {
-				// Handle unexpected response format
-				console.error('Unexpected response:', result);
-				alert('An unexpected error occurred');
-			}
-		} catch (error) {
-			console.error('Error submitting application:', error);
-			alert('An error occurred while submitting your application. Please try again.');
+	function selectLocationType(locType: string) {
+		selectedLocationType = locType;
+		isLocationTypeDropdownOpen = false;
+	}
+
+	function selectCategory(category: string) {
+		selectedCategory = category;
+		isCategoryDropdownOpen = false;
+	}
+
+	function handleClickOutside(event: MouseEvent) {
+		const target = event.target as HTMLElement;
+		if (!target.closest('.dropdown-container')) {
+			isJobTypeDropdownOpen = false;
+			isExperienceLevelDropdownOpen = false;
+			isLocationTypeDropdownOpen = false;
+			isCategoryDropdownOpen = false;
 		}
 	}
+
+	function handleKeydown(event: KeyboardEvent) {
+		if (event.key === 'Escape') {
+			isJobTypeDropdownOpen = false;
+			isExperienceLevelDropdownOpen = false;
+			isLocationTypeDropdownOpen = false;
+			isCategoryDropdownOpen = false;
+		}
+	}
+
+	async function handleJobApply() {}
 </script>
 
-<div class="min-h-screen p-5">
-	<div class="mx-auto max-w-6xl">
+<svelte:window onclick={handleClickOutside} onkeydown={handleKeydown} />
+
+<div class="min-h-screen p-4.5 lg:px-20 xl:px-40">
+	<div class="mx-auto space-y-4.5">
 		<div class="py-20 text-center">
 			<h1 class="pb-10 text-3xl font-bold">Find your dream job</h1>
-
 			<div
-				class="mx-auto mb-5 flex max-w-2xl flex-col rounded-[10px] border border-gray-300 bg-gray-200 sm:flex-row"
+				class="mx-auto mb-4.5 flex max-w-2xl flex-col rounded-[15px] border border-[#D4D7DD] bg-[#e8e8e8] sm:flex-row"
 			>
 				<div
-					class="flex flex-1 items-center gap-5 border-b
-					border-gray-300 px-5 py-2.5 sm:border-r sm:border-b-0"
+					class="flex flex-1 items-center gap-4.5 border-b
+                    border-[#D4D7DD] px-4.5 py-3 sm:border-r sm:border-b-0"
 				>
-					<Briefcase size="16" class="text-gray-400" />
+					<Briefcase size="16" class="text-[#57564F]" />
 					<input
 						type="text"
 						bind:value={searchQuery}
 						placeholder="Job title, skills, category..."
-						class="flex-1 outline-none"
+						class="flex-1 outline-none placeholder:text-[#57564F]"
 						onkeydown={handleSearchQueryKeydown}
 					/>
 				</div>
-				<div class="flex flex-1 items-center gap-5 px-5 py-2.5">
-					<MapPin size="16" class="text-gray-400" />
+				<div class="flex flex-1 items-center gap-4.5 px-4.5 py-3">
+					<MapPin size="16" class="text-[#57564F]" />
 					<input
 						type="text"
 						bind:value={searchLocation}
 						placeholder="City, country..."
-						class="flex-1 outline-none"
+						class="flex-1 outline-none placeholder:text-[#57564F]"
 						onkeydown={handleSearchLocationKeydown}
 					/>
 				</div>
 			</div>
-
-			<div class="mb-5 flex flex-wrap justify-center gap-2.5">
+			<div class="mb-4.5 flex flex-wrap justify-center gap-3">
 				{#if jobTypes.length > 0}
-					<select
-						bind:value={selectedJobType}
-						class="rounded-[5px] border border-gray-300 px-3 py-1 text-sm focus:outline-none"
-					>
-						<option value="">All Job Types</option>
-						{#each jobTypes as type}
-							<option value={type}>{type}</option>
-						{/each}
-					</select>
+					<!-- Job Type Custom Dropdown -->
+					<div class="dropdown-container relative">
+						<button
+							onclick={toggleJobTypeDropdown}
+							class="flex cursor-pointer items-center justify-between gap-2 rounded-[9px] border border-[#D4D7DD]
+							bg-[#EAE9E9] px-3 py-1 text-sm focus:outline-none"
+							aria-expanded={isJobTypeDropdownOpen}
+							aria-haspopup="listbox"
+						>
+							<span>{selectedJobType || 'All Job Types'}</span>
+							<ChevronDown
+								size="14"
+								class="transition-transform duration-200 {isJobTypeDropdownOpen
+									? 'rotate-180'
+									: ''}"
+							/>
+						</button>
+						{#if isJobTypeDropdownOpen}
+							<div
+								class="animate-in slide-in-from-top-2 fade-in absolute top-full right-0 left-0 z-20 mt-1 space-y-1 overflow-hidden rounded-[9px] border border-[#D4D7DD] bg-[#EAE9E9] p-1 duration-300"
+								role="listbox"
+							>
+								<button
+									onclick={() => selectJobType('')}
+									class="flex w-full cursor-pointer items-center justify-between rounded-[6px] px-3 py-1 text-sm transition-all duration-300 hover:bg-[#D4D7DD] focus:outline-none
+                                    {selectedJobType === '' ? 'bg-[#D4D7DD]' : ''}"
+									role="option"
+									aria-selected={selectedJobType === ''}
+								>
+									<span>All Job Types</span>
+								</button>
+								{#each jobTypes as type}
+									<button
+										onclick={() => selectJobType(type)}
+										class="flex w-full cursor-pointer items-center justify-between rounded-[5px] px-3 py-1 text-sm transition-all
+                                        duration-300 hover:bg-[#D4D7DD] focus:outline-none
+                                        {selectedJobType === type ? 'bg-[#D4D7DD]' : ''}"
+										role="option"
+										aria-selected={selectedJobType === type}
+									>
+										<span>{type}</span>
+										{#if selectedJobType === type}
+											<Check size="12" />
+										{/if}
+									</button>
+								{/each}
+							</div>
+						{/if}
+					</div>
 				{/if}
 
 				{#if experienceLevels.length > 0}
-					<select
-						bind:value={selectedExperienceLevel}
-						class="rounded-[5px] border border-gray-300 px-3 py-1 text-sm focus:outline-none"
-					>
-						<option value="">All Experience</option>
-						{#each experienceLevels as level}
-							<option value={level}>{level}</option>
-						{/each}
-					</select>
+					<!-- Experience Level Custom Dropdown -->
+					<div class="dropdown-container relative">
+						<button
+							onclick={toggleExperienceLevelDropdown}
+							class="flex cursor-pointer items-center justify-between gap-2 rounded-[9px] border border-[#D4D7DD]
+							bg-[#EAE9E9] px-3 py-1 text-sm focus:outline-none"
+							aria-expanded={isExperienceLevelDropdownOpen}
+							aria-haspopup="listbox"
+						>
+							<span>{selectedExperienceLevel || 'All Experience'}</span>
+							<ChevronDown
+								size="14"
+								class="transition-transform duration-200 {isExperienceLevelDropdownOpen
+									? 'rotate-180'
+									: ''}"
+							/>
+						</button>
+						{#if isExperienceLevelDropdownOpen}
+							<div
+								class="animate-in slide-in-from-top-2 fade-in absolute top-full right-0 left-0 z-20 mt-1 space-y-1 overflow-hidden rounded-[9px] border border-[#D4D7DD] bg-[#EAE9E9] p-1 duration-300"
+								role="listbox"
+							>
+								<button
+									onclick={() => selectExperienceLevel('')}
+									class="flex w-full cursor-pointer items-center justify-between rounded-[6px] px-3 py-1 text-sm transition-all duration-300 hover:bg-[#D4D7DD] focus:outline-none
+                                    {selectedExperienceLevel === '' ? 'bg-[#D4D7DD]' : ''}"
+									role="option"
+									aria-selected={selectedExperienceLevel === ''}
+								>
+									<span>All Experience</span>
+								</button>
+								{#each experienceLevels as level}
+									<button
+										onclick={() => selectExperienceLevel(level)}
+										class="flex w-full cursor-pointer items-center justify-between rounded-[5px] px-3 py-1 text-sm transition-all
+                                        duration-300 hover:bg-[#D4D7DD] focus:outline-none
+                                        {selectedExperienceLevel === level ? 'bg-[#D4D7DD]' : ''}"
+										role="option"
+										aria-selected={selectedExperienceLevel === level}
+									>
+										<span>{level}</span>
+									</button>
+								{/each}
+							</div>
+						{/if}
+					</div>
 				{/if}
 
 				{#if locationTypes.length > 0}
-					<select
-						bind:value={selectedLocationType}
-						class="rounded-[5px] border border-gray-300 px-3 py-1 text-sm focus:outline-none"
-					>
-						<option value="">All Locations</option>
-						{#each locationTypes as locType}
-							<option value={locType}>{locType}</option>
-						{/each}
-					</select>
+					<!-- Location Type Custom Dropdown -->
+					<div class="dropdown-container relative">
+						<button
+							onclick={toggleLocationTypeDropdown}
+							class="flex cursor-pointer items-center justify-between gap-2 rounded-[9px] border border-[#D4D7DD] bg-[#EAE9E9] px-3 py-1 text-sm focus:outline-none"
+							aria-expanded={isLocationTypeDropdownOpen}
+							aria-haspopup="listbox"
+						>
+							<span>{selectedLocationType || 'All Locations'}</span>
+							<ChevronDown
+								size="14"
+								class="transition-transform duration-200 {isLocationTypeDropdownOpen
+									? 'rotate-180'
+									: ''}"
+							/>
+						</button>
+						{#if isLocationTypeDropdownOpen}
+							<div
+								class="animate-in slide-in-from-top-2 fade-in absolute top-full right-0 left-0 z-20 mt-1 space-y-1 overflow-hidden rounded-[9px] border border-[#D4D7DD] bg-[#EAE9E9] p-1 duration-300"
+								role="listbox"
+							>
+								<button
+									onclick={() => selectLocationType('')}
+									class="flex w-full cursor-pointer items-center justify-between rounded-[6px] px-3 py-1 text-sm transition-all duration-300 hover:bg-[#D4D7DD] focus:outline-none
+                                    {selectedLocationType === '' ? 'bg-[#D4D7DD]' : ''}"
+									role="option"
+									aria-selected={selectedLocationType === ''}
+								>
+									<span>All Locations</span>
+								</button>
+								{#each locationTypes as locType}
+									<button
+										onclick={() => selectLocationType(locType)}
+										class="flex w-full cursor-pointer items-center justify-between rounded-[5px] px-3 py-1 text-sm transition-all
+                                        duration-300 hover:bg-[#D4D7DD] focus:outline-none
+                                        {selectedLocationType === locType ? 'bg-[#D4D7DD]' : ''}"
+										role="option"
+										aria-selected={selectedLocationType === locType}
+									>
+										<span>{locType}</span>
+									</button>
+								{/each}
+							</div>
+						{/if}
+					</div>
 				{/if}
 
 				{#if categories.length > 0}
-					<select
-						bind:value={selectedCategory}
-						class="rounded-[5px] border border-gray-300 px-3 py-1 text-sm focus:outline-none"
-					>
-						<option value="">All Categories</option>
-						{#each categories as category}
-							<option value={category}>{category}</option>
-						{/each}
-					</select>
+					<!-- Category Custom Dropdown -->
+					<div class="dropdown-container relative">
+						<button
+							onclick={toggleCategoryDropdown}
+							class="flex cursor-pointer items-center justify-between gap-2 rounded-[9px] border border-[#D4D7DD] bg-[#EAE9E9] px-3 py-1 text-sm transition-all duration-200 focus:outline-none"
+							aria-expanded={isCategoryDropdownOpen}
+							aria-haspopup="listbox"
+						>
+							<span>{selectedCategory || 'All Categories'}</span>
+							<ChevronDown
+								size="14"
+								class="transition-transform duration-200 {isCategoryDropdownOpen
+									? 'rotate-180'
+									: ''}"
+							/>
+						</button>
+						{#if isCategoryDropdownOpen}
+							<div
+								class="animate-in slide-in-from-top-2 fade-in absolute top-full right-0 left-0 z-20 mt-1 space-y-1 overflow-hidden rounded-[9px] border border-[#D4D7DD] bg-[#EAE9E9] p-1 duration-300"
+								role="listbox"
+							>
+								<button
+									onclick={() => selectCategory('')}
+									class="flex w-full cursor-pointer items-center justify-between rounded-[6px] px-3 py-1 text-sm transition-all duration-300
+									hover:bg-[#D4D7DD] focus:outline-none
+                                    {selectedCategory === '' ? 'bg-[#D4D7DD]' : ''}"
+									role="option"
+									aria-selected={selectedCategory === ''}
+								>
+									<span>All Categories</span>
+								</button>
+								{#each categories as category}
+									<button
+										onclick={() => selectCategory(category)}
+										class="flex w-full cursor-pointer items-center justify-between rounded-[5px] px-3 py-1 text-sm transition-all
+                                        duration-300 hover:bg-[#D4D7DD] focus:outline-none
+                                        {selectedCategory === category ? 'bg-[#D4D7DD]' : ''}"
+										role="option"
+										aria-selected={selectedCategory === category}
+									>
+										<span>{category}</span>
+									</button>
+								{/each}
+							</div>
+						{/if}
+					</div>
 				{/if}
 			</div>
-
 			<!-- Active Filters -->
 			{#if selectedJobType || selectedExperienceLevel || selectedLocationType || selectedCategory || searchQuery || searchLocation}
-				<div class="mb-5 flex flex-wrap justify-center gap-2.5">
+				<div class="mb-4.5 flex flex-wrap justify-center gap-3">
 					{#if searchQuery}
 						<span
-							class="inline-flex items-center gap-2.5 rounded-[5px] bg-gray-100 px-2.5 py-1 text-sm"
+							class="inline-flex items-center gap-3 rounded-[9px] border border-[#EAE9E9] bg-[#D4D7DD] px-3 py-1 text-sm"
 						>
 							Search: "{searchQuery}"
 							<button
 								onclick={() => (searchQuery = '')}
 								onkeydown={(e) => handleFilterTagKeydown(e, () => (searchQuery = ''))}
 								aria-label="Remove search filter"
-								class="rounded p-0.5 hover:bg-blue-200"
+								class="cursor-pointer rounded p-0.5
+								transition-all duration-300 hover:text-red-500"
 							>
 								<X size="12" />
 							</button>
@@ -312,14 +492,15 @@
 					{/if}
 					{#if searchLocation}
 						<span
-							class="inline-flex items-center gap-2.5 rounded-[5px] bg-gray-100 px-2.5 py-1 text-sm"
+							class="inline-flex items-center gap-3 rounded-[9px] border border-[#EAE9E9] bg-[#D4D7DD] px-3 py-1 text-sm"
 						>
 							Location: "{searchLocation}"
 							<button
 								onclick={() => (searchLocation = '')}
 								onkeydown={(e) => handleFilterTagKeydown(e, () => (searchLocation = ''))}
 								aria-label="Remove location filter"
-								class="rounded p-0.5 hover:bg-blue-200"
+								class="cursor-pointer rounded p-0.5
+								transition-all duration-300 hover:text-red-500"
 							>
 								<X size="12" />
 							</button>
@@ -327,14 +508,15 @@
 					{/if}
 					{#if selectedJobType}
 						<span
-							class="inline-flex items-center gap-2.5 rounded-[5px] bg-gray-100 px-2.5 py-1 text-sm"
+							class="inline-flex items-center gap-3 rounded-[9px] border border-[#EAE9E9] bg-[#D4D7DD] px-3 py-1 text-sm"
 						>
 							{selectedJobType}
 							<button
 								onclick={() => clearFilter('jobType')}
 								onkeydown={(e) => handleFilterTagKeydown(e, () => clearFilter('jobType'))}
 								aria-label="Remove job type filter"
-								class="rounded p-0.5 hover:bg-gray-200"
+								class="cursor-pointer rounded p-0.5
+								transition-all duration-300 hover:text-red-500"
 							>
 								<X size="12" />
 							</button>
@@ -342,14 +524,15 @@
 					{/if}
 					{#if selectedExperienceLevel}
 						<span
-							class="inline-flex items-center gap-2.5 rounded-[5px] bg-gray-100 px-2.5 py-1 text-sm"
+							class="inline-flex items-center gap-3 rounded-[9px] border border-[#EAE9E9] bg-[#D4D7DD] px-3 py-1 text-sm"
 						>
 							{selectedExperienceLevel}
 							<button
 								onclick={() => clearFilter('experienceLevel')}
 								onkeydown={(e) => handleFilterTagKeydown(e, () => clearFilter('experienceLevel'))}
 								aria-label="Remove experience level filter"
-								class="rounded p-0.5 hover:bg-gray-200"
+								class="cursor-pointer rounded p-0.5
+								transition-all duration-300 hover:text-red-500"
 							>
 								<X size="12" />
 							</button>
@@ -357,14 +540,15 @@
 					{/if}
 					{#if selectedLocationType}
 						<span
-							class="inline-flex items-center gap-2.5 rounded-[5px] bg-gray-100 px-2.5 py-1 text-sm"
+							class="inline-flex items-center gap-3 rounded-[9px] border border-[#EAE9E9] bg-[#D4D7DD] px-3 py-1 text-sm"
 						>
 							{selectedLocationType}
 							<button
 								onclick={() => clearFilter('locationType')}
 								onkeydown={(e) => handleFilterTagKeydown(e, () => clearFilter('locationType'))}
 								aria-label="Remove location type filter"
-								class="rounded p-0.5 hover:bg-gray-200"
+								class="cursor-pointer rounded p-0.5
+								transition-all duration-300 hover:text-red-500"
 							>
 								<X size="12" />
 							</button>
@@ -372,14 +556,15 @@
 					{/if}
 					{#if selectedCategory}
 						<span
-							class="inline-flex items-center gap-2.5 rounded-[5px] bg-gray-100 px-2.5 py-1 text-sm"
+							class="inline-flex items-center gap-3 rounded-[9px] border border-[#EAE9E9] bg-[#D4D7DD] px-3 py-1 text-sm"
 						>
 							{selectedCategory}
 							<button
 								onclick={() => clearFilter('category')}
 								onkeydown={(e) => handleFilterTagKeydown(e, () => clearFilter('category'))}
 								aria-label="Remove category filter"
-								class="rounded p-0.5 hover:bg-gray-200"
+								class="cursor-pointer rounded p-0.5
+								transition-all duration-300 hover:text-red-500"
 							>
 								<X size="12" />
 							</button>
@@ -388,37 +573,33 @@
 					<button
 						onclick={clearAllFilters}
 						onkeydown={(e) => handleFilterTagKeydown(e, clearAllFilters)}
-						class="inline-flex items-center gap-2.5 rounded-[5px] bg-red-100 px-2.5 py-1 text-sm text-red-700
-						hover:bg-red-200"
+						class="cursor-pointer rounded-[9px] border border-[#B80000] bg-[#E52020] px-3 py-1 text-sm text-[#F6F6F6] transition-all duration-300 hover:bg-[#C40C0C]"
 						aria-label="Clear all filters"
 					>
 						Clear All
-						<X size="12" />
 					</button>
 				</div>
 			{/if}
-
 			<!-- Results Count -->
-			<div class="mb-5 text-sm text-gray-600">
+			<div class="mb-4.5 text-sm text-[#7A7A73]">
 				Showing {filteredJobs.length} of {jobs?.length || 0} jobs
 			</div>
 		</div>
-
 		<!-- Main Content -->
-		<div class="flex h-[calc(100vh-40px)] gap-5">
+		<div class="flex h-full gap-4.5">
 			<!-- Jobs List -->
 			<div
-				class="w-full space-y-5 overflow-y-auto
-				{filteredJobs.length === 0 ? 'w-full' : 'md:w-1/2'}"
+				class="w-full space-y-4.5 overflow-y-auto
+                {filteredJobs.length === 0 ? 'w-full' : 'md:w-1/2'}"
 			>
 				{#if filteredJobs.length === 0}
-					<div class="py-10 text-center">
-						<p class="text-gray-500">No jobs found matching your criteria.</p>
+					<div class="text-center">
+						<p class="">No jobs found matching your criteria.</p>
 						<button
 							onclick={clearAllFilters}
 							onkeydown={(e) => handleFilterTagKeydown(e, clearAllFilters)}
-							class="mt-2.5 cursor-pointer text-blue-600
-							underline hover:text-blue-800"
+							class="mt-3 cursor-pointer text-[#E52020]
+                            underline hover:text-[#FF0000]"
 						>
 							Clear all filters
 						</button>
@@ -427,36 +608,28 @@
 					{#each filteredJobs as job (job.id)}
 						<button
 							onclick={() => selectJob(job)}
-							class="w-full cursor-pointer space-y-5 rounded-[15px] border p-5
-							text-left transition-colors {selectedJobId === job.id
-								? 'border-[#F14A00] bg-orange-50'
-								: 'border-gray-300 bg-white hover:border-[#F14A00]'}"
+							class="w-full cursor-pointer space-y-4.5 rounded-[15px] border border-[#EAE9E9] bg-[#fff] p-4.5
+                            text-left transition-colors"
 							aria-label="Select job: {job.title} at {job.employer?.name || 'Company'}"
 						>
 							<div class="">
 								<h2 class="text-lg font-semibold">{job.title}</h2>
-								<p class="text-sm font-medium text-gray-600">{job.employer?.name || 'Company'}</p>
+								<p class="text-sm font-medium text-[#7A7A73]">{job.employer?.name || 'Company'}</p>
 							</div>
-
 							{#if job.skills && job.skills.length > 0}
-								<div class="flex flex-wrap items-center gap-2.5">
+								<div class="flex flex-wrap items-center gap-3">
 									{#each job.skills.slice(0, 3) as skill}
-										<span
-											class="rounded-[5px] px-2.5 py-1 text-sm {selectedJobId === job.id
-												? 'bg-orange-100'
-												: 'bg-gray-100'} ">{skill}</span
-										>
+										<span class="rounded-[9px] bg-[#F6F6F6] px-3 py-1 text-sm">{skill}</span>
 									{/each}
 									{#if job.skills.length > 3}
-										<span class="text-sm text-gray-600">+{job.skills.length - 3} more</span>
+										<span class="text-sm text-[#7A7A73]">+{job.skills.length - 3} more</span>
 									{/if}
 								</div>
 							{/if}
-
-							<div class="flex flex-wrap items-center gap-5 text-sm text-gray-600">
-								<div class="flex items-center gap-2.5">
-									<MapPin size="14" />
-									<span>
+							<div class="flex flex-wrap items-center gap-4.5 text-sm tracking-wide text-[#7A7A73]">
+								<div class="flex items-center gap-3">
+									<MapPin size="12" />
+									<span class="tracking-wide">
 										{#if job.city}
 											{job.city}, {job.country || ''} ({job.locationType})
 										{:else}
@@ -464,8 +637,8 @@
 										{/if}
 									</span>
 								</div>
-								<div class="flex items-center gap-2.5">
-									<Clock size="14" />
+								<div class="flex items-center gap-3">
+									<Clock size="12" />
 									<span>{job.type}</span>
 								</div>
 							</div>
@@ -473,40 +646,38 @@
 					{/each}
 				{/if}
 			</div>
-
 			<!-- Job Details -->
 			<div
-				class=" h-full w-1/2 overflow-y-auto rounded-[15px] border border-gray-300 bg-white p-5
-				{filteredJobs.length === 0 ? 'hidden' : 'hidden md:block'} "
+				class=" h-full w-1/2 overflow-y-auto rounded-[15px] border border-[#EAE9E9] bg-[#fff] p-4.5
+                {filteredJobs.length === 0 ? 'hidden' : 'hidden md:block'} "
 			>
 				{#if selectedJob}
-					<div class="space-y-10">
+					<div class="space-y-12">
 						<!-- Header -->
-						<div class="space-y-5">
-							<div class="border-b border-gray-300 pb-5">
+						<div class="space-y-4.5">
+							<div class="">
 								<h1 class="text-2xl font-bold">{selectedJob.title}</h1>
-								<p class="text-lg font-semibold text-gray-600">
+								<p class="text-lg font-semibold text-[#7A7A73]">
 									{selectedJob.employer?.name || 'Company'}
 								</p>
 							</div>
 							{#if selectedJob.category}
 								<div>
 									<span
-										class="inline-block rounded bg-orange-100 px-2.5 py-1 text-sm text-[#FF4F0F]"
+										class="inline-block rounded-[9px] bg-[#EAE9E9]
+										px-3 py-1 text-sm"
 									>
 										{selectedJob.category}
 									</span>
 								</div>
 							{/if}
 						</div>
-
 						<!-- Key Details -->
-
-						<div class="space-y-5">
-							<div class="flex items-start gap-2.5">
-								<MapPin size="16" class="mt-1 text-gray-400" />
+						<div class="space-y-4.5">
+							<div class="flex items-start gap-3">
+								<MapPin size="16" class="mt-1 text-[#7A7A73]" />
 								<div>
-									<p class="text-gray-600">Location</p>
+									<p class="text-[#7A7A73]">Location</p>
 									<p class="font-medium">
 										{#if selectedJob.city}
 											{selectedJob.city}, {selectedJob.country || ''} ({selectedJob.locationType})
@@ -516,58 +687,52 @@
 									</p>
 								</div>
 							</div>
-
-							<div class="flex items-start gap-2.5">
-								<Clock size="16" class="mt-1 text-gray-400" />
+							<div class="flex items-start gap-3">
+								<Clock size="16" class="mt-1 text-[#7A7A73]" />
 								<div>
-									<p class="text-gray-600">Job Type</p>
+									<p class="text-[#7A7A73]">Job Type</p>
 									<p class="font-medium">{selectedJob.type}</p>
 								</div>
 							</div>
-
 							{#if selectedJob.salaryMin && selectedJob.salaryMax}
-								<div class="flex items-start gap-2.5">
-									<IndianRupee size="16" class="mt-1 text-gray-400" />
+								<div class="flex items-start gap-3">
+									<IndianRupee size="16" class="mt-1 text-[#7A7A73]" />
 									<div>
-										<p class="text-gray-600">Salary</p>
+										<p class="text-[#7A7A73]">Salary</p>
 										<p class="font-medium">{formatSalary(selectedJob)}</p>
 									</div>
 								</div>
 							{/if}
-
 							{#if selectedJob.experienceLevel}
-								<div class="flex items-start gap-2.5">
-									<Star size="16" class="mt-1.25 text-gray-400" />
+								<div class="flex items-start gap-3">
+									<Star size="16" class="mt-1.25 text-[#7A7A73]" />
 									<div>
-										<p class="text-gray-600">Experience Level</p>
+										<p class="text-[#7A7A73]">Experience Level</p>
 										<p class="font-medium">{selectedJob.experienceLevel}</p>
 									</div>
 								</div>
 							{/if}
-
 							{#if selectedJob.educationLevel}
-								<div class="flex items-start gap-2.5">
-									<GraduationCap size="16" class="mt-1 text-gray-400" />
+								<div class="flex items-start gap-3">
+									<GraduationCap size="16" class="mt-1 text-[#7A7A73]" />
 									<div>
-										<p class="text-gray-600">Education Level</p>
+										<p class="text-[#7A7A73]">Education Level</p>
 										<p class="font-medium">{selectedJob.educationLevel}</p>
 									</div>
 								</div>
 							{/if}
 						</div>
-
 						<!-- Skills -->
 						{#if selectedJob.skills && selectedJob.skills.length > 0}
 							<div>
 								<h3 class="mb-2 font-semibold">Required Skills</h3>
-								<div class="flex flex-wrap gap-2">
+								<div class="flex flex-wrap gap-3">
 									{#each selectedJob.skills as skill}
-										<span class="rounded bg-gray-100 px-2 py-1 text-sm">{skill}</span>
+										<span class="rounded-[9px] bg-[#F6F6F6] px-3 py-1 text-sm">{skill}</span>
 									{/each}
 								</div>
 							</div>
 						{/if}
-
 						<!-- Description -->
 						{#if selectedJob.description}
 							<div>
@@ -575,19 +740,15 @@
 								<MarkdownParser content={selectedJob.description} />
 							</div>
 						{/if}
-
 						<!-- Apply Button -->
-						<div class="flex gap-5 pt-5">
-							<button class="cursor-pointer rounded-full border border-gray-300 px-5 py-2.5"
+						<div class="flex gap-6 pt-6">
+							<button
+								class="cursor-pointer rounded-[12px] border border-[#EAE9E9] px-4.5 py-1.5 transition-colors duration-300 hover:bg-[#EAE9E9]"
 								>Save</button
 							>
-							<a href={`/jobs/${selectedJobId}/apply`}>
-								<ArrowUpRight />
-							</a>
 							<button
 								onclick={handleJobApply}
-								class="block w-full rounded-full border
-								border-[#E6521F] bg-[#FF4F0F] px-7.5 py-2.5 text-center text-white hover:bg-[#F14A00]"
+								class="block w-full cursor-pointer rounded-[12px] border border-[#323232] bg-[#212121] px-4.5 py-1.5 text-center text-[#F6F6F6] transition-colors duration-300 hover:bg-[#323232]"
 							>
 								Apply Now
 							</button>
@@ -618,104 +779,96 @@
 	>
 		<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 		<div
-			class="animate-slide-up max-h-[85vh] w-full overflow-y-auto rounded-t-[20px] border-t border-gray-300 bg-white shadow-2xl"
+			class="animate-slide-up max-h-[85vh] w-full overflow-y-auto rounded-t-[20px] border-t border-[#EAE9E9] bg-[#fff] shadow-2xl"
 			onclick={(e) => e.stopPropagation()}
 			onkeydown={handleModalContentKeydown}
 			role="document"
 		>
 			<div
-				class="sticky top-0 z-10 flex items-center justify-between border-b border-gray-300 bg-white p-5"
+				class="sticky top-0 z-10 flex items-center justify-between border-b border-[#EAE9E9] bg-[#fff] p-4.5"
 			>
 				<div class="min-w-0 flex-1">
 					<h2 id="modal-title" class="truncate text-xl font-semibold">{selectedJob.title}</h2>
-					<p class="truncate font-medium text-gray-600">
+					<p class="truncate font-medium text-[#57564F]">
 						{selectedJob.employer?.name || 'Company'}
 					</p>
 				</div>
 				<button
 					onclick={closeMobileModal}
-					class="ml-4 flex-shrink-0 cursor-pointer rounded-[10px] p-2 text-gray-600 transition-all hover:bg-gray-100
-					 hover:text-black"
+					class="ml-4 flex-shrink-0 cursor-pointer rounded-[10px] p-2 text-[#57564F] transition-all hover:bg-[#7A7A73]
+                     hover:text-black"
 					aria-label="Close modal"
 				>
 					<X size="20" />
 				</button>
 			</div>
-
-			<div class="space-y-10 p-5">
+			<div class="space-y-12 p-4.5">
 				{#if selectedJob.category}
 					<div>
-						<span class="inline-block rounded bg-orange-100 px-2.5 py-1 text-sm text-[#FF4F0F]">
+						<span class="inline-block rounded-[9px] bg-[#EAE9E9] px-3 py-1 text-sm">
 							{selectedJob.category}
 						</span>
 					</div>
 				{/if}
-
-				<div class="space-y-5">
-					<div class="flex items-start gap-2.5">
-						<MapPin size="16" class="mt-1 text-gray-400" />
-						<div>
-							<p class="text-gray-600">Location</p>
-							<p class="font-medium">
-								{#if selectedJob.city}
-									{selectedJob.city}, {selectedJob.country || ''} ({selectedJob.locationType})
-								{:else}
-									{selectedJob.locationType}
-								{/if}
-							</p>
+				<div class="space-y-4.5">
+					<div>
+						<div class="flex items-center gap-3">
+							<MapPin size="12" class="text-[#7A7A73]" />
+							<p class="text-sm text-[#7A7A73]">Location</p>
 						</div>
+						<p class="pl-6 font-medium">
+							{#if selectedJob.city}
+								{selectedJob.city}, {selectedJob.country || ''} ({selectedJob.locationType})
+							{:else}
+								{selectedJob.locationType}
+							{/if}
+						</p>
 					</div>
-
-					<div class="flex items-start gap-2.5">
-						<Clock size="16" class="mt-1 text-gray-400" />
-						<div>
-							<p class="text-gray-600">Job Type</p>
-							<p class="font-medium">{selectedJob.type}</p>
+					<div>
+						<div class="flex items-center gap-3">
+							<Clock size="12" class="text-[#7A7A73]" />
+							<p class="text-sm text-[#7A7A73]">Job Type</p>
 						</div>
+						<p class="pl-6 font-semibold">{selectedJob.type}</p>
 					</div>
-
 					{#if selectedJob.salaryMin && selectedJob.salaryMax}
-						<div class="flex items-start gap-2.5">
-							<IndianRupee size="16" class="mt-1 text-gray-400" />
-							<div>
-								<p class="text-gray-600">Salary</p>
-								<p class="font-medium">{formatSalary(selectedJob)}</p>
+						<div>
+							<div class="flex items-center gap-3">
+								<IndianRupee size="12" class="text-[#7A7A73]" />
+								<p class="text-sm text-[#7A7A73]">Salary</p>
 							</div>
+							<p class="pl-6 font-medium">{formatSalary(selectedJob)}</p>
 						</div>
 					{/if}
-
 					{#if selectedJob.experienceLevel}
-						<div class="flex items-start gap-2.5">
-							<Star size="16" class="mt-1.25 text-gray-400" />
-							<div>
-								<p class="text-gray-600">Experience Level</p>
-								<p class="font-medium">{selectedJob.experienceLevel}</p>
+						<div>
+							<div class="flex items-center gap-3">
+								<Star size="12" class="text-[#7A7A73]" />
+								<p class="text-sm text-[#7A7A73]">Experience Level</p>
 							</div>
+							<p class="pl-6 font-medium">{selectedJob.experienceLevel}</p>
 						</div>
 					{/if}
-
 					{#if selectedJob.educationLevel}
-						<div class="flex items-start gap-2.5">
-							<GraduationCap size="16" class="mt-1 text-gray-400" />
-							<div>
-								<p class="text-gray-600">Education Level</p>
-								<p class="font-medium">{selectedJob.educationLevel}</p>
+						<div>
+							<div class="flex items-center gap-3">
+								<GraduationCap size="12" class="text-[#7A7A73]" />
+								<p class="text-sm text-[#7A7A73]">Education Level</p>
 							</div>
+							<p class="pl-6 font-medium">{selectedJob.educationLevel}</p>
 						</div>
 					{/if}
 				</div>
-
 				{#if selectedJob.skills && selectedJob.skills.length > 0}
 					<div>
 						<h3 class="mb-3 text-sm font-semibold">Required Skills</h3>
-						<div class="flex flex-wrap gap-2">
+						<div class="flex flex-wrap gap-3">
 							{#each selectedJob.skills as skill}
-								<span class="rounded-[5px] bg-gray-100 px-2.5 py-1">{skill}</span>
+								<span class="rounded-[9px] bg-[#F6F6F6] px-3 py-1">{skill}</span>
 							{/each}
 						</div>
 					</div>
 				{/if}
-
 				{#if selectedJob.description}
 					<div>
 						<h3 class="mb-3 text-sm font-semibold">Job Description</h3>
@@ -723,16 +876,17 @@
 					</div>
 				{/if}
 			</div>
-
 			<div
-				class="sticky bottom-0 flex gap-5 border-t border-gray-300
-			 bg-white p-5"
+				class="sticky bottom-0 flex gap-6 border-t border-[#EAE9E9]
+             bg-[#fff] p-6"
 			>
-				<button class="cursor-pointer rounded-full border border-gray-300 px-5 py-2.5">Save</button>
+				<button
+					class="cursor-pointer rounded-[12px] border border-[#EAE9E9] px-4.5 py-1.5 transition-colors duration-300 hover:bg-[#EAE9E9]"
+					>Save</button
+				>
 				<a
-					href={`/jobs/${selectedJobId}/apply`}
-					class="block w-full rounded-full border
-						border-[#E6521F] bg-[#FF4F0F] px-7.5 py-2.5 text-center text-white hover:bg-[#F14A00]"
+					href={`/jobs/${selectedJobId}`}
+					class="w-full cursor-pointer rounded-[12px] border border-[#323232] bg-[#212121] px-4.5 py-1.5 text-center text-[#F6F6F6] transition-colors duration-300 hover:bg-[#323232]"
 				>
 					Apply Now
 				</a>
@@ -750,7 +904,6 @@
 			transform: translateY(0);
 		}
 	}
-
 	.animate-slide-up {
 		animation: slide-up 0.3s ease-out;
 	}

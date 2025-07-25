@@ -74,7 +74,7 @@ export const load: PageServerLoad = async ({ request }) => {
 	const session = await auth.api.getSession({ headers: request.headers });
 
 	if (!session) {
-		throw redirect(302, '/sign-in');
+		throw redirect(302, '/login');
 	}
 	const userId = session.user.id;
 
