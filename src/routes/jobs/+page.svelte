@@ -340,12 +340,12 @@
 						</button>
 						{#if isJobTypeDropdownOpen}
 							<div
-								class="animate-in slide-in-from-top-2 fade-in absolute top-full right-0 left-0 z-20 mt-1 space-y-1 overflow-hidden rounded-[9px] border border-[#D4D7DD] bg-[#EAE9E9] p-1 duration-300"
+								class="animate-in slide-in-from-top-2 fade-in absolute top-full right-0 left-0 z-20 mt-1 space-y-1 overflow-hidden rounded-[12px] border border-[#D4D7DD] bg-[#EAE9E9] p-1 duration-300"
 								role="listbox"
 							>
 								<button
 									onclick={() => selectJobType('')}
-									class="flex w-full cursor-pointer items-center justify-between rounded-[6px] px-3 py-1 text-sm transition-all duration-300 hover:bg-[#DDDDDD] focus:outline-none
+									class="flex w-full cursor-pointer items-center justify-between rounded-[9px] px-3 py-1 text-sm transition-all duration-300 hover:bg-[#DDDDDD] focus:outline-none
                                     {selectedJobType === '' ? 'bg-[#DDDDDD]' : ''}"
 									role="option"
 									aria-selected={selectedJobType === ''}
@@ -355,7 +355,7 @@
 								{#each jobTypes as type}
 									<button
 										onclick={() => selectJobType(type)}
-										class="flex w-full cursor-pointer items-center justify-between rounded-[5px] px-3 py-1 text-sm transition-all
+										class="flex w-full cursor-pointer items-center justify-between rounded-[9px] px-3 py-1 text-sm transition-all
                                         duration-300 hover:bg-[#DDDDDD] focus:outline-none
                                         {selectedJobType === type ? 'bg-[#DDDDDD]' : ''}"
 										role="option"
@@ -391,12 +391,12 @@
 						</button>
 						{#if isExperienceLevelDropdownOpen}
 							<div
-								class="animate-in slide-in-from-top-2 fade-in absolute top-full right-0 left-0 z-20 mt-1 space-y-1 overflow-hidden rounded-[9px] border border-[#D4D7DD] bg-[#EAE9E9] p-1 duration-300"
+								class="animate-in slide-in-from-top-2 fade-in absolute top-full right-0 left-0 z-20 mt-1 space-y-1 overflow-hidden rounded-[12px] border border-[#D4D7DD] bg-[#EAE9E9] p-1 duration-300"
 								role="listbox"
 							>
 								<button
 									onclick={() => selectExperienceLevel('')}
-									class="flex w-full cursor-pointer items-center justify-between rounded-[6px] px-3 py-1 text-sm transition-all duration-300 hover:bg-[#DDDDDD] focus:outline-none
+									class="flex w-full cursor-pointer items-center justify-between rounded-[9px] px-3 py-1 text-sm transition-all duration-300 hover:bg-[#DDDDDD] focus:outline-none
                                     {selectedExperienceLevel === '' ? 'bg-[#DDDDDD]' : ''}"
 									role="option"
 									aria-selected={selectedExperienceLevel === ''}
@@ -406,7 +406,7 @@
 								{#each experienceLevels as level}
 									<button
 										onclick={() => selectExperienceLevel(level)}
-										class="flex w-full cursor-pointer items-center justify-between rounded-[5px] px-3 py-1 text-sm transition-all
+										class="flex w-full cursor-pointer items-center justify-between rounded-[9px] px-3 py-1 text-sm transition-all
                                         duration-300 hover:bg-[#DDDDDD] focus:outline-none
                                         {selectedExperienceLevel === level ? 'bg-[#DDDDDD]' : ''}"
 										role="option"
@@ -438,12 +438,12 @@
 						</button>
 						{#if isLocationTypeDropdownOpen}
 							<div
-								class="animate-in slide-in-from-top-2 fade-in absolute top-full right-0 left-0 z-20 mt-1 space-y-1 overflow-hidden rounded-[9px] border border-[#D4D7DD] bg-[#EAE9E9] p-1 duration-300"
+								class="animate-in slide-in-from-top-2 fade-in absolute top-full right-0 left-0 z-20 mt-1 space-y-1 overflow-hidden rounded-[12px] border border-[#D4D7DD] bg-[#EAE9E9] p-1 duration-300"
 								role="listbox"
 							>
 								<button
 									onclick={() => selectLocationType('')}
-									class="flex w-full cursor-pointer items-center justify-between rounded-[6px] px-3 py-1 text-sm transition-all duration-300 hover:bg-[#DDDDDD] focus:outline-none
+									class="flex w-full cursor-pointer items-center justify-between rounded-[9px] px-3 py-1 text-sm transition-all duration-300 hover:bg-[#DDDDDD] focus:outline-none
                                     {selectedLocationType === '' ? 'bg-[#DDDDDD]' : ''}"
 									role="option"
 									aria-selected={selectedLocationType === ''}
@@ -453,7 +453,7 @@
 								{#each locationTypes as locType}
 									<button
 										onclick={() => selectLocationType(locType)}
-										class="flex w-full cursor-pointer items-center justify-between rounded-[5px] px-3 py-1 text-sm transition-all
+										class="flex w-full cursor-pointer items-center justify-between rounded-[9px] px-3 py-1 text-sm transition-all
                                         duration-300 hover:bg-[#DDDDDD] focus:outline-none
                                         {selectedLocationType === locType ? 'bg-[#DDDDDD]' : ''}"
 										role="option"
@@ -485,12 +485,12 @@
 						</button>
 						{#if isCategoryDropdownOpen}
 							<div
-								class="animate-in slide-in-from-top-2 fade-in absolute top-full right-0 left-0 z-20 mt-1 space-y-1 overflow-hidden rounded-[9px] border border-[#D4D7DD] bg-[#EAE9E9] p-1 duration-300"
+								class="animate-in slide-in-from-top-2 fade-in absolute top-full right-0 left-0 z-20 mt-1 space-y-1 overflow-hidden rounded-[12px] border border-[#D4D7DD] bg-[#EAE9E9] p-1 duration-300"
 								role="listbox"
 							>
 								<button
 									onclick={() => selectCategory('')}
-									class="flex w-full cursor-pointer items-center justify-between rounded-[6px] px-3 py-1 text-sm transition-all duration-300
+									class="flex w-full cursor-pointer items-center justify-between rounded-[9px] px-3 py-1 text-sm transition-all duration-300
                                     hover:bg-[#DDDDDD] focus:outline-none
                                     {selectedCategory === '' ? 'bg-[#DDDDDD]' : ''}"
 									role="option"
@@ -501,7 +501,7 @@
 								{#each categories as category}
 									<button
 										onclick={() => selectCategory(category)}
-										class="flex w-full cursor-pointer items-center justify-between rounded-[5px] px-3 py-1 text-sm transition-all
+										class="flex w-full cursor-pointer items-center justify-between rounded-[9px] px-3 py-1 text-sm transition-all
                                         duration-300 hover:bg-[#DDDDDD] focus:outline-none
                                         {selectedCategory === category ? 'bg-[#DDDDDD]' : ''}"
 										role="option"
@@ -652,14 +652,14 @@
 					{#each filteredJobs as job (job.id)}
 						<button
 							onclick={() => selectJob(job)}
-							class="w-full cursor-pointer space-y-4.5 rounded-[15px] border border-[#EAE9E9] bg-[#fff] p-4.5
-                            text-left transition-colors"
+							class="w-full cursor-pointer space-y-4.5 rounded-[15px] border border-[#EAE9E9] bg-[#fff] p-4.5 text-left"
 							aria-label="Select job: {job.title} at {job.employer?.name || 'Company'}"
 						>
 							<div class="">
 								<h2 class="text-lg font-semibold">{job.title}</h2>
 								<p class="text-sm font-medium text-[#7A7A73]">{job.employer?.name || 'Company'}</p>
 							</div>
+
 							{#if job.skills && job.skills.length > 0}
 								<div class="flex flex-wrap items-center gap-3">
 									{#each job.skills.slice(0, 3) as skill}
@@ -670,7 +670,8 @@
 									{/if}
 								</div>
 							{/if}
-							<div class="flex flex-wrap items-center gap-4.5 text-sm text-[#7A7A73]">
+
+							<div class="flex flex-wrap items-center gap-4.5 text-sm text-[#57564F]">
 								<div class="flex items-center gap-3">
 									<MapPin size="12" />
 									<span class="">
@@ -927,12 +928,12 @@
 					class="cursor-pointer rounded-[12px] border border-[#EAE9E9] px-4.5 py-1.5 transition-colors duration-300 hover:bg-[#EAE9E9]"
 					>Save</button
 				>
-				<a
-					href={`/jobs/${selectedJobId}`}
+				<button
+					onclick={handleJobApply}
 					class="w-full cursor-pointer rounded-[12px] border border-[#323232] bg-[#212121] px-4.5 py-1.5 text-center text-[#F6F6F6] transition-colors duration-300 hover:bg-[#323232]"
 				>
 					Apply Now
-				</a>
+				</button>
 			</div>
 		</div>
 	</div>

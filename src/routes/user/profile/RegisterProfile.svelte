@@ -307,9 +307,9 @@
 		<div class="space-y-3 pt-9 pb-4.5">
 			<div class="flex items-center justify-between">
 				<h2 class="text-xl font-semibold">Complete Your Profile</h2>
-				<span class="text-sm text-gray-600">Step {currentStep} of {totalSteps}</span>
+				<span class="text-sm text-[#7A7A73]">Step {currentStep} of {totalSteps}</span>
 			</div>
-			<div class="h-2 w-full rounded-full bg-gray-200">
+			<div class="h-2 w-full rounded-full bg-[#fff]">
 				<div
 					class="h-2 rounded-full bg-[#212121] transition-all duration-300"
 					style="width: {(currentStep / totalSteps) * 100}%"

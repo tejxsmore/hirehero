@@ -5,15 +5,16 @@
 		IndianRupee,
 		Users,
 		GraduationCap,
-		Calendar,
 		Tag,
 		Clock,
 		Building2,
 		Globe,
-		ChevronDown,
-		X
+		Plus
 	} from '@lucide/svelte';
 	import { goto } from '$app/navigation';
+	import { X } from '@lucide/svelte';
+	import Dropdown from '$lib/components/Dropdown.svelte';
+	import DatePicker from '$lib/components/DatePicker.svelte';
 
 	// Form state
 	let formData = $state({
@@ -94,17 +95,23 @@
 
 	async function handleSubmit(event: Event) {
 		event.preventDefault();
-
 		const form = event.target as HTMLFormElement;
 		const formDataObj = new FormData(form);
 
-		// Add skills manually to FormData
+		// Add skills manually to FormData (if not already handled by hidden inputs)
+		// Note: The hidden inputs in Dropdown.svelte handle their values automatically.
+		// This part is for skills, which are dynamic.
 		formData.skills.forEach((skill, index) => {
 			formDataObj.append(`skills[${index}]`, skill);
 		});
 
 		// Add published status
 		formDataObj.append('isPublished', isPublished.toString());
+
+		// Log FormData for debugging
+		for (const [key, value] of formDataObj.entries()) {
+			console.log(`${key}: ${value}`);
+		}
 
 		// Submit to your backend
 		fetch('?/post', {
@@ -126,457 +133,238 @@
 	}
 </script>
 
-<div class="flex min-h-screen">
-	<div class="flex w-full justify-center">
-		<div class="w-full max-w-4xl space-y-10 p-5">
-			<div class="space-y-2.5 py-5 text-center">
+<div class="min-h-screen">
+	<div class="flex w-full justify-center p-4.5 lg:px-20 xl:px-40">
+		<div class="w-full max-w-xl space-y-12">
+			<div class="space-y-3 py-9 text-center">
 				<p class="text-xl font-semibold">Create Job Listing</p>
-				<p class="text-gray-600">Find the perfect candidate for your open position</p>
+				<p class="text-[#7A7A73]">Find the perfect candidate for your open position</p>
 			</div>
 
-			<form method="post" action="?/post" class="space-y-10" onsubmit={handleSubmit}>
+			<form method="post" action="?/post" class="space-y-12" onsubmit={handleSubmit}>
 				<!-- Job Basic Information -->
-				<div class="rounded-[15px] border border-gray-300 bg-white p-5">
-					<h3 class="mb-5 text-lg font-semibold">Basic Information</h3>
-
-					<div class="grid gap-5 md:grid-cols-2">
-						<!-- Job Title -->
-						<div class="space-y-1 md:col-span-2">
-							<label for="title" class="block text-sm font-medium text-gray-600">
-								Job Title <span class="text-[#FF4F0F]">*</span>
-							</label>
-							<div
-								class="flex items-center rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5"
-							>
-								<Briefcase class="mr-5 h-4 w-4 text-gray-400" />
-								<input
-									type="text"
-									id="title"
-									name="title"
-									bind:value={formData.title}
-									placeholder="e.g. Senior Software Engineer"
-									required
-									class="w-full bg-transparent placeholder:text-gray-400 focus:outline-none"
-								/>
-							</div>
-						</div>
-
-						<!-- Job Type -->
-						<div class="space-y-1">
-							<label for="type" class="block text-sm font-medium text-gray-600">
-								Job Type <span class="text-[#FF4F0F]">*</span>
-							</label>
-							<div class="relative">
-								<div
-									class="flex items-center rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5"
-								>
-									<Clock class="mr-5 h-4 w-4 text-gray-400" />
-									<select
-										id="type"
-										name="type"
-										bind:value={formData.type}
-										required
-										class="w-full appearance-none bg-transparent focus:outline-none"
-									>
-										<option class="bg-white" value="">Select job type</option>
-										{#each jobTypes as jobType}
-											<option class="bg-white" value={jobType}>{jobType}</option>
-										{/each}
-									</select>
-									<ChevronDown class="pointer-events-none ml-5 h-4 w-4 text-gray-400" />
-								</div>
-							</div>
-						</div>
-
-						<!-- Category -->
-						<div class="space-y-1">
-							<label for="category" class="block text-sm font-medium text-gray-600">
-								Category
-							</label>
-							<div class="relative">
-								<div
-									class="flex items-center rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5"
-								>
-									<Tag class="mr-5 h-4 w-4 text-gray-400" />
-									<select
-										id="category"
-										name="category"
-										bind:value={formData.category}
-										class="w-full appearance-none bg-transparent focus:outline-none"
-									>
-										<option class="bg-white" value="">Select category</option>
-										{#each jobCategories as category}
-											<option class="bg-white" value={category}>{category}</option>
-										{/each}
-									</select>
-									<ChevronDown class="pointer-events-none ml-5 h-4 w-4 text-gray-400" />
-								</div>
-							</div>
-						</div>
-					</div>
-
+				<div class="space-y-3">
+					<h2 class="pb-6 text-center font-semibold">Basic Information</h2>
+					<!-- Job Title -->
+					<input
+						type="text"
+						name="title"
+						id="title"
+						bind:value={formData.title}
+						placeholder="Job Title"
+						required
+						class="w-full rounded-[12px] border border-[#D4D7DD] bg-[#e8e8e8] px-4.5 py-1.5 placeholder:text-[#57564F] focus:outline-none"
+					/>
+					<!-- Job Type -->
+					<Dropdown
+						label="Job Type *"
+						options={jobTypes}
+						bind:value={formData.type}
+						placeholder="Job Type"
+						name="type"
+					/>
+					<!-- Category -->
+					<Dropdown
+						label="Category"
+						options={jobCategories}
+						bind:value={formData.category}
+						placeholder="Category"
+						name="category"
+					/>
 					<!-- Job Description -->
-					<div class="mt-5 space-y-1">
-						<label for="description" class="block text-sm font-medium text-gray-600">
-							Job Description (Markdown) <span class="text-[#FF4F0F]">*</span>
-						</label>
-						<div class="flex items-center rounded-[10px] border border-gray-300 bg-gray-200 p-5">
-							<textarea
-								id="description"
-								name="description"
-								bind:value={formData.description}
-								rows="6"
-								required
-								placeholder="Describe the role, responsibilities, and what you're looking for in a candidate..."
-								class="w-full resize-none bg-transparent placeholder:text-gray-400 focus:outline-none"
-							></textarea>
-						</div>
-						<p class="text-xs tracking-wide text-gray-400">Minimum 100 characters recommended</p>
+					<div>
+						<textarea
+							id="description"
+							name="description"
+							bind:value={formData.description}
+							rows="6"
+							required
+							placeholder="Job Description (Markdown)"
+							class="w-full resize-none rounded-[12px] border
+						border-[#D4D7DD] bg-[#e8e8e8] px-4.5 py-1.5 placeholder:text-[#57564F] focus:outline-none"
+						></textarea>
+						<p class="text-xs text-[#7A7A73]">Minimum 100 characters recommended</p>
 					</div>
 				</div>
-
 				<!-- Compensation -->
-				<div class="rounded-[15px] border border-gray-300 bg-white p-5">
-					<h3 class="mb-5 text-lg font-semibold">Compensation</h3>
-
-					<div class="grid gap-5 md:grid-cols-3">
+				<div class="space-y-3">
+					<h2 class="pb-3 text-center font-semibold">Compensation</h2>
+					<div class="grid gap-3 md:grid-cols-3">
 						<!-- Salary Range -->
-						<div class="space-y-1">
-							<label for="salaryMin" class="block text-sm font-medium text-gray-600">
-								Minimum Salary <span class="text-[#FF4F0F]">*</span>
-							</label>
-							<div
-								class="flex items-center rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5"
-							>
-								<IndianRupee class="mr-5 h-4 w-4 text-gray-400" />
-								<input
-									type="number"
-									id="salaryMin"
-									name="salaryMin"
-									required
-									bind:value={formData.salaryMin}
-									placeholder="50000"
-									class="w-full bg-transparent placeholder:text-gray-400 focus:outline-none"
-								/>
-							</div>
-						</div>
-
-						<div class="space-y-1">
-							<label for="salaryMax" class="block text-sm font-medium text-gray-600">
-								Maximum Salary <span class="text-[#FF4F0F]">*</span>
-							</label>
-							<div
-								class="flex items-center rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5"
-							>
-								<IndianRupee class="mr-5 h-4 w-4 text-gray-400" />
-								<input
-									type="number"
-									id="salaryMax"
-									name="salaryMax"
-									required
-									bind:value={formData.salaryMax}
-									placeholder="80000"
-									class="w-full bg-transparent placeholder:text-gray-400 focus:outline-none"
-								/>
-							</div>
-						</div>
-
-						<div class="space-y-1">
-							<label for="salaryCurrency" class="block text-sm font-medium text-gray-600">
-								Currency
-							</label>
-							<div class="relative">
-								<div
-									class="flex items-center rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5"
-								>
-									<select
-										id="salaryCurrency"
-										name="salaryCurrency"
-										bind:value={formData.salaryCurrency}
-										class="w-full appearance-none bg-transparent focus:outline-none"
-									>
-										{#each currencies as currency}
-											<option class="bg-white" value={currency}>{currency}</option>
-										{/each}
-									</select>
-									<ChevronDown class="pointer-events-none ml-5 h-4 w-4 text-gray-400" />
-								</div>
-							</div>
-						</div>
-
-						<div class="space-y-1 md:col-span-3">
-							<label for="salaryType" class="block text-sm font-medium text-gray-600">
-								Salary Type <span class="text-[#FF4F0F]">*</span>
-							</label>
-							<div class="relative">
-								<div
-									class="flex items-center rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5"
-								>
-									<select
-										id="salaryType"
-										name="salaryType"
-										required
-										bind:value={formData.salaryType}
-										class="w-full appearance-none bg-transparent focus:outline-none"
-									>
-										<option class="bg-white" value="">Select salary type</option>
-										{#each salaryTypes as salaryType}
-											<option class="bg-white" value={salaryType}>{salaryType}</option>
-										{/each}
-									</select>
-									<ChevronDown class="pointer-events-none ml-5 h-4 w-4 text-gray-400" />
-								</div>
-							</div>
+						<input
+							type="number"
+							name="salaryMin"
+							id="salaryMin"
+							required
+							bind:value={formData.salaryMin}
+							placeholder="Minimum Salary"
+							class="w-full rounded-[12px] border border-[#D4D7DD] bg-[#e8e8e8] px-4.5 py-1.5 placeholder:text-[#57564F] focus:outline-none"
+						/>
+						<input
+							type="number"
+							name="salaryMax"
+							id="salaryMax"
+							required
+							bind:value={formData.salaryMax}
+							placeholder="Maximum Salary"
+							class="w-full rounded-[12px] border border-[#D4D7DD] bg-[#e8e8e8] px-4.5 py-1.5 placeholder:text-[#57564F] focus:outline-none"
+						/>
+						<Dropdown
+							label="Currency"
+							options={currencies}
+							bind:value={formData.salaryCurrency}
+							placeholder="Currency"
+							name="salaryCurrency"
+						/>
+						<div class="md:col-span-3">
+							<Dropdown
+								label="Salary Type *"
+								options={salaryTypes}
+								bind:value={formData.salaryType}
+								placeholder="Select salary type"
+								name="salaryType"
+							/>
 						</div>
 					</div>
 				</div>
-
 				<!-- Requirements -->
-				<div class="rounded-[15px] border border-gray-300 bg-white p-5">
-					<h3 class="mb-5 text-lg font-semibold">Requirements</h3>
-
-					<div class="grid gap-5 md:grid-cols-2">
+				<div class="space-y-3">
+					<h2 class="pb-3 text-center font-semibold">Requirements</h2>
+					<div class="grid gap-3 md:grid-cols-2">
 						<!-- Experience Level -->
-						<div class="space-y-1">
-							<label for="experienceLevel" class="block text-sm font-medium text-gray-600">
-								Experience Level
-							</label>
-							<div class="relative">
-								<div
-									class="flex items-center rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5"
-								>
-									<Users class="mr-5 h-4 w-4 text-gray-400" />
-									<select
-										id="experienceLevel"
-										name="experienceLevel"
-										bind:value={formData.experienceLevel}
-										class="w-full appearance-none bg-transparent focus:outline-none"
-									>
-										<option class="bg-white" value="">Select experience level</option>
-										{#each experienceLevels as level}
-											<option class="bg-white" value={level}>{level}</option>
-										{/each}
-									</select>
-									<ChevronDown class="pointer-events-none ml-5 h-4 w-4 text-gray-400" />
-								</div>
-							</div>
-						</div>
-
+						<Dropdown
+							label="Experience Level"
+							options={experienceLevels}
+							bind:value={formData.experienceLevel}
+							placeholder="Experience level"
+							name="experienceLevel"
+						/>
 						<!-- Education Level -->
-						<div class="space-y-1">
-							<label for="educationLevel" class="block text-sm font-medium text-gray-600">
-								Education Level
-							</label>
-							<div class="relative">
-								<div
-									class="flex items-center rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5"
-								>
-									<GraduationCap class="mr-5 h-4 w-4 text-gray-400" />
-									<select
-										id="educationLevel"
-										name="educationLevel"
-										bind:value={formData.educationLevel}
-										class="w-full appearance-none bg-transparent focus:outline-none"
-									>
-										<option class="bg-white" value="">Select education level</option>
-										{#each educationLevels as level}
-											<option class="bg-white" value={level}>{level}</option>
-										{/each}
-									</select>
-									<ChevronDown class="pointer-events-none ml-5 h-4 w-4 text-gray-400" />
-								</div>
-							</div>
-						</div>
+						<Dropdown
+							label="Education Level"
+							options={educationLevels}
+							bind:value={formData.educationLevel}
+							placeholder="Education level"
+							name="educationLevel"
+						/>
 					</div>
-
 					<!-- Skills -->
-					<div class="mt-5 space-y-1">
-						<label for="skillInput" class="block text-sm font-medium text-gray-600">
-							Required Skills
-						</label>
-						<div class="flex items-center gap-5">
-							<!-- Input container with border and padding -->
-							<div class="flex-1 rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5">
-								<input
-									type="text"
-									id="skillInput"
-									name="skillInput"
-									bind:value={skillInput}
-									onkeydown={handleKeyDown}
-									placeholder="Type a skill and press Add"
-									class="w-full bg-transparent text-sm placeholder-gray-400 focus:outline-none"
-								/>
-							</div>
-
-							<!-- Add button, outside the input container -->
+					<div class="space-y-3">
+						<div class="flex gap-3">
+							<input
+								type="text"
+								id="skills-input"
+								bind:value={skillInput}
+								placeholder="Skills"
+								class="w-full rounded-[12px] border border-[#D4D7DD] bg-[#e8e8e8] px-4.5 py-1.5 placeholder:text-[#57564F] focus:outline-none"
+								onkeydown={(e) => e.key === 'Enter' && (e.preventDefault(), addSkill())}
+							/>
 							<button
 								type="button"
 								onclick={addSkill}
-								class="cursor-pointer rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5 font-medium text-[#FF4F0F] transition hover:opacity-80"
+								class="cursor-pointer rounded-[12px] border border-[#323232] bg-[#212121] p-[11px] text-center text-[#F6F6F6] transition-colors duration-300 hover:bg-[#323232]"
 							>
-								Add
+								<Plus size="14" />
 							</button>
 						</div>
-
+						<p class="text-xs text-[#7A7A73]">Press Enter or click + to add each skill</p>
 						{#if formData.skills.length > 0}
-							<div class="mt-3 flex flex-wrap gap-2">
+							<div class="flex flex-wrap gap-3">
 								{#each formData.skills as skill}
 									<span
-										class="inline-flex items-center rounded-full bg-gray-200 px-3 py-1 text-sm text-gray-600"
+										class="inline-flex items-center gap-3 rounded-[9px] border border-[#c5c8cd] bg-[#D4D7DD] px-3 py-1 text-sm"
 									>
-										{skill}
+										<span class="text-[#212121]">{skill}</span>
 										<button
 											type="button"
 											onclick={() => removeSkill(skill)}
-											class="ml-3 cursor-pointer text-gray-400 hover:text-gray-600"
+											class="cursor-pointer rounded p-0.5 transition-all duration-300 hover:text-red-500"
 										>
-											<X size="16" />
+											<X size="14" />
 										</button>
 									</span>
 								{/each}
 							</div>
 						{/if}
-
 						<!-- Hidden inputs for skills to be included in form submission -->
 						{#each formData.skills as skill, index}
 							<input type="hidden" name="skills[{index}]" value={skill} />
 						{/each}
 					</div>
 				</div>
-
 				<!-- Location -->
-				<div class="rounded-[15px] border border-gray-300 bg-white p-5">
-					<h3 class="mb-5 text-lg font-semibold">Location</h3>
-
-					<div class="grid gap-5 md:grid-cols-2">
+				<div class="space-y-3">
+					<h2 class="pb-3 text-center font-semibold">Location</h2>
+					<div class="grid gap-3 md:grid-cols-2">
 						<!-- Location Type -->
-						<div class="space-y-1 md:col-span-2">
-							<label for="locationType" class="block text-sm font-medium text-gray-600">
-								Location Type <span class="text-[#FF4F0F]">*</span>
-							</label>
-							<div class="relative">
-								<div
-									class="flex items-center rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5"
-								>
-									<MapPin class="mr-5 h-4 w-4 text-gray-400" />
-									<select
-										id="locationType"
-										name="locationType"
-										bind:value={formData.locationType}
-										required
-										class="w-full appearance-none bg-transparent focus:outline-none"
-									>
-										<option class="bg-white" value="">Select location type</option>
-										{#each locationTypes as locationType}
-											<option class="bg-white" value={locationType}>{locationType}</option>
-										{/each}
-									</select>
-									<ChevronDown class="pointer-events-none ml-5 h-4 w-4 text-gray-400" />
-								</div>
-							</div>
+						<div class="md:col-span-2">
+							<Dropdown
+								label="Location Type *"
+								options={locationTypes}
+								bind:value={formData.locationType}
+								placeholder="Select location type"
+								name="locationType"
+							/>
 						</div>
-
 						{#if formData.locationType !== 'Remote'}
 							<!-- City -->
-							<div class="space-y-1">
-								<label for="city" class="block text-sm font-medium text-gray-600"> City </label>
-								<div
-									class="flex items-center rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5"
-								>
-									<Building2 class="mr-5 h-4 w-4 text-gray-400" />
-									<input
-										type="text"
-										id="city"
-										name="city"
-										bind:value={formData.city}
-										placeholder="e.g. Mumbai"
-										class="w-full bg-transparent placeholder:text-gray-400 focus:outline-none"
-									/>
-								</div>
-							</div>
-
+							<input
+								type="text"
+								name="city"
+								id="city"
+								bind:value={formData.city}
+								placeholder="City"
+								class="w-full rounded-[12px] border border-[#D4D7DD] bg-[#e8e8e8] px-4.5 py-1.5 placeholder:text-[#57564F] focus:outline-none"
+							/>
 							<!-- Country -->
-							<div class="space-y-1">
-								<label for="country" class="block text-sm font-medium text-gray-600">
-									Country
-								</label>
-								<div
-									class="flex items-center rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5"
-								>
-									<Globe class="mr-5 h-4 w-4 text-gray-400" />
-									<input
-										type="text"
-										id="country"
-										name="country"
-										bind:value={formData.country}
-										placeholder="e.g. India"
-										class="w-full bg-transparent placeholder:text-gray-400 focus:outline-none"
-									/>
-								</div>
-							</div>
-
+							<input
+								type="text"
+								name="country"
+								id="country"
+								bind:value={formData.country}
+								placeholder="Country"
+								class="w-full rounded-[12px] border border-[#D4D7DD] bg-[#e8e8e8] px-4.5 py-1.5 placeholder:text-[#57564F] focus:outline-none"
+							/>
 							<!-- Address -->
-							<div class="space-y-1 md:col-span-2">
-								<label for="address" class="block text-sm font-medium text-gray-600">
-									Address
-								</label>
-								<div
-									class="flex items-center rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5"
-								>
-									<MapPin class="mr-5 h-4 w-4 text-gray-400" />
-									<input
-										type="text"
-										id="address"
-										name="address"
-										bind:value={formData.address}
-										placeholder="Complete address (optional)"
-										class="w-full bg-transparent placeholder:text-gray-400 focus:outline-none"
-									/>
-								</div>
-							</div>
+							<input
+								type="text"
+								name="address"
+								id="address"
+								bind:value={formData.address}
+								placeholder="Complete address (optional)"
+								class="w-full rounded-[12px] border border-[#D4D7DD] bg-[#e8e8e8] px-4.5 py-1.5 placeholder:text-[#57564F] focus:outline-none md:col-span-2"
+							/>
 						{/if}
 					</div>
 				</div>
-
 				<!-- Job Settings -->
-				<div class="rounded-[15px] border border-gray-300 bg-white p-5">
-					<h3 class="mb-5 text-lg font-semibold">Job Settings</h3>
-
+				<div class="space-y-3">
+					<h2 class="pb-3 text-center font-semibold">Job Settings</h2>
 					<div class="space-y-5">
 						<!-- Expiry Date -->
-						<div class="space-y-1">
-							<label for="expiresAt" class="block text-sm font-medium text-gray-600">
-								Application Deadline
-							</label>
-							<div
-								class="flex items-center rounded-[10px] border border-gray-300 bg-gray-200 px-5 py-2.5"
-							>
-								<Calendar class="mr-5 h-4 w-4 text-gray-400" />
-								<input
-									type="datetime-local"
-									id="expiresAt"
-									name="expiresAt"
-									bind:value={formData.expiresAt}
-									class="w-full bg-transparent placeholder:text-gray-400 focus:outline-none"
-								/>
-							</div>
-							<p class="mt-1 text-xs text-gray-400">Leave empty if no deadline</p>
+						<div>
+							<DatePicker
+								name="expiresAt"
+								bind:value={formData.expiresAt}
+								placeholder="Application Deadline"
+							/>
+							<p class="mt-1 text-xs text-[#7A7A73]">Leave empty if no deadline</p>
 						</div>
 
 						<!-- Publish Status -->
-						<div class="flex items-center gap-5">
+						<div class="flex items-center gap-3">
 							<button
 								type="button"
 								onclick={togglePublished}
-								class="relative mt-0.5 flex h-5 w-5 flex-shrink-0 cursor-pointer items-center justify-center rounded-md border-2 transition-all duration-300 ease-in-out {isPublished
-									? 'border-[#E6521F] bg-[#FF4F0F] shadow-md'
-									: 'border-gray-300 hover:border-[#E6521F] hover:shadow-sm'}"
+								class="relative mt-0.5 flex h-4 w-4 flex-shrink-0 cursor-pointer items-center justify-center rounded-md border transition-all duration-300 ease-in-out {isPublished
+									? 'border-[#323232] bg-[#212121] shadow-sm'
+									: 'border-[#D4D7DD] hover:border-[#323232] hover:shadow-sm'}"
 								aria-pressed={isPublished}
 								aria-label="Publish this job listing immediately"
 							>
 								{#if isPublished}
 									<svg
-										class="h-3 w-3 text-white"
+										class="h-3 w-3 text-[#F6F6F6]"
 										fill="none"
 										stroke="currentColor"
 										viewBox="0 0 24 24"
@@ -594,29 +382,26 @@
 							<button
 								type="button"
 								onclick={togglePublished}
-								class="cursor-pointer text-sm leading-relaxed text-gray-600"
+								class="cursor-pointer text-sm leading-relaxed text-[#7A7A73]"
 							>
 								Publish this job listing immediately
 							</button>
 						</div>
 					</div>
 				</div>
-
 				<!-- Hidden input for isPublished status -->
 				<input type="hidden" name="isPublished" value={isPublished.toString()} />
-
 				<!-- Submit Buttons -->
-				<div class="flex gap-5">
+				<div class="flex gap-3">
 					<button
 						type="button"
-						class="cursor-pointer rounded-full border border-gray-300 bg-white px-5 py-2.5 text-gray-600 transition-colors
-						duration-300 hover:bg-gray-100 focus:outline-none"
+						class="cursor-pointer rounded-[12px] border border-[#EAE9E9] px-4.5 py-1.5 text-center transition-colors duration-300 hover:bg-[#EAE9E9] focus:outline-none"
 					>
 						Cancel
 					</button>
 					<button
 						type="submit"
-						class="flex-1 cursor-pointer rounded-full border border-[#E6521F] bg-[#FF4F0F] px-5 py-2.5 font-medium text-white transition-all duration-100 hover:bg-[#F14A00] focus:outline-none"
+						class="flex-1 cursor-pointer rounded-[12px] border border-[#323232] bg-[#212121] px-4.5 py-1.5 text-center text-[#F6F6F6] transition-colors duration-300 hover:bg-[#323232] focus:outline-none"
 					>
 						{isPublished ? 'Create & Publish Job' : 'Save as Draft'}
 					</button>

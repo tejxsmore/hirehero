@@ -84,7 +84,7 @@
 	</aside>
 
 	<!-- Main Content -->
-	<main class="flex-1 space-y-5 p-5">
+	<main class="flex-1 space-y-4.5 p-4.5">
 		<div class="block md:hidden">
 			<!-- Advanced Custom Dropdown -->
 			<div class="dropdown-container relative">
@@ -112,7 +112,7 @@
 
 				{#if isDropdownOpen}
 					<div
-						class="animate-in slide-in-from-top-2 fade-in absolute top-full right-0 left-0 z-20 mt-1.5 space-y-1 overflow-hidden rounded-[15px] border border-[#D4D7DD] bg-[#EAE9E9] p-1 duration-300"
+						class="animate-in slide-in-from-top-2 fade-in absolute top-full right-0 left-0 z-20 mt-1.5 space-y-1 overflow-hidden rounded-[15px] border border-[#D4D7DD] bg-[#EAE9E9] p-1"
 						role="listbox"
 					>
 						{#each navItems as { label, view, icon: Icon }, index}
@@ -139,92 +139,109 @@
 
 		<!-- View-specific content -->
 		{#if activeView === 'dashboard'}
-			<h2 class="text-3xl font-bold">Dashboard</h2>
 			<div class="grid grid-cols-2 gap-4.5 lg:grid-cols-4">
 				<div
-					class="p-1.5] rounded-[15px]
+					class="space-y-1.5 rounded-[15px]
 				border border-[#EAE9E9] bg-white p-4.5"
 				>
 					<p class="flex justify-between gap-3">
 						Active Jobs
-						<span class="rounded-[9px] bg-[#ECFAE5] p-1.5 text-[#B0DB9C]"
-							><Briefcase size="12" /></span
+						<span
+							class="rounded-[9px] bg-[#f6f6f6] p-2
+						text-[#57564F]"><Briefcase size="14" class=" " /></span
 						>
 					</p>
-					<h2 class="pt-5 text-3xl font-bold">
-						{jobs.length}
-					</h2>
-					<p class="text-sm text-gray-400">+2 from last month</p>
+					<div>
+						<h2 class="text-3xl font-bold">
+							{jobs.length}
+						</h2>
+						<p class="text-sm text-[#7A7A73]">+2 from last month</p>
+					</div>
 				</div>
 				<div
-					class="rounded-[15px] border
-				border-gray-300 bg-white p-5"
+					class="space-y-1.5 rounded-[15px]
+				border border-[#EAE9E9] bg-white p-4.5"
 				>
-					<p class="flex justify-between gap-5">
+					<p class="flex justify-between gap-3">
 						Applications
-						<span><Users size="16" class="mt-1 text-gray-400" /></span>
+						<span
+							class="rounded-[9px] bg-[#f6f6f6] p-2
+						text-[#57564F]"><Users size="14" /></span
+						>
 					</p>
-					<h2 class="pt-5 text-3xl font-bold">
-						{jobs.length}
-					</h2>
-					<p class="text-sm text-gray-400">+2 from last month</p>
+					<div>
+						<h2 class="text-3xl font-bold">
+							{jobs.length}
+						</h2>
+						<p class="text-sm text-[#7A7A73]">+2 from last month</p>
+					</div>
 				</div>
 				<div
-					class="rounded-[15px] border
-				border-gray-300 bg-white p-5"
+					class="space-y-1.5 rounded-[15px]
+				border border-[#EAE9E9] bg-white p-4.5"
 				>
-					<p class="flex justify-between gap-5">
+					<p class="flex justify-between gap-3">
 						Profile Views
-						<span><Eye size="16" class="mt-1 text-gray-400" /></span>
+						<span
+							class="rounded-[9px] bg-[#f6f6f6] p-2
+						text-[#57564F]"><Eye size="14" /></span
+						>
 					</p>
-					<h2 class="pt-5 text-3xl font-bold">
-						{jobs.length}
-					</h2>
-					<p class="text-sm text-gray-400">+2 from last month</p>
+					<div>
+						<h2 class="text-3xl font-bold">
+							{jobs.length}
+						</h2>
+						<p class="text-sm text-[#7A7A73]">+2 from last month</p>
+					</div>
 				</div>
 				<div
-					class="rounded-[15px] border
-				border-gray-300 bg-white p-5"
+					class="space-y-1.5 rounded-[15px]
+				border border-[#EAE9E9] bg-white p-4.5"
 				>
-					<p class="flex justify-between gap-5">
+					<p class="flex justify-between gap-3">
 						Interviews Scheduled
-						<span><Calendar size="16" class="mt-1 text-gray-400" /></span>
+						<span
+							class="rounded-[9px] bg-[#f6f6f6] p-2
+						text-[#57564F]"><Calendar size="14" /></span
+						>
 					</p>
-					<h2 class="pt-5 text-3xl font-bold">
-						{jobs.length}
-					</h2>
-					<p class="text-sm text-gray-400">+2 from last month</p>
+					<div>
+						<h2 class="text-3xl font-bold">
+							{jobs.length}
+						</h2>
+						<p class="text-sm text-[#7A7A73]">+2 from last month</p>
+					</div>
 				</div>
 			</div>
-			<div class="grid gap-5 md:grid-cols-2">
+			<div class="grid gap-4.5 md:grid-cols-2">
 				<div
-					class="space-y-5 rounded-[15px] border border-gray-300
-				  bg-white p-5"
+					class="space-y-4.5 rounded-[15px] border border-[#EAE9E9]
+				  bg-white p-4.5"
 				>
-					<div class="flex items-center justify-between">
+					<div class="flex items-start justify-between">
 						<h2 class="text-xl font-semibold">Applications</h2>
 						<button
-							class="cursor-pointer rounded-[10px] border border-gray-300 px-3 py-1.5 text-sm hover:bg-gray-100"
+							class="cursor-pointer rounded-[9px] border border-[#EAE9E9] px-3 py-1 text-sm transition-all duration-300 hover:bg-[#EAE9E9]"
 							>View</button
 						>
 					</div>
 					{#if application}{/if}
 				</div>
 				<div
-					class="space-y-5 rounded-[15px] border border-gray-300
-				bg-white p-5"
+					class="space-y-4.5 rounded-[15px] border border-[#EAE9E9]
+				bg-white p-4.5"
 				>
 					<div class="flex items-center justify-between">
 						<h2 class="text-xl font-semibold">Active Job Postings</h2>
 						<button
-							class="cursor-pointer rounded-[10px] border border-gray-300 px-3 py-1.5 text-sm hover:bg-gray-100"
+							class="cursor-pointer rounded-[9px] border border-[#EAE9E9] px-3 py-1 text-sm transition-all duration-300 hover:bg-[#EAE9E9]"
 							>Manage</button
 						>
 					</div>
 					{#if jobs[0]}
 						<div class="space-y-5">
 							{#each jobs.filter((job: any) => job.jobStatus === 'published') as job}
-								<div class="rounded-[10px] border border-gray-300 p-5">
+								<div class="rounded-[10px] border border-[#EAE9E9] p-5">
 									<h2>{job.title}</h2>
 								</div>
 							{/each}

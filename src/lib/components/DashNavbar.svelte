@@ -63,7 +63,7 @@
 	class="absolute left-1/2 z-30 w-full max-w-lg -translate-x-1/2
          p-4.5 transition-all duration-300 ease-in-out
          {search
-		? 'pointer-events-auto top-20 opacity-100'
+		? 'pointer-events-auto top-18 opacity-100'
 		: 'pointer-events-none top-0 opacity-0'}"
 >
 	<input

@@ -58,6 +58,7 @@
 							class="w-full resize-none rounded-[12px] border
 						border-[#D4D7DD] bg-[#e8e8e8] px-4.5 py-1.5 placeholder:text-[#57564F] focus:outline-none"
 						></textarea>
+
 						<input
 							type="url"
 							name="website"
