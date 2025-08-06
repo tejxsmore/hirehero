@@ -110,7 +110,7 @@
 	}
 </script>
 
-<div class="space-y-5">
+<div class="space-y-4.5">
 	<h2 class="text-3xl font-bold">Jobs</h2>
 
 	<div class="space-y-5 overflow-y-auto">

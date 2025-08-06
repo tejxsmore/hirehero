@@ -18,12 +18,12 @@
 			'<code class="bg-gray-300 px-1.5 py-0.5 rounded font-mono text-sm text-gray-600">$1</code>'
 		);
 
-		html = html.replace(/^###### (.*$)/gm, '<h6 class="text-md font-medium">$1</h6>');
-		html = html.replace(/^##### (.*$)/gm, '<h5 class="text-lg font-medium">$1</h5>');
-		html = html.replace(/^#### (.*$)/gm, '<h4 class="text-xl font-medium">$1</h4>');
-		html = html.replace(/^### (.*$)/gm, '<h3 class="text-2xl font-semibold">$1</h3>');
-		html = html.replace(/^## (.*$)/gm, '<h2 class="text-3xl font-semibold">$1</h2>');
-		html = html.replace(/^# (.*$)/gm, '<h1 class="text-4xl font-semibold">$1</h1>');
+		html = html.replace(/^###### (.*$)/gm, '<h6 class="text-xs pt-6 pb-3  font-medium">$1</h6>');
+		html = html.replace(/^##### (.*$)/gm, '<h5 class="text-sm pt-6 pb-3 font-medium">$1</h5>');
+		html = html.replace(/^#### (.*$)/gm, '<h4 class="pt-6 pb-3 font-medium">$1</h4>');
+		html = html.replace(/^### (.*$)/gm, '<h3 class="pt-6 pb-3 font-semibold">$1</h3>');
+		html = html.replace(/^## (.*$)/gm, '<h2 class="pt-6 pb-3 font-semibold">$1</h2>');
+		html = html.replace(/^# (.*$)/gm, '<h1 class="pt-6 pb-3 font-bold">$1</h1>');
 
 		html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
 		html = html.replace(/__(.*?)__/g, '<strong>$1</strong>');
@@ -32,9 +32,9 @@
 
 		html = html.replace(
 			/^> (.*$)/gm,
-			'<blockquote class="border-l-4 border-gray-400 pl-5 py-2.5 italic bg-gray-200 my-5">$1</blockquote>'
+			'<blockquote class="border-l-3 border-[#EAE9E9] pl-3 py-1.5 italic bg-gray-200 my-3">$1</blockquote>'
 		);
-		html = html.replace(/^\-\-\-$/gm, '<hr class="border-t my-5 border-gray-300">');
+		html = html.replace(/^\-\-\-$/gm, '<hr class="border-t my-4.5 border-[#EAE9E9]">');
 		html = processLists(html);
 		html = html.replace(
 			/\[([^\]]+)\]\(([^)]+)\)/g,

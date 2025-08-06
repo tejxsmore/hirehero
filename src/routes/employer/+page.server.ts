@@ -52,13 +52,13 @@ export const actions = {
 
 			const formData = await request.formData();
 			const companyName = formData.get('name') as string;
+			const companyIndustry = formData.get('industry') as string | null;
 			const companyDescription = formData.get('description') as string;
 			const companyWebsite = formData.get('website') as string | null;
 			const companyLocation = formData.get('location') as string;
-			const industry = formData.get('industry') as string | null;
 
 			const registrationNumber = formData.get('registrationNumber') as string | null;
-			const verificationDocUrl = formData.get('VerificationDoc') as string | null;
+			const verificationDocUrl = formData.get('verificationDoc') as string | null;
 
 			const representativeName = formData.get('representativeName') as string | null;
 			const representativeTitle = formData.get('representativeTitle') as string | null;
@@ -74,12 +74,14 @@ export const actions = {
 				id: randomUUID(),
 				userId: session.user.id,
 				companyName,
+				companyIndustry,
 				companyDescription,
 				companyWebsite,
 				companyLocation,
-				industry,
+
 				registrationNumber,
 				verificationDocUrl,
+
 				representativeName,
 				representativeTitle,
 				contactEmail,

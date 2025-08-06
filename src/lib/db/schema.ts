@@ -87,20 +87,17 @@ export const profile = pgTable('profile', {
 
 	// Basic info
 	fullName: text('full_name').notNull(),
-	headline: text('headline'), // e.g. "Frontend Developer at XYZ"
-	bio: text('bio'),
-	location: text('location'), // e.g. "New Delhi, India"
-
-	// Contact
-	phone: text('phone'),
 	email: text('email'), // Can be different from user.email
+	phone: text('phone'),
+	resumeUrl: text('resume_url'),
+	location: text('location'),
+	headline: text('headline'),
+	bio: text('bio'),
 
 	// URLs
-	resumeUrl: text('resume_url'),
-	website: text('website'),
+	portfolio: text('portfolio'),
 	linkedin: text('linkedin'),
 	github: text('github'),
-	portfolio: text('portfolio'),
 
 	// Skills - small array, kept in profile for performance
 	skills: json('skills').$type<string[]>(),
@@ -259,7 +256,7 @@ export const employer = pgTable('employer', {
 	companyDescription: text('company_description').notNull(),
 	companyWebsite: text('company_website'),
 	companyLocation: text('company_location').notNull(),
-	industry: text('industry'),
+	companyIndustry: text('company_industry'),
 
 	// Verification Info
 	registrationNumber: text('registration_number'),

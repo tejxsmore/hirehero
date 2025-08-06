@@ -39,7 +39,7 @@
 
 		<div class="flex justify-center">
 			<button
-				class="flex cursor-pointer items-center gap-2.5 rounded-full border border-[#E6521F] bg-[#FF4F0F] px-7.5 py-2.5 text-white transition-colors duration-200 hover:bg-[#F14A00]"
+				class="flex cursor-pointer items-center gap-2.5 rounded-full border border-[#E6521F] bg-[#FF4F0F] px-7.5 py-2.5 text-white transition-colors duration-300 hover:bg-[#F14A00]"
 				>Apply <span><ArrowUpRight size="16" /></span></button
 			>
 		</div>

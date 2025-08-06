@@ -11,6 +11,7 @@ body {
 	box-sizing: border-box;
 	scrollbar-width: none;
 	-ms-overflow-style: none;
+	font-family: 'Satoshi', sans-serif;
 }
 
 ::-webkit-scrollbar {
@@ -27,4 +28,86 @@ body {
 *::before,
 *::after {
 	box-sizing: inherit;
+}
+
+/* Satoshi Font Faces */
+@font-face {
+	font-family: 'Satoshi';
+	src: url('/fonts/Satoshi/Fonts/OTF/Satoshi-Light.otf') format('opentype');
+	font-weight: 300;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Satoshi';
+	src: url('/fonts/Satoshi/Fonts/OTF/Satoshi-Regular.otf') format('opentype');
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Satoshi';
+	src: url('/fonts/Satoshi/Fonts/OTF/Satoshi-Medium.otf') format('opentype');
+	font-weight: 500;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Satoshi';
+	src: url('/fonts/Satoshi/Fonts/OTF/Satoshi-Bold.otf') format('opentype');
+	font-weight: 700;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Satoshi';
+	src: url('/fonts/Satoshi/Fonts/OTF/Satoshi-Black.otf') format('opentype');
+	font-weight: 900;
+	font-style: normal;
+	font-display: swap;
+}
+
+/* Italic Styles */
+@font-face {
+	font-family: 'Satoshi';
+	src: url('/fonts/Satoshi/Fonts/OTF/Satoshi-LightItalic.otf') format('opentype');
+	font-weight: 300;
+	font-style: italic;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Satoshi';
+	src: url('/fonts/Satoshi/Fonts/OTF/Satoshi-Italic.otf') format('opentype');
+	font-weight: 400;
+	font-style: italic;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Satoshi';
+	src: url('/fonts/Satoshi/Fonts/OTF/Satoshi-MediumItalic.otf') format('opentype');
+	font-weight: 500;
+	font-style: italic;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Satoshi';
+	src: url('/fonts/Satoshi/Fonts/OTF/Satoshi-BoldItalic.otf') format('opentype');
+	font-weight: 700;
+	font-style: italic;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Satoshi';
+	src: url('/fonts/Satoshi/Fonts/OTF/Satoshi-BlackItalic.otf') format('opentype');
+	font-weight: 900;
+	font-style: italic;
+	font-display: swap;
 }

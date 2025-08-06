@@ -1,22 +1,25 @@
 <script lang="ts">
-	import { Mail, Globe, Building2, MapPin } from '@lucide/svelte';
-	import { goto } from '$app/navigation';
-
 	const { data } = $props();
 	const { employerProfile, hasEmployerProfile, jobsPosted, applications } = data;
+	import { goto } from '$app/navigation';
 
 	import { userStore } from '$lib/stores/user.js';
 	import Dashboard from './Dashboard.svelte';
+	import Navbar from '$lib/components/Navbar.svelte';
+	import DashNavbar from '$lib/components/DashNavbar.svelte';
+
 	if (!$userStore) {
 		goto('/login');
 	}
 	let isChecked = $state(false);
 </script>
 
-<div class="flex min-h-screen">
+<div class="min-h-screen">
 	{#if hasEmployerProfile}
+		<DashNavbar employer={employerProfile} />
 		<Dashboard employer={employerProfile} jobs={jobsPosted} {applications} />
 	{:else}
+		<Navbar />
 		<div class="flex w-full justify-center p-4.5 lg:px-20 xl:px-40">
 			<div class="w-full max-w-xl space-y-12">
 				<div class="space-y-3 py-9 text-center">
@@ -35,6 +38,17 @@
 							class="w-full resize-none rounded-[12px] border
 						border-[#D4D7DD] bg-[#e8e8e8] px-4.5 py-1.5 placeholder:text-[#57564F] focus:outline-none"
 						/>
+
+						<input
+							type="text"
+							name="industry"
+							id="industry"
+							required
+							placeholder="Industry"
+							class="w-full rounded-[12px] border border-[#D4D7DD]
+						bg-[#e8e8e8] px-4.5 py-1.5 placeholder:text-[#57564F] focus:outline-none"
+						/>
+
 						<textarea
 							name="description"
 							id="description"
@@ -62,16 +76,6 @@
 							class="w-full rounded-[12px] border border-[#D4D7DD]
 						bg-[#e8e8e8] px-4.5 py-1.5 placeholder:text-[#57564F] focus:outline-none"
 						/>
-
-						<input
-							type="text"
-							name="industry"
-							id="industry"
-							required
-							placeholder="Industry"
-							class="w-full rounded-[12px] border border-[#D4D7DD]
-						bg-[#e8e8e8] px-4.5 py-1.5 placeholder:text-[#57564F] focus:outline-none"
-						/>
 					</div>
 
 					<div class="space-y-3">
@@ -87,8 +91,8 @@
 						/>
 						<input
 							type="text"
-							name="VerificationDoc"
-							id="VerificationDoc"
+							name="verificationDoc"
+							id="verificationDoc"
 							required
 							placeholder="Verification Document URL"
 							class="w-full rounded-[12px] border border-[#D4D7DD]
@@ -129,7 +133,7 @@
 						/>
 
 						<input
-							type="number"
+							type="tel"
 							name="phone"
 							id="phone"
 							required
@@ -202,7 +206,7 @@
 				</form>
 
 				<!-- Help Text -->
-				<div class="space-y-3 py-6 text-sm text-[#7A7A73]">
+				<div class="space-y-3 pt-3 pb-6 text-sm text-[#7A7A73]">
 					<h3 class="font-medium text-[#323232]">Need Help?</h3>
 					<p class="">
 						Contact our support team at <a

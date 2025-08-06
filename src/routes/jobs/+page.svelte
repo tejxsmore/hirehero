@@ -1,6 +1,5 @@
 <script lang="ts">
-	const { data } = $props();
-	const { jobs } = data;
+	import { onMount } from 'svelte';
 	import {
 		Briefcase,
 		MapPin,
@@ -15,6 +14,9 @@
 	} from '@lucide/svelte';
 	import Fuse from 'fuse.js';
 	import MarkdownParser from '$lib/components/MarkdownParser.svelte';
+
+	const { data } = $props();
+	const { jobs } = data;
 
 	let selectedJobId = $state(jobs?.[0]?.id || null);
 	let mobileModal = $state(false);
@@ -51,15 +53,16 @@
 		includeMatches: true,
 		minMatchCharLength: 2
 	};
-
 	const fuse = new Fuse(jobs || [], fuseOptions);
 
 	const filteredJobs = $derived.by(() => {
 		let result = jobs || [];
+
 		if (searchQuery.trim()) {
 			const fuseResults = fuse.search(searchQuery);
 			result = fuseResults.map((item) => item.item);
 		}
+
 		if (searchLocation.trim()) {
 			result = result.filter(
 				(job: any) =>
@@ -67,18 +70,23 @@
 					(job.country && job.country.toLowerCase().includes(searchLocation.toLowerCase()))
 			);
 		}
+
 		if (selectedJobType) {
 			result = result.filter((job: any) => job.type === selectedJobType);
 		}
+
 		if (selectedExperienceLevel) {
 			result = result.filter((job: any) => job.experienceLevel === selectedExperienceLevel);
 		}
+
 		if (selectedLocationType) {
 			result = result.filter((job: any) => job.locationType === selectedLocationType);
 		}
+
 		if (selectedCategory) {
 			result = result.filter((job: any) => job.category === selectedCategory);
 		}
+
 		return result;
 	});
 
@@ -91,6 +99,19 @@
 		) {
 			selectedJobId = filteredJobs[0].id;
 		}
+	});
+
+	// Effect to control body scroll when mobile modal is open
+	$effect(() => {
+		if (mobileModal) {
+			document.body.style.overflow = 'hidden';
+		} else {
+			document.body.style.overflow = ''; // Reset to default
+		}
+		// Cleanup function for the effect
+		return () => {
+			document.body.style.overflow = '';
+		};
 	});
 
 	function selectJob(job: any) {
@@ -133,9 +154,32 @@
 
 	function formatSalary(job: any) {
 		if (!job.salaryMin || !job.salaryMax) return 'Salary not specified';
+
+		const currencySymbolMap: Record<string, string> = {
+			INR: '₹',
+			USD: '$',
+			EUR: '€',
+			GBP: '£'
+			// Add more currencies if needed
+		};
+
 		const currency = job.salaryCurrency || 'INR';
-		const type = job.salaryType || 'annual';
-		return `${currency} ${job.salaryMin} - ${job.salaryMax} ${type}`;
+		const symbol = currencySymbolMap[currency] || currency;
+		const type = job.salaryType?.slice(4).toLowerCase() || '';
+
+		// Format functions
+		const formatToK = (num: number) => `${Math.round(num / 1000)}K`;
+		const formatToL = (num: number) => `${(num / 100000).toFixed(1).replace(/\.0$/, '')}L`;
+
+		// Decide format
+		let salaryFormatted: string;
+		if (job.salaryType === 'Per Year') {
+			salaryFormatted = `${formatToL(job.salaryMin)} - ${formatToL(job.salaryMax)}`;
+		} else {
+			salaryFormatted = `${formatToK(job.salaryMin)} - ${formatToK(job.salaryMax)}`;
+		}
+
+		return `${symbol} ${salaryFormatted} /${type}`;
 	}
 
 	function formatDate(dateString: string) {
@@ -165,6 +209,9 @@
 	}
 
 	function handleModalContentKeydown(event: KeyboardEvent) {
+		// Prevent default for Tab key to keep focus within the modal if needed,
+		// or allow normal behavior if not explicitly managing focus.
+		// For now, just stop propagation to prevent background interaction.
 		event.stopPropagation();
 	}
 
@@ -244,7 +291,7 @@
 <div class="min-h-screen p-4.5 lg:px-20 xl:px-40">
 	<div class="mx-auto space-y-4.5">
 		<div class="py-20 text-center">
-			<h1 class="pb-10 text-3xl font-bold">Find your dream job</h1>
+			<h1 class="pb-12 text-3xl font-bold">Find your dream job</h1>
 			<div
 				class="mx-auto mb-4.5 flex max-w-2xl flex-col rounded-[15px] border border-[#D4D7DD] bg-[#e8e8e8] sm:flex-row"
 			>
@@ -279,14 +326,14 @@
 						<button
 							onclick={toggleJobTypeDropdown}
 							class="flex cursor-pointer items-center justify-between gap-2 rounded-[9px] border border-[#D4D7DD]
-							bg-[#EAE9E9] px-3 py-1 text-sm focus:outline-none"
+                            bg-[#EAE9E9] px-3 py-1 text-sm focus:outline-none"
 							aria-expanded={isJobTypeDropdownOpen}
 							aria-haspopup="listbox"
 						>
 							<span>{selectedJobType || 'All Job Types'}</span>
 							<ChevronDown
 								size="14"
-								class="transition-transform duration-200 {isJobTypeDropdownOpen
+								class="transition-transform duration-300 {isJobTypeDropdownOpen
 									? 'rotate-180'
 									: ''}"
 							/>
@@ -298,8 +345,8 @@
 							>
 								<button
 									onclick={() => selectJobType('')}
-									class="flex w-full cursor-pointer items-center justify-between rounded-[6px] px-3 py-1 text-sm transition-all duration-300 hover:bg-[#D4D7DD] focus:outline-none
-                                    {selectedJobType === '' ? 'bg-[#D4D7DD]' : ''}"
+									class="flex w-full cursor-pointer items-center justify-between rounded-[6px] px-3 py-1 text-sm transition-all duration-300 hover:bg-[#DDDDDD] focus:outline-none
+                                    {selectedJobType === '' ? 'bg-[#DDDDDD]' : ''}"
 									role="option"
 									aria-selected={selectedJobType === ''}
 								>
@@ -309,8 +356,8 @@
 									<button
 										onclick={() => selectJobType(type)}
 										class="flex w-full cursor-pointer items-center justify-between rounded-[5px] px-3 py-1 text-sm transition-all
-                                        duration-300 hover:bg-[#D4D7DD] focus:outline-none
-                                        {selectedJobType === type ? 'bg-[#D4D7DD]' : ''}"
+                                        duration-300 hover:bg-[#DDDDDD] focus:outline-none
+                                        {selectedJobType === type ? 'bg-[#DDDDDD]' : ''}"
 										role="option"
 										aria-selected={selectedJobType === type}
 									>
@@ -324,21 +371,20 @@
 						{/if}
 					</div>
 				{/if}
-
 				{#if experienceLevels.length > 0}
 					<!-- Experience Level Custom Dropdown -->
 					<div class="dropdown-container relative">
 						<button
 							onclick={toggleExperienceLevelDropdown}
 							class="flex cursor-pointer items-center justify-between gap-2 rounded-[9px] border border-[#D4D7DD]
-							bg-[#EAE9E9] px-3 py-1 text-sm focus:outline-none"
+                            bg-[#EAE9E9] px-3 py-1 text-sm focus:outline-none"
 							aria-expanded={isExperienceLevelDropdownOpen}
 							aria-haspopup="listbox"
 						>
 							<span>{selectedExperienceLevel || 'All Experience'}</span>
 							<ChevronDown
 								size="14"
-								class="transition-transform duration-200 {isExperienceLevelDropdownOpen
+								class="transition-transform duration-300 {isExperienceLevelDropdownOpen
 									? 'rotate-180'
 									: ''}"
 							/>
@@ -350,8 +396,8 @@
 							>
 								<button
 									onclick={() => selectExperienceLevel('')}
-									class="flex w-full cursor-pointer items-center justify-between rounded-[6px] px-3 py-1 text-sm transition-all duration-300 hover:bg-[#D4D7DD] focus:outline-none
-                                    {selectedExperienceLevel === '' ? 'bg-[#D4D7DD]' : ''}"
+									class="flex w-full cursor-pointer items-center justify-between rounded-[6px] px-3 py-1 text-sm transition-all duration-300 hover:bg-[#DDDDDD] focus:outline-none
+                                    {selectedExperienceLevel === '' ? 'bg-[#DDDDDD]' : ''}"
 									role="option"
 									aria-selected={selectedExperienceLevel === ''}
 								>
@@ -361,8 +407,8 @@
 									<button
 										onclick={() => selectExperienceLevel(level)}
 										class="flex w-full cursor-pointer items-center justify-between rounded-[5px] px-3 py-1 text-sm transition-all
-                                        duration-300 hover:bg-[#D4D7DD] focus:outline-none
-                                        {selectedExperienceLevel === level ? 'bg-[#D4D7DD]' : ''}"
+                                        duration-300 hover:bg-[#DDDDDD] focus:outline-none
+                                        {selectedExperienceLevel === level ? 'bg-[#DDDDDD]' : ''}"
 										role="option"
 										aria-selected={selectedExperienceLevel === level}
 									>
@@ -373,7 +419,6 @@
 						{/if}
 					</div>
 				{/if}
-
 				{#if locationTypes.length > 0}
 					<!-- Location Type Custom Dropdown -->
 					<div class="dropdown-container relative">
@@ -386,7 +431,7 @@
 							<span>{selectedLocationType || 'All Locations'}</span>
 							<ChevronDown
 								size="14"
-								class="transition-transform duration-200 {isLocationTypeDropdownOpen
+								class="transition-transform duration-300 {isLocationTypeDropdownOpen
 									? 'rotate-180'
 									: ''}"
 							/>
@@ -398,8 +443,8 @@
 							>
 								<button
 									onclick={() => selectLocationType('')}
-									class="flex w-full cursor-pointer items-center justify-between rounded-[6px] px-3 py-1 text-sm transition-all duration-300 hover:bg-[#D4D7DD] focus:outline-none
-                                    {selectedLocationType === '' ? 'bg-[#D4D7DD]' : ''}"
+									class="flex w-full cursor-pointer items-center justify-between rounded-[6px] px-3 py-1 text-sm transition-all duration-300 hover:bg-[#DDDDDD] focus:outline-none
+                                    {selectedLocationType === '' ? 'bg-[#DDDDDD]' : ''}"
 									role="option"
 									aria-selected={selectedLocationType === ''}
 								>
@@ -409,8 +454,8 @@
 									<button
 										onclick={() => selectLocationType(locType)}
 										class="flex w-full cursor-pointer items-center justify-between rounded-[5px] px-3 py-1 text-sm transition-all
-                                        duration-300 hover:bg-[#D4D7DD] focus:outline-none
-                                        {selectedLocationType === locType ? 'bg-[#D4D7DD]' : ''}"
+                                        duration-300 hover:bg-[#DDDDDD] focus:outline-none
+                                        {selectedLocationType === locType ? 'bg-[#DDDDDD]' : ''}"
 										role="option"
 										aria-selected={selectedLocationType === locType}
 									>
@@ -421,20 +466,19 @@
 						{/if}
 					</div>
 				{/if}
-
 				{#if categories.length > 0}
 					<!-- Category Custom Dropdown -->
 					<div class="dropdown-container relative">
 						<button
 							onclick={toggleCategoryDropdown}
-							class="flex cursor-pointer items-center justify-between gap-2 rounded-[9px] border border-[#D4D7DD] bg-[#EAE9E9] px-3 py-1 text-sm transition-all duration-200 focus:outline-none"
+							class="flex cursor-pointer items-center justify-between gap-2 rounded-[9px] border border-[#D4D7DD] bg-[#EAE9E9] px-3 py-1 text-sm transition-all duration-300 focus:outline-none"
 							aria-expanded={isCategoryDropdownOpen}
 							aria-haspopup="listbox"
 						>
 							<span>{selectedCategory || 'All Categories'}</span>
 							<ChevronDown
 								size="14"
-								class="transition-transform duration-200 {isCategoryDropdownOpen
+								class="transition-transform duration-300 {isCategoryDropdownOpen
 									? 'rotate-180'
 									: ''}"
 							/>
@@ -447,8 +491,8 @@
 								<button
 									onclick={() => selectCategory('')}
 									class="flex w-full cursor-pointer items-center justify-between rounded-[6px] px-3 py-1 text-sm transition-all duration-300
-									hover:bg-[#D4D7DD] focus:outline-none
-                                    {selectedCategory === '' ? 'bg-[#D4D7DD]' : ''}"
+                                    hover:bg-[#DDDDDD] focus:outline-none
+                                    {selectedCategory === '' ? 'bg-[#DDDDDD]' : ''}"
 									role="option"
 									aria-selected={selectedCategory === ''}
 								>
@@ -458,8 +502,8 @@
 									<button
 										onclick={() => selectCategory(category)}
 										class="flex w-full cursor-pointer items-center justify-between rounded-[5px] px-3 py-1 text-sm transition-all
-                                        duration-300 hover:bg-[#D4D7DD] focus:outline-none
-                                        {selectedCategory === category ? 'bg-[#D4D7DD]' : ''}"
+                                        duration-300 hover:bg-[#DDDDDD] focus:outline-none
+                                        {selectedCategory === category ? 'bg-[#DDDDDD]' : ''}"
 										role="option"
 										aria-selected={selectedCategory === category}
 									>
@@ -476,7 +520,7 @@
 				<div class="mb-4.5 flex flex-wrap justify-center gap-3">
 					{#if searchQuery}
 						<span
-							class="inline-flex items-center gap-3 rounded-[9px] border border-[#EAE9E9] bg-[#D4D7DD] px-3 py-1 text-sm"
+							class="inline-flex items-center gap-3 rounded-[9px] border border-[#c5c8cd] bg-[#D4D7DD] px-3 py-1 text-sm"
 						>
 							Search: "{searchQuery}"
 							<button
@@ -484,7 +528,7 @@
 								onkeydown={(e) => handleFilterTagKeydown(e, () => (searchQuery = ''))}
 								aria-label="Remove search filter"
 								class="cursor-pointer rounded p-0.5
-								transition-all duration-300 hover:text-red-500"
+                                transition-all duration-300 hover:text-red-500"
 							>
 								<X size="12" />
 							</button>
@@ -492,7 +536,7 @@
 					{/if}
 					{#if searchLocation}
 						<span
-							class="inline-flex items-center gap-3 rounded-[9px] border border-[#EAE9E9] bg-[#D4D7DD] px-3 py-1 text-sm"
+							class="inline-flex items-center gap-3 rounded-[9px] border border-[#c5c8cd] bg-[#D4D7DD] px-3 py-1 text-sm"
 						>
 							Location: "{searchLocation}"
 							<button
@@ -500,7 +544,7 @@
 								onkeydown={(e) => handleFilterTagKeydown(e, () => (searchLocation = ''))}
 								aria-label="Remove location filter"
 								class="cursor-pointer rounded p-0.5
-								transition-all duration-300 hover:text-red-500"
+                                transition-all duration-300 hover:text-red-500"
 							>
 								<X size="12" />
 							</button>
@@ -508,7 +552,7 @@
 					{/if}
 					{#if selectedJobType}
 						<span
-							class="inline-flex items-center gap-3 rounded-[9px] border border-[#EAE9E9] bg-[#D4D7DD] px-3 py-1 text-sm"
+							class="inline-flex items-center gap-3 rounded-[9px] border border-[#c5c8cd] bg-[#D4D7DD] px-3 py-1 text-sm"
 						>
 							{selectedJobType}
 							<button
@@ -516,7 +560,7 @@
 								onkeydown={(e) => handleFilterTagKeydown(e, () => clearFilter('jobType'))}
 								aria-label="Remove job type filter"
 								class="cursor-pointer rounded p-0.5
-								transition-all duration-300 hover:text-red-500"
+                                transition-all duration-300 hover:text-red-500"
 							>
 								<X size="12" />
 							</button>
@@ -524,7 +568,7 @@
 					{/if}
 					{#if selectedExperienceLevel}
 						<span
-							class="inline-flex items-center gap-3 rounded-[9px] border border-[#EAE9E9] bg-[#D4D7DD] px-3 py-1 text-sm"
+							class="inline-flex items-center gap-3 rounded-[9px] border border-[#c5c8cd] bg-[#D4D7DD] px-3 py-1 text-sm"
 						>
 							{selectedExperienceLevel}
 							<button
@@ -532,7 +576,7 @@
 								onkeydown={(e) => handleFilterTagKeydown(e, () => clearFilter('experienceLevel'))}
 								aria-label="Remove experience level filter"
 								class="cursor-pointer rounded p-0.5
-								transition-all duration-300 hover:text-red-500"
+                                transition-all duration-300 hover:text-red-500"
 							>
 								<X size="12" />
 							</button>
@@ -540,7 +584,7 @@
 					{/if}
 					{#if selectedLocationType}
 						<span
-							class="inline-flex items-center gap-3 rounded-[9px] border border-[#EAE9E9] bg-[#D4D7DD] px-3 py-1 text-sm"
+							class="inline-flex items-center gap-3 rounded-[9px] border border-[#c5c8cd] bg-[#D4D7DD] px-3 py-1 text-sm"
 						>
 							{selectedLocationType}
 							<button
@@ -548,7 +592,7 @@
 								onkeydown={(e) => handleFilterTagKeydown(e, () => clearFilter('locationType'))}
 								aria-label="Remove location type filter"
 								class="cursor-pointer rounded p-0.5
-								transition-all duration-300 hover:text-red-500"
+                                transition-all duration-300 hover:text-red-500"
 							>
 								<X size="12" />
 							</button>
@@ -556,7 +600,7 @@
 					{/if}
 					{#if selectedCategory}
 						<span
-							class="inline-flex items-center gap-3 rounded-[9px] border border-[#EAE9E9] bg-[#D4D7DD] px-3 py-1 text-sm"
+							class="inline-flex items-center gap-3 rounded-[9px] border border-[#c5c8cd] bg-[#D4D7DD] px-3 py-1 text-sm"
 						>
 							{selectedCategory}
 							<button
@@ -564,7 +608,7 @@
 								onkeydown={(e) => handleFilterTagKeydown(e, () => clearFilter('category'))}
 								aria-label="Remove category filter"
 								class="cursor-pointer rounded p-0.5
-								transition-all duration-300 hover:text-red-500"
+                                transition-all duration-300 hover:text-red-500"
 							>
 								<X size="12" />
 							</button>
@@ -586,10 +630,10 @@
 			</div>
 		</div>
 		<!-- Main Content -->
-		<div class="flex h-full gap-4.5">
+		<div class="flex gap-4.5 md:h-[calc(100vh-35px)]">
 			<!-- Jobs List -->
 			<div
-				class="w-full space-y-4.5 overflow-y-auto
+				class="w-full space-y-4.5 overflow-y-auto will-change-transform
                 {filteredJobs.length === 0 ? 'w-full' : 'md:w-1/2'}"
 			>
 				{#if filteredJobs.length === 0}
@@ -626,10 +670,10 @@
 									{/if}
 								</div>
 							{/if}
-							<div class="flex flex-wrap items-center gap-4.5 text-sm tracking-wide text-[#7A7A73]">
+							<div class="flex flex-wrap items-center gap-4.5 text-sm text-[#7A7A73]">
 								<div class="flex items-center gap-3">
 									<MapPin size="12" />
-									<span class="tracking-wide">
+									<span class="">
 										{#if job.city}
 											{job.city}, {job.country || ''} ({job.locationType})
 										{:else}
@@ -648,24 +692,24 @@
 			</div>
 			<!-- Job Details -->
 			<div
-				class=" h-full w-1/2 overflow-y-auto rounded-[15px] border border-[#EAE9E9] bg-[#fff] p-4.5
+				class=" h-full w-1/2 overflow-y-auto rounded-[15px] border border-[#EAE9E9] bg-[#fff] will-change-transform
                 {filteredJobs.length === 0 ? 'hidden' : 'hidden md:block'} "
 			>
 				{#if selectedJob}
-					<div class="space-y-12">
+					<div class="sticky top-0 border-b border-[#EAE9E9] bg-white p-4.5">
+						<h1 class="text-2xl font-bold">{selectedJob.title}</h1>
+						<p class="text-lg font-semibold text-[#7A7A73]">
+							{selectedJob.employer?.name || 'Company'}
+						</p>
+					</div>
+					<div class="space-y-12 p-4.5">
 						<!-- Header -->
 						<div class="space-y-4.5">
-							<div class="">
-								<h1 class="text-2xl font-bold">{selectedJob.title}</h1>
-								<p class="text-lg font-semibold text-[#7A7A73]">
-									{selectedJob.employer?.name || 'Company'}
-								</p>
-							</div>
 							{#if selectedJob.category}
 								<div>
 									<span
 										class="inline-block rounded-[9px] bg-[#EAE9E9]
-										px-3 py-1 text-sm"
+                                        px-3 py-1"
 									>
 										{selectedJob.category}
 									</span>
@@ -725,7 +769,7 @@
 						<!-- Skills -->
 						{#if selectedJob.skills && selectedJob.skills.length > 0}
 							<div>
-								<h3 class="mb-2 font-semibold">Required Skills</h3>
+								<h3 class="mb-3 font-semibold">Required Skills</h3>
 								<div class="flex flex-wrap gap-3">
 									{#each selectedJob.skills as skill}
 										<span class="rounded-[9px] bg-[#F6F6F6] px-3 py-1 text-sm">{skill}</span>
@@ -736,23 +780,22 @@
 						<!-- Description -->
 						{#if selectedJob.description}
 							<div>
-								<h3 class="mb-2 font-semibold">Job Description</h3>
+								<h3 class="mb-3 font-semibold">Job Description</h3>
 								<MarkdownParser content={selectedJob.description} />
 							</div>
 						{/if}
-						<!-- Apply Button -->
-						<div class="flex gap-6 pt-6">
-							<button
-								class="cursor-pointer rounded-[12px] border border-[#EAE9E9] px-4.5 py-1.5 transition-colors duration-300 hover:bg-[#EAE9E9]"
-								>Save</button
-							>
-							<button
-								onclick={handleJobApply}
-								class="block w-full cursor-pointer rounded-[12px] border border-[#323232] bg-[#212121] px-4.5 py-1.5 text-center text-[#F6F6F6] transition-colors duration-300 hover:bg-[#323232]"
-							>
-								Apply Now
-							</button>
-						</div>
+					</div>
+					<div class="sticky bottom-0 flex gap-4.5 border-t border-[#EAE9E9] bg-white p-4.5">
+						<button
+							class="cursor-pointer rounded-[12px] border border-[#EAE9E9] px-4.5 py-1.5 transition-colors duration-300 hover:bg-[#EAE9E9]"
+							>Save</button
+						>
+						<button
+							onclick={handleJobApply}
+							class="block w-full cursor-pointer rounded-[12px] border border-[#323232] bg-[#212121] px-4.5 py-1.5 text-center text-[#F6F6F6] transition-colors duration-300 hover:bg-[#323232]"
+						>
+							Apply Now
+						</button>
 					</div>
 				{:else}
 					<div class="flex h-full items-center justify-center">
@@ -779,7 +822,7 @@
 	>
 		<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 		<div
-			class="animate-slide-up max-h-[85vh] w-full overflow-y-auto rounded-t-[20px] border-t border-[#EAE9E9] bg-[#fff] shadow-2xl"
+			class="animate-slide-up max-h-[85vh] w-full overflow-y-auto overscroll-y-contain rounded-t-[20px] border-t border-[#EAE9E9] bg-[#fff] shadow-2xl"
 			onclick={(e) => e.stopPropagation()}
 			onkeydown={handleModalContentKeydown}
 			role="document"
@@ -795,8 +838,8 @@
 				</div>
 				<button
 					onclick={closeMobileModal}
-					class="ml-4 flex-shrink-0 cursor-pointer rounded-[10px] p-2 text-[#57564F] transition-all hover:bg-[#7A7A73]
-                     hover:text-black"
+					class="ml-4 flex-shrink-0 cursor-pointer rounded-[10px] p-2
+                    text-[#7A7A73]"
 					aria-label="Close modal"
 				>
 					<X size="20" />
@@ -805,7 +848,7 @@
 			<div class="space-y-12 p-4.5">
 				{#if selectedJob.category}
 					<div>
-						<span class="inline-block rounded-[9px] bg-[#EAE9E9] px-3 py-1 text-sm">
+						<span class="inline-block rounded-[9px] bg-[#EAE9E9] px-3 py-1">
 							{selectedJob.category}
 						</span>
 					</div>
@@ -829,7 +872,7 @@
 							<Clock size="12" class="text-[#7A7A73]" />
 							<p class="text-sm text-[#7A7A73]">Job Type</p>
 						</div>
-						<p class="pl-6 font-semibold">{selectedJob.type}</p>
+						<p class="pl-6 font-medium">{selectedJob.type}</p>
 					</div>
 					{#if selectedJob.salaryMin && selectedJob.salaryMax}
 						<div>
@@ -861,17 +904,17 @@
 				</div>
 				{#if selectedJob.skills && selectedJob.skills.length > 0}
 					<div>
-						<h3 class="mb-3 text-sm font-semibold">Required Skills</h3>
+						<h3 class="mb-6 font-semibold">Required Skills</h3>
 						<div class="flex flex-wrap gap-3">
 							{#each selectedJob.skills as skill}
-								<span class="rounded-[9px] bg-[#F6F6F6] px-3 py-1">{skill}</span>
+								<span class="rounded-[9px] bg-[#F6F6F6] px-3 py-1 text-sm">{skill}</span>
 							{/each}
 						</div>
 					</div>
 				{/if}
 				{#if selectedJob.description}
 					<div>
-						<h3 class="mb-3 text-sm font-semibold">Job Description</h3>
+						<h3 class="mb-3 font-semibold">Job Description</h3>
 						<MarkdownParser content={selectedJob.description} />
 					</div>
 				{/if}

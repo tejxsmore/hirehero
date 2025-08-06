@@ -3,12 +3,10 @@
 		TrendingUp,
 		Briefcase,
 		Users,
-		Building2,
+		Building,
 		Settings,
 		Calendar,
 		LayoutDashboard,
-		Plus,
-		Search,
 		MessageCircle,
 		ChevronDown,
 		Check,
@@ -29,7 +27,6 @@
 		| 'company-profile'
 		| 'settings';
 	let activeView = $state<ViewKey>('dashboard');
-	let searchQuery = $state('');
 	let isDropdownOpen = $state(false);
 
 	const navItems: { label: string; view: ViewKey; icon: typeof LayoutDashboard }[] = [
@@ -38,7 +35,7 @@
 		{ label: 'Applications', view: 'applications', icon: Users },
 		{ label: 'Messages', view: 'messages', icon: MessageCircle },
 		{ label: 'Interviews', view: 'interviews', icon: Calendar },
-		{ label: 'Company Profile', view: 'company-profile', icon: Building2 },
+		{ label: 'Company Profile', view: 'company-profile', icon: Building },
 		{ label: 'Settings', view: 'settings', icon: Settings }
 	];
 
@@ -71,18 +68,15 @@
 
 <div class="flex min-h-screen w-full overflow-y-auto">
 	<!-- Desktop Sidebar -->
-	<aside
-		class="hidden w-72 flex-col space-y-5 border-r border-gray-300
-	bg-white p-5 md:flex"
-	>
-		<nav class="space-y-2.5">
+	<aside class="hidden w-72 flex-col space-y-5 border-r border-[#EAE9E9] p-5 md:flex">
+		<nav class="space-y-3">
 			{#each navItems as { label, view, icon: Icon }}
 				<button
 					onclick={() => (activeView = view)}
-					class="flex w-full cursor-pointer items-center gap-5 rounded-[10px] px-5 py-2.5 transition-colors
-					{activeView === view ? 'bg-gray-100  text-[#FF4F0F]' : ' hover:bg-gray-100'}"
+					class="flex w-full cursor-pointer items-center gap-5 rounded-[12px] px-4.5 py-1.5 transition-colors
+					{activeView === view ? 'bg-[#EAE9E9] ' : ' hover:bg-[#EAE9E9]'}"
 				>
-					<Icon size="16" />
+					<Icon size="14" />
 					<span>{label}</span>
 				</button>
 			{/each}
@@ -97,40 +91,39 @@
 				<button
 					onclick={toggleDropdown}
 					class="flex w-full cursor-pointer items-center justify-between
-					rounded-[10px] bg-gray-100 px-5 py-2.5 text-[#FF4F0F]
-					transition-all duration-200 focus:outline-none"
+					rounded-[12px] border border-[#D4D7DD] bg-[#EAE9E9]
+					px-4.5 py-1.5"
 					aria-expanded={isDropdownOpen}
 					aria-haspopup="listbox"
 				>
-					<div class="flex items-center gap-5">
+					<div class="flex items-center gap-4.5">
 						{#if currentItem}
 							<div class="">
-								<currentItem.icon size="16" />
+								<currentItem.icon size="14" />
 							</div>
 							<span class="">{currentItem.label}</span>
 						{/if}
 					</div>
 					<ChevronDown
-						size="16"
-						class="transition-transform duration-200 {isDropdownOpen ? 'rotate-180 ' : ''}"
+						size="14"
+						class="transition-transform duration-300 {isDropdownOpen ? 'rotate-180 ' : ''}"
 					/>
 				</button>
 
 				{#if isDropdownOpen}
 					<div
-						class="animate-in slide-in-from-top-2 fade-in absolute top-full right-0 left-0 z-20 mt-2.5 space-y-1 overflow-hidden rounded-[14px] border border-gray-300 bg-white p-1 duration-200"
+						class="animate-in slide-in-from-top-2 fade-in absolute top-full right-0 left-0 z-20 mt-1.5 space-y-1 overflow-hidden rounded-[15px] border border-[#D4D7DD] bg-[#EAE9E9] p-1 duration-300"
 						role="listbox"
 					>
 						{#each navItems as { label, view, icon: Icon }, index}
 							<button
 								onclick={() => selectView(view)}
-								class="flex w-full cursor-pointer items-center justify-between rounded-[10px] px-5 py-2.5 transition-all
-								duration-200 hover:bg-gray-100 focus:outline-none
-								{activeView === view ? 'bg-gray-100 text-[#FF4F0F]' : ''}"
+								class="flex w-full cursor-pointer items-center justify-between rounded-[12px] px-4.5 py-1.5 transition-all duration-300 hover:bg-[#DDDDDD] focus:outline-none
+								{activeView === view ? 'bg-[#DDDDDD]' : ''}"
 								role="option"
 								aria-selected={activeView === view}
 							>
-								<div class="flex items-center gap-5">
+								<div class="flex items-center gap-4.5">
 									<Icon size="14" class="" />
 									<span class="flex-1">{label}</span>
 								</div>
@@ -146,38 +139,17 @@
 
 		<!-- View-specific content -->
 		{#if activeView === 'dashboard'}
-			<div class="flex justify-between gap-5">
-				<h2 class="text-3xl font-bold">Dashboard</h2>
-				<div class="flex gap-5">
-					<a
-						href={`/employer/post-job`}
-						class="flex w-full items-center gap-5 rounded-[10px] border border-gray-300 bg-white p-2.5 hover:text-[#FF4F0F]
-						sm:px-5"
-					>
-						<Plus size="16" class="flex-shrink-0" />
-						<span class="hidden lg:inline">Post Job</span>
-					</a>
-					<div
-						class="flex w-full items-center gap-5 rounded-[10px] border border-gray-300 bg-gray-200 p-2.5 sm:px-5"
-					>
-						<Search size="16" class="text-gray-400" />
-						<input
-							type="text"
-							name="search"
-							placeholder="Search candidates"
-							class=" hidden placeholder:text-gray-400 focus:outline-none sm:inline"
-						/>
-					</div>
-				</div>
-			</div>
-			<div class="grid grid-cols-2 gap-5 lg:grid-cols-4">
+			<h2 class="text-3xl font-bold">Dashboard</h2>
+			<div class="grid grid-cols-2 gap-4.5 lg:grid-cols-4">
 				<div
-					class="rounded-[15px] border
-				border-gray-300 bg-white p-5"
+					class="p-1.5] rounded-[15px]
+				border border-[#EAE9E9] bg-white p-4.5"
 				>
-					<p class="flex justify-between gap-5">
+					<p class="flex justify-between gap-3">
 						Active Jobs
-						<span><Briefcase size="16" class="mt-1 text-gray-400" /></span>
+						<span class="rounded-[9px] bg-[#ECFAE5] p-1.5 text-[#B0DB9C]"
+							><Briefcase size="12" /></span
+						>
 					</p>
 					<h2 class="pt-5 text-3xl font-bold">
 						{jobs.length}
@@ -189,7 +161,7 @@
 				border-gray-300 bg-white p-5"
 				>
 					<p class="flex justify-between gap-5">
-						Total Applications
+						Applications
 						<span><Users size="16" class="mt-1 text-gray-400" /></span>
 					</p>
 					<h2 class="pt-5 text-3xl font-bold">

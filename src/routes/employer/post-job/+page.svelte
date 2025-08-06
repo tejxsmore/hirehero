@@ -68,7 +68,7 @@
 		'Legal',
 		'Other'
 	];
-	const currencies = ['₹ INR', '$ USD', '€ EUR', '£ GBP'];
+	const currencies = ['INR', 'USD', 'EUR', 'GBP'];
 
 	function addSkill() {
 		if (skillInput.trim() && !formData.skills.includes(skillInput.trim())) {
@@ -568,7 +568,7 @@
 							<button
 								type="button"
 								onclick={togglePublished}
-								class="relative mt-0.5 flex h-5 w-5 flex-shrink-0 cursor-pointer items-center justify-center rounded-md border-2 transition-all duration-200 ease-in-out {isPublished
+								class="relative mt-0.5 flex h-5 w-5 flex-shrink-0 cursor-pointer items-center justify-center rounded-md border-2 transition-all duration-300 ease-in-out {isPublished
 									? 'border-[#E6521F] bg-[#FF4F0F] shadow-md'
 									: 'border-gray-300 hover:border-[#E6521F] hover:shadow-sm'}"
 								aria-pressed={isPublished}
@@ -610,7 +610,7 @@
 					<button
 						type="button"
 						class="cursor-pointer rounded-full border border-gray-300 bg-white px-5 py-2.5 text-gray-600 transition-colors
-						duration-200 hover:bg-gray-100 focus:outline-none"
+						duration-300 hover:bg-gray-100 focus:outline-none"
 					>
 						Cancel
 					</button>

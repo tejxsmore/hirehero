@@ -56,10 +56,7 @@
 			</div>
 
 			<!-- Desktop Navigation -->
-			<div
-				class="hidden gap-1 rounded-[15px] border border-[#EAE9E9] bg-[#EAE9E9]
-			p-1 md:flex"
-			>
+			<div class="hidden gap-1 rounded-[15px] border border-[#EAE9E9] bg-[#EAE9E9] p-1 md:flex">
 				<a
 					href="/jobs"
 					class="rounded-[12px] px-4.5 py-1.5 transition-colors duration-300 {activeTab === 'jobs'
@@ -156,18 +153,20 @@
 		</button>
 	</div>
 
-	<!-- Mobile Menu Overlay -->
-	{#if mobileMenu}
-		<div
-			class="absolute top-full right-0 left-0 z-50 space-y-4.5 border-b
-			border-[#EAE9E9] bg-[#F6F6F6] p-4.5 pt-0 shadow-sm transition-all duration-300
-			ease-out md:hidden"
-			role="menu"
-			aria-orientation="vertical"
-		>
+	<!-- Mobile Menu Overlay with Slide Down Animation -->
+	<div
+		class="absolute top-full right-0 left-0 z-50 overflow-hidden border-b
+		border-[#EAE9E9] bg-[#F6F6F6] shadow-sm transition-all duration-500
+		ease-in-out md:hidden {mobileMenu
+			? 'max-h-[500px] translate-y-0 opacity-100'
+			: 'max-h-0 -translate-y-2 opacity-0'}"
+		role="menu"
+		aria-orientation="vertical"
+	>
+		<div class="space-y-4.5 p-4.5 pt-0 transition-all duration-500 ease-in-out">
 			<div
 				class="flex flex-col space-y-1 rounded-[15px] border
-			border-[#EAE9E9] bg-[#EAE9E9] p-1"
+			border-[#EAE9E9] bg-[#EAE9E9] p-1 transition-all duration-300 ease-in-out"
 			>
 				<!-- Mobile Navigation Links -->
 				<a
@@ -244,5 +243,5 @@
 				{/if}
 			</div>
 		</div>
-	{/if}
+	</div>
 </nav>
