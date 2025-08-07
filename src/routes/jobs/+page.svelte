@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import {
 		Briefcase,
 		MapPin,
@@ -8,18 +7,30 @@
 		IndianRupee,
 		GraduationCap,
 		Star,
-		ArrowUpRight,
 		ChevronDown,
-		Check
+		Check,
+		FileText, // Added for file icon
+		CheckCircle, // Added for checkmark icon
+		Settings // Added for CV options icon
 	} from '@lucide/svelte';
 	import Fuse from 'fuse.js';
 	import MarkdownParser from '$lib/components/MarkdownParser.svelte';
+	import { userStore } from '$lib/stores/user.js';
+	import { goto } from '$app/navigation';
 
 	const { data } = $props();
-	const { jobs } = data;
+	const { jobs, savedJobIds: initialSavedJobIds, profile } = data;
 
+	let isLoggedIn = $state($userStore != null);
+	let message = $state('');
+	let messageType = $state<'success' | 'error' | ''>('');
+	let savingJob = $state(false);
+	let savedJobIds = $state(new Set<string>(initialSavedJobIds || []));
+	let showSaveTooltip = $state(false);
+	let showApplyTooltip = $state(false);
 	let selectedJobId = $state(jobs?.[0]?.id || null);
 	let mobileModal = $state(false);
+
 	let searchQuery = $state('');
 	let searchLocation = $state('');
 	let selectedJobType = $state('');
@@ -27,11 +38,23 @@
 	let selectedLocationType = $state('');
 	let selectedCategory = $state('');
 
+	// Apply states
+	let applyModal = $state(false);
+
 	// Dropdown states
 	let isJobTypeDropdownOpen = $state(false);
 	let isExperienceLevelDropdownOpen = $state(false);
 	let isLocationTypeDropdownOpen = $state(false);
 	let isCategoryDropdownOpen = $state(false);
+
+	// Track if user just clicked to prevent tooltip on hover after click
+	let justClicked = $state({
+		save: false,
+		apply: false
+	});
+
+	// Derived state to check if the currently selected job is saved
+	const isCurrentJobSaved = $derived(selectedJobId ? savedJobIds.has(selectedJobId) : false);
 
 	const jobTypes = [...new Set(jobs?.map((job: any) => job.type).filter(Boolean))];
 	const experienceLevels = [
@@ -126,6 +149,11 @@
 		mobileModal = false;
 	}
 
+	// New function to close apply modal
+	function closeApplyModal() {
+		applyModal = false;
+	}
+
 	function clearFilter(filterType: string) {
 		switch (filterType) {
 			case 'jobType':
@@ -202,16 +230,16 @@
 		}
 	}
 
-	function handleModalOverlayKeydown(event: KeyboardEvent) {
-		if (event.key === 'Escape') {
-			closeMobileModal();
+	// Generic keydown handler for modal overlays
+	function handleOverlayKeydown(event: KeyboardEvent, closeFn: () => void) {
+		if (event.key === 'Escape' || event.key === 'Enter' || event.key === ' ') {
+			event.preventDefault(); // Prevent default action for space/enter
+			closeFn();
 		}
 	}
 
+	// Updated handleModalContentKeydown to stop propagation for keyboard events
 	function handleModalContentKeydown(event: KeyboardEvent) {
-		// Prevent default for Tab key to keep focus within the modal if needed,
-		// or allow normal behavior if not explicitly managing focus.
-		// For now, just stop propagation to prevent background interaction.
 		event.stopPropagation();
 	}
 
@@ -264,13 +292,55 @@
 		isCategoryDropdownOpen = false;
 	}
 
+	function handleTooltipEnter(buttonType: 'save' | 'apply') {
+		if (buttonType === 'save') {
+			if (!isLoggedIn && !justClicked.save) {
+				showSaveTooltip = true;
+			}
+		} else if (buttonType === 'apply') {
+			// Show tooltip if not logged in OR if logged in but profile is null
+			if ((!isLoggedIn || profile === null) && !justClicked.apply) {
+				showApplyTooltip = true;
+			}
+		}
+	}
+
+	function handleTooltipLeave(buttonType: 'save' | 'apply') {
+		if (buttonType === 'save' && !justClicked.save) {
+			showSaveTooltip = false;
+		} else if (buttonType === 'apply' && !justClicked.apply) {
+			showApplyTooltip = false;
+		}
+	}
+
 	function handleClickOutside(event: MouseEvent) {
 		const target = event.target as HTMLElement;
-		if (!target.closest('.dropdown-container')) {
+		// Close dropdowns
+		const dropdownContainers = document.querySelectorAll('.dropdown-container');
+		let clickedInsideDropdown = false;
+		for (const container of Array.from(dropdownContainers)) {
+			if (container.contains(target)) {
+				clickedInsideDropdown = true;
+				break;
+			}
+			// Also check if the click was on the dropdown button itself
+			if (target.closest('button[aria-haspopup="listbox"]')) {
+				clickedInsideDropdown = true;
+				break;
+			}
+		}
+
+		if (!clickedInsideDropdown) {
 			isJobTypeDropdownOpen = false;
 			isExperienceLevelDropdownOpen = false;
 			isLocationTypeDropdownOpen = false;
 			isCategoryDropdownOpen = false;
+		}
+
+		// Hide sign-in tooltips if click is outside both save and apply buttons
+		if (!target.closest('.save-button-container') && !target.closest('.apply-button-container')) {
+			showSaveTooltip = false;
+			showApplyTooltip = false;
 		}
 	}
 
@@ -280,10 +350,124 @@
 			isExperienceLevelDropdownOpen = false;
 			isLocationTypeDropdownOpen = false;
 			isCategoryDropdownOpen = false;
+			showSaveTooltip = false; // Also hide save tooltip on escape
+			showApplyTooltip = false; // Also hide apply tooltip on escape
 		}
 	}
 
-	async function handleJobApply() {}
+	async function handleJobSave(jobId: string) {
+		// Set click flag and hide tooltip immediately
+		justClicked.save = true;
+		showSaveTooltip = false;
+		// Reset click flag after a short delay
+		setTimeout(() => {
+			justClicked.save = false;
+		}, 300);
+
+		if (!isLoggedIn) {
+			// If not logged in, redirect to login page
+			goto('/login');
+			return;
+		}
+
+		if (savingJob) {
+			return;
+		}
+
+		console.log('Attempting to save job:', jobId);
+		message = '';
+		messageType = '';
+		savingJob = true;
+
+		// Optimistic update: Create a new Set to ensure reactivity
+		savedJobIds = new Set(savedJobIds.add(jobId));
+
+		try {
+			const response = await fetch('/api/jobs/save', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({ jobId })
+			});
+
+			const result = await response.json();
+
+			if (response.ok) {
+				message = result.message;
+				messageType = 'success';
+				console.log('Job saved successfully:', result.message);
+			} else {
+				// Revert optimistic update on error: Create a new Set after deletion
+				const newSavedJobIds = new Set(savedJobIds);
+				newSavedJobIds.delete(jobId);
+				savedJobIds = newSavedJobIds;
+				message = result.message || 'Failed to save job.';
+				messageType = 'error';
+				console.error('Error saving job:', result.message);
+			}
+		} catch (error) {
+			// Revert optimistic update on network/unexpected error: Create a new Set after deletion
+			const newSavedJobIds = new Set(savedJobIds);
+			newSavedJobIds.delete(jobId);
+			savedJobIds = newSavedJobIds;
+			message = 'An unexpected error occurred.';
+			messageType = 'error';
+			console.error('Network or unexpected error:', error);
+		} finally {
+			savingJob = false; // End loading state
+		}
+	}
+
+	async function handleJobApply() {
+		justClicked.apply = true;
+		showApplyTooltip = false;
+
+		// Reset click flag after a short delay
+		setTimeout(() => {
+			justClicked.apply = false;
+		}, 300);
+
+		console.log(`User applied for ${selectedJob?.title} job`);
+		try {
+			const response = await fetch('/api/jobs/apply', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({ jobId: selectedJob?.id, resumeUrl: profile?.resumeUrl })
+			});
+
+			const result = await response.json();
+			if (response.ok) {
+				message = result.message;
+				messageType = 'success';
+				console.log('Job applied successfully:', result.message);
+			} else {
+				message = result.message || 'Failed to save job.';
+				messageType = 'error';
+				console.error('Error saving job:', result.message);
+			}
+		} catch (error) {
+			console.error('Network or unexpected error:', error);
+		} finally {
+			applyModal = false;
+		}
+	}
+
+	function getFileNameFromUrl(url: string): string {
+		try {
+			const urlObj = new URL(url);
+			const pathSegments = urlObj.pathname.split('/');
+			const filename = pathSegments[pathSegments.length - 1];
+			const parts = filename.split('-');
+			const cleanFileName = parts.slice(2).join('-');
+			return cleanFileName;
+		} catch (e) {
+			console.error('Invalid URL for filename extraction:', url, e);
+			return 'resume.pdf'; // Fallback for invalid URLs
+		}
+	}
 </script>
 
 <svelte:window onclick={handleClickOutside} onkeydown={handleKeydown} />
@@ -471,7 +655,7 @@
 					<div class="dropdown-container relative">
 						<button
 							onclick={toggleCategoryDropdown}
-							class="flex cursor-pointer items-center justify-between gap-2 rounded-[9px] border border-[#D4D7DD] bg-[#EAE9E9] px-3 py-1 text-sm transition-all duration-300 focus:outline-none"
+							class="flex cursor-pointer items-center justify-between gap-2 rounded-[9px] border border-[#D4D7DD] bg-[#EAE9E9] px-3 py-1 text-sm focus:outline-none"
 							aria-expanded={isCategoryDropdownOpen}
 							aria-haspopup="listbox"
 						>
@@ -652,14 +836,13 @@
 					{#each filteredJobs as job (job.id)}
 						<button
 							onclick={() => selectJob(job)}
-							class="w-full cursor-pointer space-y-4.5 rounded-[15px] border border-[#EAE9E9] bg-[#fff] p-4.5 text-left"
+							class="w-full cursor-pointer space-y-4.5 rounded-[15px] border border-[#EAE9E9] bg-white p-4.5 text-left"
 							aria-label="Select job: {job.title} at {job.employer?.name || 'Company'}"
 						>
 							<div class="">
 								<h2 class="text-lg font-semibold">{job.title}</h2>
 								<p class="text-sm font-medium text-[#7A7A73]">{job.employer?.name || 'Company'}</p>
 							</div>
-
 							{#if job.skills && job.skills.length > 0}
 								<div class="flex flex-wrap items-center gap-3">
 									{#each job.skills.slice(0, 3) as skill}
@@ -670,7 +853,6 @@
 									{/if}
 								</div>
 							{/if}
-
 							<div class="flex flex-wrap items-center gap-4.5 text-sm text-[#57564F]">
 								<div class="flex items-center gap-3">
 									<MapPin size="12" />
@@ -693,7 +875,7 @@
 			</div>
 			<!-- Job Details -->
 			<div
-				class=" h-full w-1/2 overflow-y-auto rounded-[15px] border border-[#EAE9E9] bg-[#fff] will-change-transform
+				class=" h-full w-1/2 overflow-y-auto rounded-[15px] border border-[#EAE9E9] bg-white will-change-transform
                 {filteredJobs.length === 0 ? 'hidden' : 'hidden md:block'} "
 			>
 				{#if selectedJob}
@@ -787,16 +969,66 @@
 						{/if}
 					</div>
 					<div class="sticky bottom-0 flex gap-4.5 border-t border-[#EAE9E9] bg-white p-4.5">
-						<button
-							class="cursor-pointer rounded-[12px] border border-[#EAE9E9] px-4.5 py-1.5 transition-colors duration-300 hover:bg-[#EAE9E9]"
-							>Save</button
-						>
-						<button
-							onclick={handleJobApply}
-							class="block w-full cursor-pointer rounded-[12px] border border-[#323232] bg-[#212121] px-4.5 py-1.5 text-center text-[#F6F6F6] transition-colors duration-300 hover:bg-[#323232]"
-						>
-							Apply Now
-						</button>
+						<div class="save-button-container group relative">
+							{#if !isLoggedIn}
+								<span
+									class="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 rounded-[9px] bg-[#57564F] px-3 py-1 text-sm whitespace-nowrap text-white transition-opacity duration-300
+                                    {showSaveTooltip ? 'opacity-100' : 'opacity-0'}"
+								>
+									Login
+								</span>
+							{/if}
+							<button
+								onclick={() => handleJobSave(selectedJobId!)}
+								onmouseenter={() => handleTooltipEnter('save')}
+								onmouseleave={() => handleTooltipLeave('save')}
+								disabled={savingJob || isCurrentJobSaved}
+								class="cursor-pointer rounded-[12px] border border-[#EAE9E9] px-4.5 py-1.5 transition-colors duration-300
+                                disabled:cursor-not-allowed
+                                {savingJob ? 'opacity-70' : ''}"
+							>
+								{#if savingJob}
+									Saving...
+								{:else if isCurrentJobSaved}
+									Saved
+								{:else}
+									Save
+								{/if}
+							</button>
+						</div>
+						<div class="apply-button-container group relative w-full">
+							{#if !isLoggedIn}
+								<span
+									class="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 rounded-[9px] bg-[#57564F] px-3 py-1 text-sm whitespace-nowrap text-white transition-opacity duration-300
+                                    {showApplyTooltip ? 'opacity-100' : 'opacity-0'}"
+								>
+									Login
+								</span>
+							{:else if profile === null}
+								<span
+									class="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 rounded-[9px] bg-[#57564F] px-3 py-1 text-sm whitespace-nowrap text-white transition-opacity duration-300
+                                    {showApplyTooltip ? 'opacity-100' : 'opacity-0'}"
+								>
+									Create profile to apply
+								</span>
+							{/if}
+							<button
+								onclick={() => {
+									if (!isLoggedIn) {
+										goto('/login'); // Redirect to login page
+									} else if (profile === null) {
+										goto('/user/profile'); // Redirect to profile creation
+									} else {
+										applyModal = true; // Open modal if logged in and has profile
+									}
+								}}
+								onmouseenter={() => handleTooltipEnter('apply')}
+								onmouseleave={() => handleTooltipLeave('apply')}
+								class="w-full cursor-pointer rounded-[12px] border border-[#323232] bg-[#212121] px-4.5 py-1.5 text-center text-[#F6F6F6] transition-colors duration-300 hover:bg-[#323232]"
+							>
+								Apply Now
+							</button>
+						</div>
 					</div>
 				{:else}
 					<div class="flex h-full items-center justify-center">
@@ -810,26 +1042,25 @@
 
 <!-- Mobile Modal -->
 {#if mobileModal && selectedJob}
-	<!-- svelte-ignore a11y_click_events_have_key_events -->
-	<!-- svelte-ignore a11y_no_static_element_interactions -->
 	<div
 		class="fixed inset-0 z-50 flex items-end md:hidden"
 		onclick={closeMobileModal}
-		onkeydown={handleModalOverlayKeydown}
-		role="dialog"
-		aria-modal="true"
-		aria-labelledby="modal-title"
-		tabindex="-1"
+		onkeydown={(e) => handleOverlayKeydown(e, closeMobileModal)}
+		role="button"
+		tabindex="0"
+		aria-label="Close job details modal"
 	>
-		<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 		<div
-			class="animate-slide-up max-h-[85vh] w-full overflow-y-auto overscroll-y-contain rounded-t-[20px] border-t border-[#EAE9E9] bg-[#fff] shadow-2xl"
+			class="animate-slide-up max-h-[85vh] w-full overflow-y-auto overscroll-y-contain rounded-t-[20px] border-t border-[#EAE9E9] bg-white shadow-2xl"
 			onclick={(e) => e.stopPropagation()}
 			onkeydown={handleModalContentKeydown}
-			role="document"
+			role="dialog"
+			aria-modal="true"
+			tabindex="-1"
+			aria-labelledby="modal-title"
 		>
 			<div
-				class="sticky top-0 z-10 flex items-center justify-between border-b border-[#EAE9E9] bg-[#fff] p-4.5"
+				class="sticky top-0 z-10 flex items-center justify-between border-b border-[#EAE9E9] bg-white p-4.5"
 			>
 				<div class="min-w-0 flex-1">
 					<h2 id="modal-title" class="truncate text-xl font-semibold">{selectedJob.title}</h2>
@@ -922,17 +1153,123 @@
 			</div>
 			<div
 				class="sticky bottom-0 flex gap-6 border-t border-[#EAE9E9]
-             bg-[#fff] p-6"
+                bg-white p-6"
 			>
+				<div class="save-button-container group relative">
+					{#if !isLoggedIn}
+						<span
+							class="pointer-events-none absolute -top-9 left-1/2 -translate-x-1/2 rounded-[9px] bg-[#57564F] px-3 py-1 text-sm whitespace-nowrap text-white transition-opacity duration-300
+                            {showSaveTooltip ? 'opacity-100' : 'opacity-0'}"
+						>
+							Login
+						</span>
+					{/if}
+					<button
+						onclick={() => handleJobSave(selectedJobId!)}
+						onmouseenter={() => handleTooltipEnter('save')}
+						onmouseleave={() => handleTooltipLeave('save')}
+						disabled={savingJob || isCurrentJobSaved}
+						class="cursor-pointer rounded-[12px] border border-[#EAE9E9] px-4.5 py-1.5 transition-colors duration-300
+                        disabled:cursor-not-allowed
+                        {savingJob ? 'opacity-70' : ''}"
+					>
+						{#if savingJob}
+							Saving...
+						{:else if isCurrentJobSaved}
+							Saved
+						{:else}
+							Save
+						{/if}
+					</button>
+				</div>
+				<div class="apply-button-container group relative w-full">
+					{#if !isLoggedIn}
+						<span
+							class="pointer-events-none absolute -top-9 left-1/2 -translate-x-1/2 rounded-[9px] bg-[#57564F] px-3 py-1 text-sm whitespace-nowrap text-white transition-opacity duration-300
+                            {showApplyTooltip ? 'opacity-100' : 'opacity-0'}"
+						>
+							Login
+						</span>
+					{:else if profile === null}
+						<span
+							class="pointer-events-none absolute -top-9 left-1/2 -translate-x-1/2 rounded-[9px] bg-[#57564F] px-3 py-1 text-sm whitespace-nowrap text-white transition-opacity duration-300
+                            {showApplyTooltip ? 'opacity-100' : 'opacity-0'}"
+						>
+							Create profile to apply
+						</span>
+					{/if}
+					<button
+						onclick={() => {
+							if (!isLoggedIn) {
+								goto('/login'); // Redirect to login page
+							} else if (profile === null) {
+								goto('/user/profile'); // Redirect to profile creation
+							} else {
+								applyModal = true; // Open modal if logged in and has profile
+							}
+						}}
+						onmouseenter={() => handleTooltipEnter('apply')}
+						onmouseleave={() => handleTooltipLeave('apply')}
+						class="w-full cursor-pointer rounded-[12px] border border-[#323232] bg-[#212121] px-4.5 py-1.5 text-center text-[#F6F6F6] transition-colors duration-300 hover:bg-[#323232]"
+					>
+						Apply Now
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+{/if}
+
+{#if applyModal}
+	<div
+		class="bg-opacity-50 fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4.5"
+		onclick={closeApplyModal}
+		onkeydown={(e) => handleOverlayKeydown(e, closeApplyModal)}
+		role="button"
+		tabindex="0"
+		aria-label="Close application modal"
+	>
+		<div
+			class="modal-content w-full max-w-sm space-y-4.5 rounded-[15px] border border-[#EAE9E9] bg-white p-4.5"
+			onclick={(e) => e.stopPropagation()}
+			onkeydown={handleModalContentKeydown}
+			role="dialog"
+			aria-modal="true"
+			tabindex="-1"
+			aria-labelledby="apply-modal-title"
+		>
+			<h2 id="apply-modal-title" class="text-lg font-semibold">Resume</h2>
+			{#if profile?.resumeUrl}
+				<div class="flex items-center justify-between gap-3">
+					<div class="flex items-center gap-3">
+						<FileText size="18" class="text-[#7A7A73]" />
+						<span class="font-medium">{getFileNameFromUrl(profile.resumeUrl)}</span>
+					</div>
+					<CheckCircle size="16" class="text-[#06923E]" />
+				</div>
+				<div class="relative h-88 w-full overflow-y-hidden rounded-[12px] border border-[#EAE9E9]">
+					<iframe
+						src={`${profile.resumeUrl}#toolbar=0&navpanes=0&scrollbar=0`}
+						class="absolute inset-0 h-full w-full overflow-hidden border-none"
+						title="Resume Preview"
+						frameborder="0"
+					></iframe>
+				</div>
+			{:else}
+				<p>No resume uploaded. Please create your profile to upload a resume.</p>
+			{/if}
+			<div class="flex justify-end gap-3">
 				<button
-					class="cursor-pointer rounded-[12px] border border-[#EAE9E9] px-4.5 py-1.5 transition-colors duration-300 hover:bg-[#EAE9E9]"
-					>Save</button
+					onclick={() => (applyModal = false)}
+					class="rounded-[12px] border border-[#EAE9E9] px-4.5 py-1.5 hover:bg-[#EAE9E9]"
 				>
+					Cancel
+				</button>
 				<button
 					onclick={handleJobApply}
 					class="w-full cursor-pointer rounded-[12px] border border-[#323232] bg-[#212121] px-4.5 py-1.5 text-center text-[#F6F6F6] transition-colors duration-300 hover:bg-[#323232]"
 				>
-					Apply Now
+					Apply
 				</button>
 			</div>
 		</div>

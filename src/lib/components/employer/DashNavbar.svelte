@@ -17,7 +17,7 @@
 </script>
 
 <nav class="relative z-10">
-	<div class="flex items-center justify-between border border-[#EAE9E9] p-4.5">
+	<div class="flex items-center justify-between border border-[#EAE9E9] bg-white p-4.5">
 		<div class="flex items-center gap-3 text-xl font-normal">
 			<div><a href="/" class="font-semibold">Hirehero</a></div>
 			<p>/</p>

@@ -1,15 +1,31 @@
-import { job, employer, application, user } from '$lib/db/schema';
+import { job, employer, application, saved, profile } from '$lib/db/schema';
 import { db } from '$lib/db';
 import type { PageServerLoad, Actions } from './$types';
 import { eq, and } from 'drizzle-orm';
-import { fail } from '@sveltejs/kit';
 import { auth } from '$lib/auth';
 
-export const load: PageServerLoad = async ({ url, locals }) => {
-	// Extract search parameters for server-side filtering if needed
+export const load: PageServerLoad = async ({ url, request }) => {
 	const searchParams = url.searchParams;
 	const searchTitle = searchParams.get('title') || '';
 	const searchLocation = searchParams.get('location') || '';
+
+	let savedJobIds: string[] = [];
+	try {
+		const session = await auth.api.getSession({
+			headers: request.headers
+		});
+		if (session?.user) {
+			// If user is logged in, fetch their saved job IDs
+			const saveds = await db
+				.select({ jobId: saved.jobId })
+				.from(saved)
+				.where(eq(saved.userId, session.user.id));
+			savedJobIds = saveds.map((item) => item.jobId);
+		}
+	} catch (error) {
+		console.error('Error fetching user session or saved jobs:', error);
+		// Continue loading jobs even if user session or saved jobs fetch fails
+	}
 
 	try {
 		const jobs = await db
@@ -19,24 +35,20 @@ export const load: PageServerLoad = async ({ url, locals }) => {
 				description: job.description,
 				type: job.type,
 				category: job.category,
-
 				// Compensation
 				salaryMin: job.salaryMin,
 				salaryMax: job.salaryMax,
 				salaryCurrency: job.salaryCurrency,
 				salaryType: job.salaryType,
-
 				// Requirements
 				experienceLevel: job.experienceLevel,
 				educationLevel: job.educationLevel,
 				skills: job.skills,
-
 				// Location info
 				locationType: job.locationType,
 				country: job.country,
 				city: job.city,
 				address: job.address,
-
 				// Job status and timing
 				isPublished: job.isPublished,
 				isArchived: job.isArchived,
@@ -44,11 +56,9 @@ export const load: PageServerLoad = async ({ url, locals }) => {
 				postedAt: job.postedAt,
 				expiresAt: job.expiresAt,
 				applicationCount: job.applicationCount,
-
 				// Timestamps
 				createdAt: job.createdAt,
 				updatedAt: job.updatedAt,
-
 				// Employer info
 				employer: {
 					id: employer.id,
@@ -68,128 +78,36 @@ export const load: PageServerLoad = async ({ url, locals }) => {
 			)
 			.orderBy(job.postedAt); // Order by most recent first
 
+		const session = await auth.api.getSession({
+			headers: request.headers
+		});
+
+		const userProfile = await db
+			.select()
+			.from(profile)
+			.where(eq(profile.id, session?.user.id))
+			.limit(1);
+
 		return {
 			jobs,
+			savedJobIds, // Pass the fetched saved job IDs to the frontend
 			searchParams: {
 				title: searchTitle,
 				location: searchLocation
-			}
+			},
+			profile: userProfile[0] || null
 		};
 	} catch (error) {
 		console.error('Error loading jobs:', error);
 		return {
 			jobs: [],
-			userApplications: {},
+			savedJobIds: [], // Ensure savedJobIds is always an array
+			userApplications: {}, // This was in your original code, keeping it for consistency
 			searchParams: {
 				title: searchTitle,
 				location: searchLocation
 			},
 			error: 'Failed to load jobs'
 		};
-	}
-};
-
-export const actions: Actions = {
-	apply: async ({ request }) => {
-		const session = await auth.api.getSession({
-			headers: request.headers
-		});
-
-		if (!session) {
-			return fail(401, {
-				message: 'You must be logged in to apply for jobs'
-			});
-		}
-
-		try {
-			const formData = await request.formData();
-			const selectedJobId = formData.get('selectedJobId') as string;
-
-			if (!selectedJobId) {
-				return fail(400, {
-					message: 'Job ID is required'
-				});
-			}
-
-			// Check if job exists and is still available
-			const jobExists = await db
-				.select({
-					id: job.id,
-					title: job.title,
-					applicationCount: job.applicationCount,
-					expiresAt: job.expiresAt
-				})
-				.from(job)
-				.where(and(eq(job.id, selectedJobId), eq(job.isPublished, true), eq(job.isArchived, false)))
-				.limit(1);
-
-			if (jobExists.length === 0) {
-				return fail(404, {
-					message: 'Job not found or no longer available'
-				});
-			}
-
-			// Check if job has expired
-			const currentJob = jobExists[0];
-			if (currentJob.expiresAt && new Date() > new Date(currentJob.expiresAt)) {
-				return fail(400, {
-					message: 'This job posting has expired'
-				});
-			}
-
-			// Check if user has already applied for this job (and not withdrawn)
-			const existingApplication = await db
-				.select({
-					id: application.id,
-					status: application.status,
-					isWithdrawn: application.isWithdrawn
-				})
-				.from(application)
-				.where(and(eq(application.jobId, selectedJobId), eq(application.userId, session.user.id)))
-				.limit(1);
-
-			if (existingApplication.length > 0 && !existingApplication[0].isWithdrawn) {
-				return fail(409, {
-					message: 'You have already applied for this job'
-				});
-			}
-
-			// Generate application ID
-			const applicationId = crypto.randomUUID();
-
-			// Create job application
-			await db.insert(application).values({
-				id: applicationId,
-				jobId: selectedJobId,
-				userId: session.user.id,
-				status: 'pending',
-				appliedAt: new Date(),
-				createdAt: new Date(),
-				updatedAt: new Date()
-			});
-
-			// Update job application count
-			await db
-				.update(job)
-				.set({
-					applicationCount: (currentJob.applicationCount || 0) + 1,
-					updatedAt: new Date()
-				})
-				.where(eq(job.id, selectedJobId));
-
-			return {
-				type: 'success',
-				message: 'Application submitted successfully',
-				data: {
-					applicationId,
-					jobTitle: currentJob.title
-				}
-			};
-		} catch (error) {
-			console.error('Error submitting job application:', error);
-			return fail(500, {
-				message: 'An error occurred while submitting your application'
-			});
-		}
 	}
 };

@@ -1,16 +1,5 @@
 <script lang="ts">
-	import {
-		Briefcase,
-		MapPin,
-		IndianRupee,
-		Users,
-		GraduationCap,
-		Tag,
-		Clock,
-		Building2,
-		Globe,
-		Plus
-	} from '@lucide/svelte';
+	import { Plus } from '@lucide/svelte';
 	import { goto } from '$app/navigation';
 	import { X } from '@lucide/svelte';
 	import Dropdown from '$lib/components/Dropdown.svelte';

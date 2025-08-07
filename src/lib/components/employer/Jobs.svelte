@@ -158,7 +158,7 @@
 		{#if jobs.length > 0}
 			{#each jobs as job (job.id)}
 				<div
-					class="w-full cursor-pointer space-y-4.5 rounded-[15px] border border-[#EAE9E9] bg-[#fff] p-4.5"
+					class="w-full cursor-pointer space-y-3 rounded-[15px] border border-[#EAE9E9] bg-white p-4.5"
 				>
 					<div class="flex items-start justify-between">
 						<a href={`/jobs/${job.id}`} class="text-lg font-semibold">
@@ -234,7 +234,7 @@
 										{/if}
 									</button>
 									<button
-										class="block w-full cursor-pointer rounded-[9px] px-3 py-1 text-left text-sm text-[#E52020] hover:bg-[#E52020] hover:text-[#fff]"
+										class="block w-full cursor-pointer rounded-[9px] px-3 py-1 text-left text-sm text-[#E52020] hover:bg-[#E52020] hover:text-white"
 										onclick={(e) => {
 											e.stopPropagation();
 											openConfirmModal('delete', job.id);
@@ -317,7 +317,7 @@
 			<div class="flex justify-end gap-3">
 				<button
 					onclick={closeConfirmModal}
-					class="rounded-[10px] border border-gray-300 px-4 py-2 text-sm hover:bg-gray-100"
+					class="cursor-pointer rounded-[12px] border border-[#EAE9E9] px-4.5 py-1.5 hover:bg-[#EAE9E9]"
 				>
 					Cancel
 				</button>

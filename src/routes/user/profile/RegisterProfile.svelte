@@ -309,7 +309,7 @@
 				<h2 class="text-xl font-semibold">Complete Your Profile</h2>
 				<span class="text-sm text-[#7A7A73]">Step {currentStep} of {totalSteps}</span>
 			</div>
-			<div class="h-2 w-full rounded-full bg-[#fff]">
+			<div class="h-2 w-full rounded-full bg-white">
 				<div
 					class="h-2 rounded-full bg-[#212121] transition-all duration-300"
 					style="width: {(currentStep / totalSteps) * 100}%"
@@ -395,13 +395,13 @@
 						</div>
 					{:else}
 						<div
-							class="flex w-full items-center justify-between gap-4.5 rounded-[12px] border border-[#B0DB9C] bg-[#ECFAE5]
-                             p-4.5 text-[#B0DB9C] focus:outline-none"
+							class="flex w-full items-center justify-between gap-4.5 rounded-[12px] border border-[#06923E] bg-[#D3ECCD]
+                             p-4.5 text-[#212121] focus:outline-none"
 						>
 							<div class="flex items-center gap-4.5">
-								<div class="flex items-center justify-center rounded-full bg-[#CAE8BD] p-3">
+								<div class="flex items-center justify-center rounded-full bg-[#06923E] p-3">
 									<svg
-										class="h-4.5 w-4.5 text-[#5B913B]"
+										class="h-4.5 w-4.5 text-[#212121]"
 										fill="none"
 										stroke="currentColor"
 										viewBox="0 0 24 24"
@@ -415,14 +415,15 @@
 									</svg>
 								</div>
 								<div>
-									<p class="text-sm font-medium text-[#5B913B]">
+									<p class="text-sm font-medium text-[#5E936C]">
 										{`${resumeName} (${(Number.parseInt(resumeSize) / 1024).toFixed(1)}KB)`}
 									</p>
 								</div>
 							</div>
 							<button
 								type="button"
-								class="cursor-pointer rounded-[9px] border border-[#FF8282] bg-[#ffdfdf] px-3 py-1 text-sm text-[#FF6363]"
+								class="cursor-pointer rounded-[9px] border
+								border-[#E52020] bg-white px-3 py-1 text-sm text-[#E52020]"
 								onclick={() => {
 									resumeUpload = false;
 									resumeName = '';

@@ -253,10 +253,11 @@ export const employer = pgTable('employer', {
 
 	// Company Info
 	companyName: text('company_name').notNull(),
+	companyIndustry: text('company_industry'),
+	companySize: text('company_size'),
 	companyDescription: text('company_description').notNull(),
 	companyWebsite: text('company_website'),
 	companyLocation: text('company_location').notNull(),
-	companyIndustry: text('company_industry'),
 
 	// Verification Info
 	registrationNumber: text('registration_number'),
@@ -374,6 +375,23 @@ export const application = pgTable('application', {
 		.$defaultFn(() => new Date())
 		.notNull(),
 	updatedAt: timestamp('updated_at')
+		.$defaultFn(() => new Date())
+		.notNull()
+});
+
+export const saved = pgTable('saved', {
+	id: text('id').primaryKey(),
+
+	// Foreign keys
+	userId: text('user_id')
+		.notNull()
+		.references(() => user.id, { onDelete: 'cascade' }),
+	jobId: text('job_id')
+		.notNull()
+		.references(() => job.id, { onDelete: 'cascade' }),
+
+	// Timestamp
+	createdAt: timestamp('created_at')
 		.$defaultFn(() => new Date())
 		.notNull()
 });

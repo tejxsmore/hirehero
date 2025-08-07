@@ -1,5 +1,5 @@
 import { auth } from '$lib/auth';
-import { application, employer, job } from '$lib/db/schema';
+import { application, employer, job, user, profile } from '$lib/db/schema';
 import { db } from '$lib/db';
 import { eq } from 'drizzle-orm';
 import type { PageServerLoad, Actions } from './$types';
@@ -26,9 +26,16 @@ export const load: PageServerLoad = async ({ request }) => {
 	if (employerProfile.length >= 1) {
 		jobsPosted = await db.select().from(job).where(eq(job.employerId, employerProfile[0].id));
 		applications = await db
-			.select()
+			.select({
+				application,
+				job,
+				user,
+				profile
+			})
 			.from(application)
 			.innerJoin(job, eq(application.jobId, job.id))
+			.innerJoin(user, eq(application.userId, user.id))
+			.leftJoin(profile, eq(profile.id, user.id))
 			.where(eq(job.employerId, employerProfile[0].id));
 	}
 
@@ -39,6 +46,7 @@ export const load: PageServerLoad = async ({ request }) => {
 		applications
 	};
 };
+
 export const actions = {
 	register: async ({ request }) => {
 		try {

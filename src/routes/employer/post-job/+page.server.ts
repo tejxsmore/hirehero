@@ -66,8 +66,6 @@ export const actions = {
 			// Simplified isPublished parsing
 			const isPublished = formData.get('isPublished') === 'true';
 
-			const jobId = randomUUID();
-
 			// Parse salary values as numbers
 			const parsedSalaryMin = salaryMin ? Number.parseFloat(salaryMin) : null;
 			const parsedSalaryMax = salaryMax ? Number.parseFloat(salaryMax) : null;
@@ -88,7 +86,7 @@ export const actions = {
 			const newJob = await db
 				.insert(job)
 				.values({
-					id: jobId,
+					id: randomUUID(),
 					employerId,
 					title,
 					description,

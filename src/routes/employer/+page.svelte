@@ -4,9 +4,10 @@
 	import { goto } from '$app/navigation';
 
 	import { userStore } from '$lib/stores/user.js';
-	import Dashboard from './Dashboard.svelte';
+
+	import Dashboard from '$lib/components/employer/Dashboard.svelte';
 	import Navbar from '$lib/components/Navbar.svelte';
-	import DashNavbar from '$lib/components/DashNavbar.svelte';
+	import DashNavbar from '$lib/components/employer/DashNavbar.svelte';
 
 	if (!$userStore) {
 		goto('/login');
