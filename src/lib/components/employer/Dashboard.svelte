@@ -12,7 +12,6 @@
 		MessageCircle,
 		ChevronDown,
 		Check,
-		Eye,
 		Clock,
 		MapPin
 	} from '@lucide/svelte';
@@ -103,7 +102,7 @@
 					onclick={toggleDropdown}
 					class="flex w-full cursor-pointer items-center justify-between
 					rounded-[12px] border border-[#D4D7DD] bg-[#EAE9E9]
-					px-4.5 py-1.5"
+					px-4.5 py-1.5 focus:outline-none"
 					aria-expanded={isDropdownOpen}
 					aria-haspopup="listbox"
 				>
@@ -178,7 +177,7 @@
 						>
 					</p>
 					<h2 class="text-xl font-semibold">
-						{jobs.length}
+						{applications.length}
 					</h2>
 				</div>
 				<div
@@ -186,10 +185,10 @@
 				border border-[#EAE9E9] bg-white p-4.5"
 				>
 					<p class="flex items-start justify-between gap-3">
-						Profile Views
+						Messages
 						<span
 							class="rounded-[9px] bg-[#f6f6f6] p-2
-						text-[#57564F]"><Eye size="14" /></span
+						text-[#57564F]"><MessageCircle size="14" /></span
 						>
 					</p>
 					<h2 class="text-xl font-semibold">
@@ -250,12 +249,8 @@
 										<p class="flex items-center gap-3">
 											<Users size="12" />
 											<span class="flex gap-1.5"
-												>0 <span class="hidden sm:block">applicants</span></span
+												>{job.applicationCount}<span class="hidden sm:block">applicants</span></span
 											>
-										</p>
-										<p class="flex items-center gap-3">
-											<Eye size="12" />
-											<span class="flex gap-1.5">0<span class="hidden sm:block">views</span></span>
 										</p>
 									</div>
 								</div>

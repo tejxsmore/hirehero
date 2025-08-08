@@ -25,6 +25,7 @@ export const load: PageServerLoad = async ({ request }) => {
 
 	if (employerProfile.length >= 1) {
 		jobsPosted = await db.select().from(job).where(eq(job.employerId, employerProfile[0].id));
+
 		applications = await db
 			.select({
 				application,

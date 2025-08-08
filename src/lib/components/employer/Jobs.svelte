@@ -1,7 +1,7 @@
 <script lang="ts">
 	let { jobs } = $props();
 
-	import { Users, MapPin, Clock, Eye, EllipsisVertical, Check } from '@lucide/svelte';
+	import { Users, MapPin, Clock, EllipsisVertical, Check } from '@lucide/svelte';
 
 	let openOptionsId: string | null = $state(null);
 	let showConfirmModal: boolean = $state(false);
@@ -180,7 +180,7 @@
 							</button>
 							{#if openOptionsId === job.id}
 								<div
-									class="absolute top-10 right-0 z-10 w-40 space-y-1 rounded-[12px] border border-[#D4D7DD] bg-[#EAE9E9] p-1"
+									class="absolute top-10 right-0 z-10 w-40 space-y-1 rounded-[12px] border border-[#EAE9E9] bg-white p-1 shadow-xs"
 									role="menu"
 									aria-orientation="vertical"
 								>
@@ -188,8 +188,8 @@
 									<button
 										class="flex w-full cursor-pointer items-center justify-between rounded-[9px] px-3 py-1 text-left text-sm {job.jobStatus ===
 										'draft'
-											? 'bg-[#DDDDDD]'
-											: 'hover:bg-[#DDDDDD]'}"
+											? 'bg-[#EAE9E9]'
+											: 'hover:bg-[#f6f6f6]'}"
 										onclick={(e) => {
 											e.stopPropagation();
 											openConfirmModal('status', job.id, 'draft');
@@ -204,8 +204,8 @@
 									<button
 										class="flex w-full cursor-pointer items-center justify-between rounded-[9px] px-3 py-1 text-left text-sm {job.jobStatus ===
 										'published'
-											? 'bg-[#DDDDDD] '
-											: 'hover:bg-[#DDDDDD]'}"
+											? 'bg-[#EAE9E9]'
+											: 'hover:bg-[#f6f6f6]'}"
 										onclick={(e) => {
 											e.stopPropagation();
 											openConfirmModal('status', job.id, 'published');
@@ -220,8 +220,8 @@
 									<button
 										class="flex w-full cursor-pointer items-center justify-between rounded-[9px] px-3 py-1 text-left text-sm {job.jobStatus ===
 										'closed'
-											? 'bg-[#DDDDDD]'
-											: 'hover:bg-[#DDDDDD]'}"
+											? 'bg-[#EAE9E9]'
+											: 'hover:bg-[#f6f6f6]'}"
 										onclick={(e) => {
 											e.stopPropagation();
 											openConfirmModal('status', job.id, 'closed');
@@ -276,11 +276,9 @@
 					<div class="flex flex-wrap items-center gap-4.5 text-sm text-[#7A7A73]">
 						<p class="flex items-center gap-3">
 							<Users size="12" />
-							<span class="flex gap-1.5">0 <span class="hidden sm:block">applicants</span></span>
-						</p>
-						<p class="flex items-center gap-3">
-							<Eye size="12" />
-							<span class="flex gap-1.5">0<span class="hidden sm:block">views</span></span>
+							<span class="flex gap-1.5"
+								>{job.applicationCount}<span class="hidden sm:block">applicants</span></span
+							>
 						</p>
 						<p>Posted {timeAgo(job.createdAt)}</p>
 					</div>

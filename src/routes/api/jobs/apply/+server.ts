@@ -1,8 +1,8 @@
 import { json, error } from '@sveltejs/kit';
 import { db } from '$lib/db';
-import { application } from '$lib/db/schema';
+import { application, job } from '$lib/db/schema';
 import { auth } from '$lib/auth';
-import { eq, and } from 'drizzle-orm';
+import { eq, and, sql } from 'drizzle-orm';
 import { randomUUID } from 'crypto';
 
 export async function POST({ request }) {
@@ -43,6 +43,11 @@ export async function POST({ request }) {
 			appliedAt: new Date(),
 			createdAt: new Date()
 		});
+
+		await db
+			.update(job)
+			.set({ applicationCount: sql`${job.applicationCount} + 1` })
+			.where(eq(job.id, jobId));
 
 		return json({ message: 'Job applied successfully', application: true }, { status: 200 });
 	} catch (e) {

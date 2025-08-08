@@ -17,7 +17,7 @@
 
 <button
 	onclick={handleSignOut}
-	class="cursor-pointer rounded-[9px] border border-[#B80000] bg-[#820300] px-3 py-1 text-sm transition-all duration-300 hover:border-[#FF0000] hover:bg-[#B80000]"
+	class="cursor-pointer rounded-[9px] border border-[#B80000] bg-[#E52020] px-3 py-1 text-sm text-[#F6F6F6] transition-all duration-300 hover:bg-[#C40C0C]"
 >
 	Sign Out
 </button>

@@ -5,9 +5,9 @@
 
 	import { userStore } from '$lib/stores/user.js';
 
+	import DashNavbar from '$lib/components/employer/DashNavbar.svelte';
 	import Dashboard from '$lib/components/employer/Dashboard.svelte';
 	import Navbar from '$lib/components/Navbar.svelte';
-	import DashNavbar from '$lib/components/employer/DashNavbar.svelte';
 
 	if (!$userStore) {
 		goto('/login');
@@ -17,7 +17,7 @@
 
 <div class="min-h-screen">
 	{#if hasEmployerProfile}
-		<DashNavbar employer={employerProfile} />
+		<DashNavbar employer={employerProfile} jobs={jobsPosted} {applications} />
 		<Dashboard employer={employerProfile} jobs={jobsPosted} {applications} />
 	{:else}
 		<Navbar />

@@ -1240,21 +1240,16 @@
 		>
 			<h2 id="apply-modal-title" class="text-lg font-semibold">Resume</h2>
 			{#if profile?.resumeUrl}
-				<div class="flex items-center justify-between gap-3">
+				<a href={profile.resumeUrl} target="_blank" class="flex items-center justify-between gap-3">
 					<div class="flex items-center gap-3">
 						<FileText size="18" class="text-[#7A7A73]" />
 						<span class="font-medium">{getFileNameFromUrl(profile.resumeUrl)}</span>
 					</div>
 					<CheckCircle size="16" class="text-[#06923E]" />
-				</div>
-				<div class="relative h-88 w-full overflow-y-hidden rounded-[12px] border border-[#EAE9E9]">
-					<iframe
-						src={`${profile.resumeUrl}#toolbar=0&navpanes=0&scrollbar=0`}
-						class="absolute inset-0 h-full w-full overflow-hidden border-none"
-						title="Resume Preview"
-						frameborder="0"
-					></iframe>
-				</div>
+				</a>
+				<button class="w-full rounded-[12px] border border-[#EAE9E9] px-4.5 py-1.5 text-center"
+					>Edit Profile</button
+				>
 			{:else}
 				<p>No resume uploaded. Please create your profile to upload a resume.</p>
 			{/if}

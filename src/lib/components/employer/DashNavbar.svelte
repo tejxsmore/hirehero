@@ -1,5 +1,5 @@
 <script lang="ts">
-	const { employer } = $props();
+	const { employer, jobs, applications } = $props();
 
 	import { Plus, Search } from '@lucide/svelte';
 	let search = $state(false);
@@ -72,7 +72,7 @@
 		placeholder="Search candidates"
 		bind:this={searchInputRef}
 		class="w-full resize-none rounded-[15px] border
-		border-[#D4D7DD] bg-[#e8e8e8] px-4.5 py-3
+		border-[#EAE9E9] bg-white px-4.5 py-3
 		placeholder:text-[#57564F] focus:outline-none"
 		onkeydown={(e) => {
 			if (e.key === 'Escape') closeSearch();

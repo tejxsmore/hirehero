@@ -1,4 +1,6 @@
 <script lang="ts">
+	import SignOutButton from '$lib/components/auth/SignOutButton.svelte';
+
 	const { profile, experiences, educations, projects, certifications } = $props();
 	console.log(profile);
 </script>
@@ -11,4 +13,5 @@
 			<p>{profile.headline}</p>
 		</div>
 	</div>
+	<SignOutButton />
 </div>
