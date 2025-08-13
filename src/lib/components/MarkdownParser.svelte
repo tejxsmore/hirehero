@@ -34,7 +34,7 @@
 			/^> (.*$)/gm,
 			'<blockquote class="border-l-3 border-[#EAE9E9] pl-3 py-1.5 italic bg-gray-200 my-3">$1</blockquote>'
 		);
-		html = html.replace(/^\-\-\-$/gm, '<hr class="border-t my-4.5 border-[#EAE9E9]">');
+		html = html.replace(/^\-\-\-$/gm, '<hr class="border-t my-4.5 mt-9 border-[#EAE9E9]">');
 		html = processLists(html);
 		html = html.replace(
 			/\[([^\]]+)\]\(([^)]+)\)/g,
@@ -111,6 +111,6 @@
 	}
 </script>
 
-<div class={`prose prose-slate dark:prose-invert max-w-none ${className}`}>
+<div class={`prose max-w-none ${className}`}>
 	{@html parsedContent}
 </div>

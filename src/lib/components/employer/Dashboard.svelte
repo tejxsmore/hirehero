@@ -213,8 +213,8 @@
 			</div>
 			<div class="grid gap-4.5 md:grid-cols-2">
 				<div
-					class="space-y-3 rounded-[15px] border border-[#EAE9E9]
-				bg-white p-4.5"
+					class="h-full space-y-3 rounded-[15px] border
+				border-[#EAE9E9] bg-white p-4.5"
 				>
 					<div class="flex items-center justify-between">
 						<h2 class="text-lg font-semibold">Active Job Postings</h2>
@@ -259,8 +259,8 @@
 					{/if}
 				</div>
 				<div
-					class="space-y-4.5 rounded-[15px] border border-[#EAE9E9]
-				  bg-white p-4.5"
+					class="h-full space-y-4.5 rounded-[15px] border
+				  border-[#EAE9E9] bg-white p-4.5"
 				>
 					<div class="flex items-start justify-between">
 						<h2 class="text-lg font-semibold">Applications</h2>

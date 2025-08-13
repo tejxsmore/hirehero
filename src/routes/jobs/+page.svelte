@@ -814,7 +814,7 @@
 			</div>
 		</div>
 		<!-- Main Content -->
-		<div class="flex gap-4.5 md:h-[calc(100vh-35px)]">
+		<div class="flex gap-4.5">
 			<!-- Jobs List -->
 			<div
 				class="w-full space-y-4.5 overflow-y-auto will-change-transform
@@ -875,13 +875,13 @@
 			</div>
 			<!-- Job Details -->
 			<div
-				class=" h-full w-1/2 overflow-y-auto rounded-[15px] border border-[#EAE9E9] bg-white will-change-transform
+				class="sticky top-4.5 w-1/2 overflow-y-auto rounded-[15px] border border-[#EAE9E9] bg-white will-change-transform md:h-[calc(100vh-35px)]
                 {filteredJobs.length === 0 ? 'hidden' : 'hidden md:block'} "
 			>
 				{#if selectedJob}
-					<div class="sticky top-0 border-b border-[#EAE9E9] bg-white p-4.5">
-						<h1 class="text-2xl font-bold">{selectedJob.title}</h1>
-						<p class="text-lg font-semibold text-[#7A7A73]">
+					<div class="sticky top-0 space-y-1.5 border-b border-[#EAE9E9] bg-white p-4.5">
+						<h1 class="truncate text-2xl font-bold">{selectedJob.title}</h1>
+						<p class="truncate font-semibold text-[#7A7A73]">
 							{selectedJob.employer?.name || 'Company'}
 						</p>
 					</div>
@@ -1062,7 +1062,7 @@
 			<div
 				class="sticky top-0 z-10 flex items-center justify-between border-b border-[#EAE9E9] bg-white p-4.5"
 			>
-				<div class="min-w-0 flex-1">
+				<div class="min-w-0 flex-1 space-y-1.5">
 					<h2 id="modal-title" class="truncate text-xl font-semibold">{selectedJob.title}</h2>
 					<p class="truncate font-medium text-[#57564F]">
 						{selectedJob.employer?.name || 'Company'}

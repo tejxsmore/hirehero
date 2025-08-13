@@ -11,16 +11,9 @@
 <div class="flex min-h-screen">
 	<div class="flex w-full items-center justify-center p-4.5">
 		<div class="w-full max-w-md space-y-12">
-			<div class="flex justify-center">
-				<a
-					href="/"
-					class="group inline-flex items-center gap-2 rounded-full border border-[#D4D7DD] bg-[#EAE9E9] px-3 py-1 text-xs text-[#57564F]"
-				>
-					<span class="transition-transform group-hover:-translate-x-1">
-						<ArrowLeft size="12" />
-					</span>
-					Back
-				</a>
+			<div class="space-y-1.5 text-center">
+				<div><a href="/" class="text-xl font-semibold">Hirehero</a></div>
+				<p class="font-medium text-[#57564F]">Create a new account</p>
 			</div>
 
 			<SocialAuthButton provider="google">Google</SocialAuthButton>
@@ -104,7 +97,7 @@
 				<div class="text-center text-[#7A7A73]">
 					<p>
 						Already have an account?
-						<a href="/login" class="pl-3 text-[#57564F]">Login</a>
+						<a href="/login" class="pl-3 hover:text-[#57564F]">Login</a>
 					</p>
 				</div>
 

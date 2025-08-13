@@ -52,7 +52,7 @@
 	<div class="flex items-center justify-between p-4.5 lg:px-20 xl:px-40">
 		<div class="flex items-center gap-4.5 lg:gap-9 xl:gap-18">
 			<div class="flex focus:outline-none">
-				<a href="/" class="mb-1 text-xl font-semibold">Hirehero</a>
+				<a href="/" class="text-xl font-semibold">Hirehero</a>
 			</div>
 
 			<!-- Desktop Navigation -->

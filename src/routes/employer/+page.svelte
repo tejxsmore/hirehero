@@ -5,9 +5,9 @@
 
 	import { userStore } from '$lib/stores/user.js';
 
-	import DashNavbar from '$lib/components/employer/DashNavbar.svelte';
+	import DashNavbar from '$lib/components/nav/DashNavbar.svelte';
 	import Dashboard from '$lib/components/employer/Dashboard.svelte';
-	import Navbar from '$lib/components/Navbar.svelte';
+	import Navbar from '$lib/components/nav/Navbar.svelte';
 
 	if (!$userStore) {
 		goto('/login');

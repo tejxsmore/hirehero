@@ -20,8 +20,12 @@
 	<div class="flex items-center justify-between border border-[#EAE9E9] bg-white p-4.5">
 		<div class="flex items-center gap-3 text-xl font-normal">
 			<div><a href="/" class="font-semibold">Hirehero</a></div>
-			<p>/</p>
-			<p>{employer.companyName}</p>
+			<p class="text-[#57564F]">/</p>
+			<p class="truncate text-[#57564F]">
+				{employer.companyName.length > 10
+					? employer.companyName.slice(0, 10) + '..'
+					: employer.companyName}
+			</p>
 		</div>
 		<div class="flex items-center gap-4.5">
 			<button
