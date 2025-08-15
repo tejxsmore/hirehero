@@ -510,7 +510,7 @@
 						<button
 							onclick={toggleJobTypeDropdown}
 							class="flex cursor-pointer items-center justify-between gap-2 rounded-[9px] border border-[#D4D7DD]
-                            bg-[#EAE9E9] px-3 py-1 text-sm focus:outline-none"
+                            bg-[#e8e8e8] px-3 py-1 text-sm focus:outline-none"
 							aria-expanded={isJobTypeDropdownOpen}
 							aria-haspopup="listbox"
 						>
@@ -524,13 +524,15 @@
 						</button>
 						{#if isJobTypeDropdownOpen}
 							<div
-								class="animate-in slide-in-from-top-2 fade-in absolute top-full right-0 left-0 z-20 mt-1 space-y-1 overflow-hidden rounded-[12px] border border-[#D4D7DD] bg-[#EAE9E9] p-1 duration-300"
+								class="animate-in slide-in-from-top-2 fade-in absolute top-full right-0 left-0 z-20 mt-1 space-y-1 overflow-hidden rounded-[12px] border border-[#EAE9E9] bg-white p-1 shadow-sm duration-300"
 								role="listbox"
 							>
 								<button
 									onclick={() => selectJobType('')}
 									class="flex w-full cursor-pointer items-center justify-between rounded-[9px] px-3 py-1 text-sm transition-all duration-300 hover:bg-[#DDDDDD] focus:outline-none
-                                    {selectedJobType === '' ? 'bg-[#DDDDDD]' : ''}"
+                                    {selectedJobType === ''
+										? 'bg-[#EAE9E9]'
+										: 'hover:bg-[#f6f6f6]'}"
 									role="option"
 									aria-selected={selectedJobType === ''}
 								>
@@ -541,7 +543,9 @@
 										onclick={() => selectJobType(type)}
 										class="flex w-full cursor-pointer items-center justify-between rounded-[9px] px-3 py-1 text-sm transition-all
                                         duration-300 hover:bg-[#DDDDDD] focus:outline-none
-                                        {selectedJobType === type ? 'bg-[#DDDDDD]' : ''}"
+                                        {selectedJobType === type
+											? 'bg-[#EAE9E9]'
+											: 'hover:bg-[#f6f6f6]'}"
 										role="option"
 										aria-selected={selectedJobType === type}
 									>
@@ -561,7 +565,7 @@
 						<button
 							onclick={toggleExperienceLevelDropdown}
 							class="flex cursor-pointer items-center justify-between gap-2 rounded-[9px] border border-[#D4D7DD]
-                            bg-[#EAE9E9] px-3 py-1 text-sm focus:outline-none"
+                            bg-[#e8e8e8] px-3 py-1 text-sm focus:outline-none"
 							aria-expanded={isExperienceLevelDropdownOpen}
 							aria-haspopup="listbox"
 						>
@@ -575,13 +579,13 @@
 						</button>
 						{#if isExperienceLevelDropdownOpen}
 							<div
-								class="animate-in slide-in-from-top-2 fade-in absolute top-full right-0 left-0 z-20 mt-1 space-y-1 overflow-hidden rounded-[12px] border border-[#D4D7DD] bg-[#EAE9E9] p-1 duration-300"
+								class="animate-in slide-in-from-top-2 fade-in absolute top-full right-0 left-0 z-20 mt-1 space-y-1 overflow-hidden rounded-[12px] border border-[#EAE9E9] bg-white p-1 shadow-sm duration-300"
 								role="listbox"
 							>
 								<button
 									onclick={() => selectExperienceLevel('')}
-									class="flex w-full cursor-pointer items-center justify-between rounded-[9px] px-3 py-1 text-sm transition-all duration-300 hover:bg-[#DDDDDD] focus:outline-none
-                                    {selectedExperienceLevel === '' ? 'bg-[#DDDDDD]' : ''}"
+									class="flex w-full cursor-pointer items-center justify-between rounded-[9px] px-3 py-1 text-sm transition-all duration-300 hover:bg-[#f6f6f6] focus:outline-none
+                                    {selectedExperienceLevel === '' ? 'bg-[#EAE9E9]' : ''}"
 									role="option"
 									aria-selected={selectedExperienceLevel === ''}
 								>
@@ -592,7 +596,9 @@
 										onclick={() => selectExperienceLevel(level)}
 										class="flex w-full cursor-pointer items-center justify-between rounded-[9px] px-3 py-1 text-sm transition-all
                                         duration-300 hover:bg-[#DDDDDD] focus:outline-none
-                                        {selectedExperienceLevel === level ? 'bg-[#DDDDDD]' : ''}"
+                                        {selectedExperienceLevel === level
+											? 'bg-[#EAE9E9]'
+											: 'hover:bg-[#f6f6f6]'}"
 										role="option"
 										aria-selected={selectedExperienceLevel === level}
 									>
@@ -608,7 +614,7 @@
 					<div class="dropdown-container relative">
 						<button
 							onclick={toggleLocationTypeDropdown}
-							class="flex cursor-pointer items-center justify-between gap-2 rounded-[9px] border border-[#D4D7DD] bg-[#EAE9E9] px-3 py-1 text-sm focus:outline-none"
+							class="flex cursor-pointer items-center justify-between gap-2 rounded-[9px] border border-[#D4D7DD] bg-[#e8e8e8] px-3 py-1 text-sm focus:outline-none"
 							aria-expanded={isLocationTypeDropdownOpen}
 							aria-haspopup="listbox"
 						>
@@ -622,13 +628,13 @@
 						</button>
 						{#if isLocationTypeDropdownOpen}
 							<div
-								class="animate-in slide-in-from-top-2 fade-in absolute top-full right-0 left-0 z-20 mt-1 space-y-1 overflow-hidden rounded-[12px] border border-[#D4D7DD] bg-[#EAE9E9] p-1 duration-300"
+								class="animate-in slide-in-from-top-2 fade-in absolute top-full right-0 left-0 z-20 mt-1 space-y-1 overflow-hidden rounded-[12px] border border-[#EAE9E9] bg-white p-1 shadow-sm duration-300"
 								role="listbox"
 							>
 								<button
 									onclick={() => selectLocationType('')}
-									class="flex w-full cursor-pointer items-center justify-between rounded-[9px] px-3 py-1 text-sm transition-all duration-300 hover:bg-[#DDDDDD] focus:outline-none
-                                    {selectedLocationType === '' ? 'bg-[#DDDDDD]' : ''}"
+									class="flex w-full cursor-pointer items-center justify-between rounded-[9px] px-3 py-1 text-sm transition-all duration-300 hover:bg-[#f6f6f6] focus:outline-none
+                                    {selectedLocationType === '' ? 'bg-[#EAE9E9]' : ''}"
 									role="option"
 									aria-selected={selectedLocationType === ''}
 								>
@@ -638,8 +644,10 @@
 									<button
 										onclick={() => selectLocationType(locType)}
 										class="flex w-full cursor-pointer items-center justify-between rounded-[9px] px-3 py-1 text-sm transition-all
-                                        duration-300 hover:bg-[#DDDDDD] focus:outline-none
-                                        {selectedLocationType === locType ? 'bg-[#DDDDDD]' : ''}"
+                                        duration-300 focus:outline-none
+                                        {selectedLocationType === locType
+											? 'bg-[#EAE9E9]'
+											: 'hover:bg-[#f6f6f6] '}"
 										role="option"
 										aria-selected={selectedLocationType === locType}
 									>
@@ -655,7 +663,7 @@
 					<div class="dropdown-container relative">
 						<button
 							onclick={toggleCategoryDropdown}
-							class="flex cursor-pointer items-center justify-between gap-2 rounded-[9px] border border-[#D4D7DD] bg-[#EAE9E9] px-3 py-1 text-sm focus:outline-none"
+							class="flex cursor-pointer items-center justify-between gap-2 rounded-[9px] border border-[#D4D7DD] bg-[#e8e8e8] px-3 py-1 text-sm focus:outline-none"
 							aria-expanded={isCategoryDropdownOpen}
 							aria-haspopup="listbox"
 						>
@@ -669,14 +677,16 @@
 						</button>
 						{#if isCategoryDropdownOpen}
 							<div
-								class="animate-in slide-in-from-top-2 fade-in absolute top-full right-0 left-0 z-20 mt-1 space-y-1 overflow-hidden rounded-[12px] border border-[#D4D7DD] bg-[#EAE9E9] p-1 duration-300"
+								class="animate-in slide-in-from-top-2 fade-in absolute top-full right-0 left-0 z-20 mt-1 space-y-1 overflow-hidden rounded-[12px] border border-[#EAE9E9] bg-white p-1 shadow-sm duration-300"
 								role="listbox"
 							>
 								<button
 									onclick={() => selectCategory('')}
 									class="flex w-full cursor-pointer items-center justify-between rounded-[9px] px-3 py-1 text-sm transition-all duration-300
-                                    hover:bg-[#DDDDDD] focus:outline-none
-                                    {selectedCategory === '' ? 'bg-[#DDDDDD]' : ''}"
+                                    focus:outline-none
+                                    {selectedCategory === ''
+										? 'bg-[#EAE9E9]'
+										: 'hover:bg-[#f6f6f6] '}"
 									role="option"
 									aria-selected={selectedCategory === ''}
 								>
@@ -686,8 +696,10 @@
 									<button
 										onclick={() => selectCategory(category)}
 										class="flex w-full cursor-pointer items-center justify-between rounded-[9px] px-3 py-1 text-sm transition-all
-                                        duration-300 hover:bg-[#DDDDDD] focus:outline-none
-                                        {selectedCategory === category ? 'bg-[#DDDDDD]' : ''}"
+                                        duration-300 focus:outline-none
+                                        {selectedCategory === category
+											? 'bg-[#EAE9E9]'
+											: 'hover:bg-[#f6f6f6] '}"
 										role="option"
 										aria-selected={selectedCategory === category}
 									>
@@ -1070,8 +1082,7 @@
 				</div>
 				<button
 					onclick={closeMobileModal}
-					class="ml-4 flex-shrink-0 cursor-pointer rounded-[10px] p-2
-                    text-[#7A7A73]"
+					class="cursor-pointer text-[#7A7A73] focus:outline-none"
 					aria-label="Close modal"
 				>
 					<X size="20" />

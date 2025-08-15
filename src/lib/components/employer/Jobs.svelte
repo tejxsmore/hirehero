@@ -180,7 +180,7 @@
 							</button>
 							{#if openOptionsId === job.id}
 								<div
-									class="absolute top-10 right-0 z-10 w-40 space-y-1 rounded-[12px] border border-[#EAE9E9] bg-white p-1 shadow-xs"
+									class="absolute top-10 right-0 z-10 w-40 space-y-1 rounded-[12px] border border-[#EAE9E9] bg-white p-1 shadow-sm"
 									role="menu"
 									aria-orientation="vertical"
 								>

@@ -19,6 +19,7 @@
 
 	import Jobs from './Jobs.svelte';
 	import Applications from './Applications.svelte';
+	import Messages from './(Messages)/Messages.svelte';
 
 	type ViewKey =
 		| 'dashboard'
@@ -73,11 +74,10 @@
 
 <svelte:window on:click={handleClickOutside} on:keydown={handleKeydown} />
 
-<div class="flex min-h-screen w-full overflow-y-auto">
+<div class="flex min-h-screen w-full">
 	<!-- Desktop Sidebar -->
 	<aside
-		class="hidden w-72 flex-col space-y-5 border-r border-[#EAE9E9]
-	bg-white p-5 md:flex"
+		class="sticky top-0 hidden h-screen w-72 flex-col self-start border-r border-[#EAE9E9] bg-white p-5 md:flex"
 	>
 		<nav class="space-y-3">
 			{#each navItems as { label, view, icon: Icon }}
@@ -94,7 +94,7 @@
 	</aside>
 
 	<!-- Main Content -->
-	<main class="flex-1 space-y-4.5 p-4.5">
+	<main class="flex-1 space-y-4.5 overflow-y-auto p-4.5">
 		<div class="block md:hidden">
 			<!-- Advanced Custom Dropdown -->
 			<div class="dropdown-container relative">
@@ -122,14 +122,14 @@
 
 				{#if isDropdownOpen}
 					<div
-						class="animate-in slide-in-from-top-2 fade-in absolute top-full right-0 left-0 z-20 mt-1.5 space-y-1 overflow-hidden rounded-[15px] border border-[#D4D7DD] bg-[#EAE9E9] p-1"
+						class="animate-in slide-in-from-top-2 fade-in absolute top-full right-0 left-0 z-20 mt-1.5 space-y-1 overflow-hidden rounded-[15px] border border-[#EAE9E9] bg-white p-1 shadow-sm"
 						role="listbox"
 					>
 						{#each navItems as { label, view, icon: Icon }, index}
 							<button
 								onclick={() => selectView(view)}
-								class="flex w-full cursor-pointer items-center justify-between rounded-[12px] px-4.5 py-1.5 transition-all duration-300 hover:bg-[#DDDDDD] focus:outline-none
-								{activeView === view ? 'bg-[#DDDDDD]' : ''}"
+								class="flex w-full cursor-pointer items-center justify-between rounded-[12px] px-4.5 py-1.5 transition-all duration-300 focus:outline-none
+								{activeView === view ? 'bg-[#EAE9E9]' : 'hover:bg-[#f6f6f6] '}"
 								role="option"
 								aria-selected={activeView === view}
 							>
@@ -213,7 +213,7 @@
 			</div>
 			<div class="grid gap-4.5 md:grid-cols-2">
 				<div
-					class="h-full space-y-3 rounded-[15px] border
+					class="space-y-3 rounded-[15px] border
 				border-[#EAE9E9] bg-white p-4.5"
 				>
 					<div class="flex items-center justify-between">
@@ -259,7 +259,7 @@
 					{/if}
 				</div>
 				<div
-					class="h-full space-y-4.5 rounded-[15px] border
+					class="space-y-4.5 rounded-[15px] border
 				  border-[#EAE9E9] bg-white p-4.5"
 				>
 					<div class="flex items-start justify-between">
@@ -290,7 +290,7 @@
 		{:else if activeView === 'applications'}
 			<Applications {applications} />
 		{:else if activeView === 'messages'}
-			<!-- Messages content -->
+			<Messages />
 		{:else if activeView === 'interviews'}
 			<!-- Interviews content -->
 		{:else if activeView === 'company-profile'}

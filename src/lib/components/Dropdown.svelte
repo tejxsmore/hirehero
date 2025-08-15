@@ -55,7 +55,7 @@
 		aria-label={label.replace('*', '').trim()}
 		aria-controls={listboxId}
 		onclick={toggleDropdown}
-		class="flex w-full cursor-pointer items-center justify-between gap-2 rounded-[12px] border border-[#D4D7DD] bg-[#e8e8e8] px-4.5 py-1.5 transition-all duration-300 focus:outline-none"
+		class="flex w-full cursor-pointer items-center justify-between gap-2 rounded-[12px] border border-[#D4D7DD] bg-[#e8e8e8] px-4.5 py-1.5 focus:outline-none"
 	>
 		<div class="flex items-center">
 			{#if IconComponent}
